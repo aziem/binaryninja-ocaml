@@ -1,0 +1,50 @@
+OASISFormat:    0.4
+OCamlVersion:   >= 4.01
+Name:           binaryninja
+Version:        0.1
+Synopsis:       Ctypes bindings to Binary Ninja
+Authors:        Aziem Chawdhary
+License:        LGPL-2.1 with OCaml linking exception
+Plugins:        DevFiles (0.4), META (0.4)
+BuildTools:     ocamlbuild
+
+Library binaryninja
+  FindLibName:  binaryninja
+  Install: true
+  Path: .
+  Modules: Binaryninja, Ffi_bindings 
+  InternalModules: Ffi_generated, Ffi_generated_types
+  CSources: ffi_generated_stubs.c
+  CCLib: -L/home/aziem/Downloads/binaryninja -lbinaryninjacore
+  CCOpt: -I $pkg_ctypes_stubs
+  BuildDepends:     ctypes, uchar, ctypes.stubs, ctypes.foreign, result
+  CompiledObject: native
+
+Document binaryninja
+  Type: ocamlbuild (0.4)
+  Install: true
+  BuildTools : ocamldoc
+  Title: API reference for Binary Ninja
+  XOCamlBuildPath: .
+  XOCamlBuildlibraries: binaryninja
+
+Executable ffi_types_stubgen
+  Install: false
+  Path: .
+  MainIs: ffi_types_stubgen.ml
+  BuildDepends: ctypes.stubs
+  CompiledObject: native
+
+Executable ffi_stubgen
+  Install: false
+  Path: .
+  MainIs: ffi_stubgen.ml
+  BuildDepends:    ctypes.stubs, ctypes.foreign
+  CompiledObject : native
+
+Executable test
+  Install: false
+  Path: .
+  MainIs: test.ml
+  BuildDepends: binaryninja
+  CompiledObject: native
