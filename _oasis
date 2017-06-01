@@ -12,7 +12,7 @@ Library binaryninja
   FindLibName:  binaryninja
   Install: true
   Path: .
-  Modules: Binaryninja, Ffi_bindings 
+  Modules: Binaryninja, Ffi_bindings, Log, Plugin
   InternalModules: Ffi_generated, Ffi_generated_types
   CSources: ffi_generated_stubs.c
   CCLib: -L/home/aziem/Downloads/binaryninja -lbinaryninjacore

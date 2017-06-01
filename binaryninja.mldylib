@@ -1,7 +1,9 @@
 # OASIS_START
-# DO NOT EDIT (digest: fd5957cc645c95e254521b7af6f0b80a)
+# DO NOT EDIT (digest: df4e34b5ae054ea2904344a1cec14599)
 Binaryninja
 Ffi_bindings
+Log
+Plugin
 Ffi_generated
 Ffi_generated_types
 # OASIS_STOP

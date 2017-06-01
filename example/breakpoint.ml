@@ -7,11 +7,20 @@ let write_breakpoint bn_view start length =
 
 let is_valid = fun _ _ _ -> true
 
-let core_plugin_init () =
-  Binaryninja.bn_register_plugin_command_for_range
-    "Convert to breakpoint (OCaml version)"
-    "Fill region with breakpoint instructions"
-    write_breakpoint
-    is_valid;
-  true
+
+module BreakPointPlugin : Plugin.BinjaPluginForRange =
+struct
+  let name = "Convert to breakpoint (OCaml version)"
+  let descr = "Fill region with breakpoint instructions"
+  let action = write_breakpoint
+  let is_valid = is_valid
+  
+end
+
+module G = Plugin.GeneratePluginForRange(BreakPointPlugin)
+
+let _ =
+  G.write_c ()
+
+
 
