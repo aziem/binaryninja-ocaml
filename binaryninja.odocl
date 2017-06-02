@@ -1,7 +1,4 @@
 # OASIS_START
-# DO NOT EDIT (digest: f20c6a1611ab3a3e80709b16f993ce07)
-Binaryninja
-Ffi_bindings
-Log
-Plugin
+# DO NOT EDIT (digest: 078e4870404b048d082b003a0b7c53bf)
+lib/Binaryninja
 # OASIS_STOP

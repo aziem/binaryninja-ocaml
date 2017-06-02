@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 3dd68698ae843021770c8cfbfe7351d7)
+# DO NOT EDIT (digest: 2c0968f0b555e026456ec9b34dcc6388)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -14,26 +14,41 @@ true: annot, bin_annot
 ".git": not_hygienic
 "_darcs": -traverse
 "_darcs": not_hygienic
+# Library binaryninja_bindings
+"bindings/binaryninja_bindings.cmxs": use_binaryninja_bindings
+<bindings/*.ml{,i,y}>: package(ctypes.stubs)
 # Library binaryninja
-"binaryninja.cmxs": use_binaryninja
-<*.ml{,i,y}>: oasis_library_binaryninja_ccopt
-"ffi_generated_stubs.c": oasis_library_binaryninja_ccopt
-"binaryninja.cmxa": oasis_library_binaryninja_cclib
-"libbinaryninja_stubs.lib": oasis_library_binaryninja_cclib
-"dllbinaryninja_stubs.dll": oasis_library_binaryninja_cclib
-"libbinaryninja_stubs.a": oasis_library_binaryninja_cclib
-"dllbinaryninja_stubs.so": oasis_library_binaryninja_cclib
-"binaryninja.cmxa": use_libbinaryninja_stubs
-"ffi_generated_stubs.c": package(ctypes)
-"ffi_generated_stubs.c": package(ctypes.foreign)
-"ffi_generated_stubs.c": package(ctypes.stubs)
-"ffi_generated_stubs.c": package(result)
-"ffi_generated_stubs.c": package(uchar)
+"lib/binaryninja.cmxs": use_binaryninja
+<lib/*.ml{,i,y}>: oasis_library_binaryninja_ccopt
+"lib/ffi_generated_stubs.c": oasis_library_binaryninja_ccopt
+"lib/binaryninja.cmxa": oasis_library_binaryninja_cclib
+"lib/libbinaryninja_stubs.lib": oasis_library_binaryninja_cclib
+"lib/dllbinaryninja_stubs.dll": oasis_library_binaryninja_cclib
+"lib/libbinaryninja_stubs.a": oasis_library_binaryninja_cclib
+"lib/dllbinaryninja_stubs.so": oasis_library_binaryninja_cclib
+"lib/binaryninja.cmxa": use_libbinaryninja_stubs
+<lib/*.ml{,i,y}>: package(ctypes)
+<lib/*.ml{,i,y}>: package(ctypes.foreign)
+<lib/*.ml{,i,y}>: package(ctypes.stubs)
+<lib/*.ml{,i,y}>: package(result)
+<lib/*.ml{,i,y}>: package(uchar)
+<lib/*.ml{,i,y}>: use_binaryninja_bindings
+"lib/ffi_generated_stubs.c": package(ctypes)
+"lib/ffi_generated_stubs.c": package(ctypes.foreign)
+"lib/ffi_generated_stubs.c": package(ctypes.stubs)
+"lib/ffi_generated_stubs.c": package(result)
+"lib/ffi_generated_stubs.c": package(uchar)
+"lib/ffi_generated_stubs.c": use_binaryninja_bindings
 # Executable ffi_types_stubgen
-"ffi_types_stubgen.native": package(ctypes.stubs)
+"stubgen/ffi_types_stubgen.native": package(ctypes.stubs)
+"stubgen/ffi_types_stubgen.native": use_binaryninja_bindings
 # Executable ffi_stubgen
-"ffi_stubgen.native": package(ctypes.foreign)
-"ffi_stubgen.native": package(ctypes.stubs)
+"stubgen/ffi_stubgen.native": package(ctypes.foreign)
+"stubgen/ffi_stubgen.native": package(ctypes.stubs)
+"stubgen/ffi_stubgen.native": use_binaryninja_bindings
+<stubgen/*.ml{,i,y}>: package(ctypes.foreign)
+<stubgen/*.ml{,i,y}>: package(ctypes.stubs)
+<stubgen/*.ml{,i,y}>: use_binaryninja_bindings
 # Executable test
 "test.native": package(ctypes)
 "test.native": package(ctypes.foreign)
@@ -41,11 +56,14 @@ true: annot, bin_annot
 "test.native": package(result)
 "test.native": package(uchar)
 "test.native": use_binaryninja
+"test.native": use_binaryninja_bindings
 <*.ml{,i,y}>: package(ctypes)
 <*.ml{,i,y}>: package(ctypes.foreign)
 <*.ml{,i,y}>: package(ctypes.stubs)
 <*.ml{,i,y}>: package(result)
 <*.ml{,i,y}>: package(uchar)
 <*.ml{,i,y}>: use_binaryninja
+<*.ml{,i,y}>: use_binaryninja_bindings
 # OASIS_STOP
 <example>: -traverse
+<lib>: include

@@ -58,7 +58,7 @@ let get_analysis_progress binary_view =
 
 let bn_get_scripting_provider_list () =
   let i = allocate size_t (Unsigned.Size_t.of_int 3) in
-  bn_get_scripting_provider_list i
+  ignore(bn_get_scripting_provider_list i)
 
 let bn_write_view_data bn_view offset data len =
   B.bn_write_view_data bn_view offset (coerce string (ptr void) data) len

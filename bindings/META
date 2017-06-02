@@ -1,0 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: d0094454dd36ea7fd8f320cdd9829278)
+version = "0.1"
+description = "Ctypes bindings to Binary Ninja"
+requires = "ctypes.stubs"
+archive(byte) = "binaryninja_bindings.cma"
+archive(byte, plugin) = "binaryninja_bindings.cma"
+archive(native) = "binaryninja_bindings.cmxa"
+archive(native, plugin) = "binaryninja_bindings.cmxs"
+exists_if = "binaryninja_bindings.cma"
+# OASIS_STOP
+

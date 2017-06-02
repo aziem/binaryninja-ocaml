@@ -11,14 +11,20 @@ BuildTools:     ocamlbuild
 Library binaryninja
   FindLibName:  binaryninja
   Install: true
-  Path: .
-  Modules: Binaryninja, Ffi_bindings, Log, Plugin
-  InternalModules: Ffi_generated, Ffi_generated_types
+  Path: lib
+  Modules: Binaryninja
+  InternalModules: Ffi_generated, Ffi_generated_types, Log, Plugin
   CSources: ffi_generated_stubs.c
   CCLib: -L/home/aziem/Downloads/binaryninja -lbinaryninjacore
   CCOpt: -I $pkg_ctypes_stubs
-  BuildDepends:     ctypes, uchar, ctypes.stubs, ctypes.foreign, result
+  BuildDepends: binaryninja_bindings, ctypes, uchar, ctypes.stubs, ctypes.foreign, result
   CompiledObject: native
+
+Library binaryninja_bindings
+  Install: true
+  Path: bindings
+  Modules: Ffi_bindings
+  BuildDepends: ctypes.stubs
 
 Document binaryninja
   Type: ocamlbuild (0.4)
@@ -30,16 +36,16 @@ Document binaryninja
 
 Executable ffi_types_stubgen
   Install: false
-  Path: .
+  Path: stubgen
   MainIs: ffi_types_stubgen.ml
-  BuildDepends: ctypes.stubs
+  BuildDepends: ctypes.stubs, binaryninja_bindings
   CompiledObject: native
 
 Executable ffi_stubgen
   Install: false
-  Path: .
+  Path: stubgen
   MainIs: ffi_stubgen.ml
-  BuildDepends:    ctypes.stubs, ctypes.foreign
+  BuildDepends:    ctypes.stubs, ctypes.foreign, binaryninja_bindings
   CompiledObject : native
 
 Executable test
