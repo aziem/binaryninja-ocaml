@@ -3,7 +3,8 @@ OCaml API for Binary Ninja (Work in Progress) : Only tested on Linux.
 Currently exposed enough bindings to implement the breakpoint plugin
 for Binary Ninja.
 
-Uses the core API of Binary Ninja - NOT the higher level C++ API. 
+Uses the core API of Binary Ninja - NOT the higher level C++ API. Uses
+ocaml-ctypes stub generation to generate the bindings.
 
 Requires Oasis for build system (for now) and of-course a copy of
 Binary Ninja, and the binaryninja-api repository (master branch). 
