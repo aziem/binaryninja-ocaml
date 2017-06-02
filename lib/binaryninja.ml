@@ -8,6 +8,7 @@ open B
 
 
 module Log = Log
+module Platform = Platform
 module Plugin = Plugin
 
 type bn_file_metadata = Ffi_bindings.bn_file_metadata Ctypes.structure Ctypes_static.ptr

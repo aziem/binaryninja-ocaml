@@ -1055,6 +1055,19 @@ struct
 
   let bn_register_plugin_command_for_function = F.foreign "BNRegisterPluginCommandForFunction" F.(T.string @-> T.string @-> Ctypes.static_funptr plugin_action_for_function @-> Ctypes.static_funptr plugin_is_valid_for_function @-> T.ptr T.void @-> returning T.void)
 
-  let bn_get_platform_name = F.foreign "BNGetPlatformName" F.( T.ptr bn_platform  @-> returning T.string)
 
+  let bn_create_platform = F.foreign "BNCreatePlatform" F.(T.ptr bn_architecture @-> T.string @-> returning (T.ptr bn_platform))
+  let bn_get_platform_name = F.foreign "BNGetPlatformName" F.( T.ptr bn_platform  @-> returning T.string)
+  let bn_get_platform_architecture = F.foreign "BNGetPlatformArchitecture" F.(T.ptr bn_platform @-> returning (T.ptr bn_architecture))
+
+  let bn_get_platform_list = F.foreign "BNGetPlatformList" (T.ptr T.size_t @-> returning (T.ptr (T.ptr bn_platform)))
+  let bn_get_platform_list_by_architecture = F.foreign "BNGetPlatformListByArchitecture" (T.ptr bn_architecture @-> T.ptr T.size_t @-> returning (T.ptr (T.ptr bn_platform)))
+
+  
+
+
+
+
+
+  
 end
