@@ -921,7 +921,7 @@ struct
   let () = T.seal bn_binary_data_notification
 
 
- 
+
   let bn_file_accessor : bn_file_accessor Ctypes.structure T.typ = T.structure "BNFileAccessor"
   let context = T.field bn_file_accessor "context" (T.ptr T.void)
   let get_length = T.field bn_file_accessor "getLength" (T.static_funptr T.(T.ptr T.void @-> returning T.uint64_t))
@@ -931,7 +931,7 @@ struct
   let idlestate = T.constant "IdleState" T.int64_t
   let disassemblestate = T.constant "DisassembleState" T.int64_t
   let analyzestate = T.constant "AnalyzeState" T.int64_t
-  
+
   let bn_analysis_state =
     T.enum "BNAnalysisState" [
       IdleState, idlestate;
@@ -945,7 +945,7 @@ struct
   let count = T.field bn_analysis_progress "count" T.size_t
   let total = T.field bn_analysis_progress "total" T.size_t
   let () = T.seal bn_analysis_progress
-      
+
 end
 
 
@@ -957,15 +957,18 @@ struct
   let plugin_init_function = T.typedef (T.static_funptr T.(T.void @-> returning T.bool)) "BNCorePluginInitFunction"
   let plugin_dep_function = T.typedef (T.static_funptr T.(T.void @-> returning T.void)) "BNCorePluginDependencyFunction"
 
-  let plugin_action = T.static_funptr T.(T.ptr T.void @-> T.ptr bn_binary_view @-> returning T.void)
-  let plugin_is_valid = T.static_funptr T.(T.ptr T.void @-> T.ptr bn_binary_view @-> returning bool)
+  let plugin_action = T.(T.ptr T.void @-> T.ptr bn_binary_view @-> returning T.void)
+  let plugin_is_valid = T.(T.ptr T.void @-> T.ptr bn_binary_view @-> returning bool)
 
   let plugin_action_for_range = T.(T.ptr T.void @-> T.ptr bn_binary_view @-> T.uint64_t @-> T.uint64_t @-> returning T.void)
   let plugin_is_valid_for_range = T.(T.ptr T.void @-> T.ptr bn_binary_view @-> T.uint64_t @-> T.uint64_t @-> returning T.bool)
 
   let plugin_action_for_address = T.(T.ptr T.void @-> T.ptr bn_binary_view @-> T.uint64_t @-> returning T.void)
   let plugin_is_valid_for_address = T.(T.ptr T.void @-> T.ptr bn_binary_view @-> T.uint64_t @-> returning T.bool)
-  
+
+  let plugin_action_for_function = T.(T.ptr T.void @-> T.ptr bn_binary_view @-> T.ptr bn_function @-> returning T.void) 
+  let plugin_is_valid_for_function = T.(T.ptr T.void @-> T.ptr bn_binary_view @-> T.ptr bn_function @-> returning T.bool) 
+
   let bn_get_build_id = F.foreign "BNGetBuildId" (T.void @-> returning T.uint32_t)
 
   let bn_shutdown = F.foreign "BNShutdown" (T.void @-> returning T.void)
@@ -992,7 +995,7 @@ struct
   let bn_alloc_string = F.foreign "BNAllocString" F.( T.string  @-> returning T.string)
 
   let bn_free_string = F.foreign "BNFreeString" F.( T.string  @-> returning T.void)
-      
+
   let bn_get_path_relative_to_bundled_plugin_directory = F.foreign "BNGetPathRelativeToBundledPluginDirectory" F.(T.string @-> returning T.string)
 
   let bn_get_path_relative_to_user_plugin_directory = F.foreign "BNGetPathRelativeToUserPluginDirectory" F.( T.string @-> returning T.string)
@@ -1002,14 +1005,14 @@ struct
   let bn_add_required_plugin_dependency =  F.foreign "BNAddRequiredPluginDependency" F.( T.string  @-> returning T.void)
 
   let bn_add_optional_plugin_dependency = F.foreign "BNAddOptionalPluginDependency" F.( T.string @-> returning T.void) 
- 
+
   let bn_log = F.foreign "BNLog" F.( E.bn_log_level @-> T.string @-> returning T.void)
-      
+
   let bn_log_debug = F.foreign "BNLogDebug" F.(T.string  @-> returning T.void)
 
   let bn_log_info = F.foreign "BNLogInfo" F.( T.string  @-> returning T.void)
 
-  
+
   let bn_log_warn = F.foreign "BNLogWarn" F.( T.string  @-> returning T.void)
 
   let bn_log_error = F.foreign "BNLogError" F.( T.string @-> returning T.void)
@@ -1025,7 +1028,7 @@ struct
   let bn_log_to_stdout = F.foreign "BNLogToStdout" F.( E.bn_log_level  @-> returning T.void)
 
   let bn_log_to_stderr = F.foreign "BNLogToStderr" F.( E.bn_log_level  @-> returning T.void)
-      
+
   let bn_log_to_file = F.foreign "BNLogToFile" F.( E.bn_log_level @-> T.string @-> T.bool @-> returning T.bool) 
   let bn_close_logs = F.foreign "BNCloseLogs" F.(T.void @-> returning T.void)
 
@@ -1033,20 +1036,25 @@ struct
 
   let bn_get_scripting_provider_name = F.foreign "BNGetScriptingProviderName" F.(T.ptr bn_scripting_provider @-> returning T.string)
 
-let bn_create_file_metadata = F.foreign "BNCreateFileMetadata" F.( T.void @-> returning (T.ptr bn_file_metadata ))
-let bn_write_view_data = F.foreign "BNWriteViewData" F.( T.ptr bn_binary_view @-> T.uint64_t @-> T.ptr T.void @-> T.size_t @-> returning T.size_t) 
-let bn_get_default_architecture = F.foreign "BNGetDefaultArchitecture" F.( T.ptr bn_binary_view @-> returning (T.ptr bn_architecture))
-let bn_get_default_platform = F.foreign "BNGetDefaultPlatform" F.( T.ptr bn_binary_view @-> returning (T.ptr bn_platform))
-let bn_create_binary_dataview_from_filename = F.foreign "BNCreateBinaryDataViewFromFilename" F.(T.ptr bn_file_metadata @-> T.string @-> returning (T.ptr bn_binary_view))
-let bn_get_binary_view_types = F.foreign "BNGetBinaryViewTypes" F.( T.ptr T.size_t @-> returning (T.ptr (T.ptr bn_binary_viewtype)))
-let bn_get_binary_view_typename = F.foreign "BNGetBinaryViewTypeName" F.( T.ptr bn_binary_viewtype  @-> returning T.string )
-let bn_get_architecture_name = F.foreign "BNGetArchitectureName" F.( T.ptr bn_architecture @-> returning T.string)
-let bn_update_analysis = F.foreign "BNUpdateAnalysis" F.( T.ptr bn_binary_view @-> returning T.void) 
-let bn_get_analysis_progress = F.foreign "BNGetAnalysisProgress" F.( T.ptr bn_binary_view @-> returning E.bn_analysis_progress) 
-let bn_register_plugin_command = F.foreign "BNRegisterPluginCommand" F.( T.string @-> T.string @-> plugin_action @-> plugin_is_valid @-> T.ptr T.void @-> returning T.void)
-let bn_register_plugin_command_for_range = F.foreign "BNRegisterPluginCommandForRange" F.(T.string @-> T.string @-> Ctypes.static_funptr plugin_action_for_range @-> Ctypes.static_funptr plugin_is_valid_for_range @-> T.ptr T.void @-> returning T.void)
+  let bn_create_file_metadata = F.foreign "BNCreateFileMetadata" F.( T.void @-> returning (T.ptr bn_file_metadata ))
+  let bn_write_view_data = F.foreign "BNWriteViewData" F.( T.ptr bn_binary_view @-> T.uint64_t @-> T.ptr T.void @-> T.size_t @-> returning T.size_t) 
+  let bn_get_default_architecture = F.foreign "BNGetDefaultArchitecture" F.( T.ptr bn_binary_view @-> returning (T.ptr bn_architecture))
+  let bn_get_default_platform = F.foreign "BNGetDefaultPlatform" F.( T.ptr bn_binary_view @-> returning (T.ptr bn_platform))
+  let bn_create_binary_dataview_from_filename = F.foreign "BNCreateBinaryDataViewFromFilename" F.(T.ptr bn_file_metadata @-> T.string @-> returning (T.ptr bn_binary_view))
+  let bn_get_binary_view_types = F.foreign "BNGetBinaryViewTypes" F.( T.ptr T.size_t @-> returning (T.ptr (T.ptr bn_binary_viewtype)))
+  let bn_get_binary_view_typename = F.foreign "BNGetBinaryViewTypeName" F.( T.ptr bn_binary_viewtype  @-> returning T.string )
+  let bn_get_architecture_name = F.foreign "BNGetArchitectureName" F.( T.ptr bn_architecture @-> returning T.string)
+  let bn_update_analysis = F.foreign "BNUpdateAnalysis" F.( T.ptr bn_binary_view @-> returning T.void) 
+  let bn_get_analysis_progress = F.foreign "BNGetAnalysisProgress" F.( T.ptr bn_binary_view @-> returning E.bn_analysis_progress) 
 
-let bn_register_plugin_command_for_address = F.foreign "BNRegisterPluginCommandForAddress" F.( T.string @-> T.string @-> Ctypes.static_funptr plugin_action_for_address @-> Ctypes.static_funptr plugin_is_valid_for_address @-> T.ptr T.void @-> returning T.void)
-let bn_get_platform_name = F.foreign "BNGetPlatformName" F.( T.ptr bn_platform  @-> returning T.string)
+  let bn_register_plugin_command = F.foreign "BNRegisterPluginCommand" F.( T.string @-> T.string @-> Ctypes.static_funptr plugin_action @-> Ctypes.static_funptr plugin_is_valid @-> T.ptr T.void @-> returning T.void)
+
+  let bn_register_plugin_command_for_range = F.foreign "BNRegisterPluginCommandForRange" F.(T.string @-> T.string @-> Ctypes.static_funptr plugin_action_for_range @-> Ctypes.static_funptr plugin_is_valid_for_range @-> T.ptr T.void @-> returning T.void)
+
+  let bn_register_plugin_command_for_address = F.foreign "BNRegisterPluginCommandForAddress" F.( T.string @-> T.string @-> Ctypes.static_funptr plugin_action_for_address @-> Ctypes.static_funptr plugin_is_valid_for_address @-> T.ptr T.void @-> returning T.void)
+
+  let bn_register_plugin_command_for_function = F.foreign "BNRegisterPluginCommandForFunction" F.(T.string @-> T.string @-> Ctypes.static_funptr plugin_action_for_function @-> Ctypes.static_funptr plugin_is_valid_for_function @-> T.ptr T.void @-> returning T.void)
+
+  let bn_get_platform_name = F.foreign "BNGetPlatformName" F.( T.ptr bn_platform  @-> returning T.string)
 
 end

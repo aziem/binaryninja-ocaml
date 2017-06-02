@@ -1,6 +1,7 @@
 
 type bn_file_metadata
 type bn_binary_view
+type bn_function 
 type bn_platform
 type bn_architecture
 
@@ -12,16 +13,16 @@ type analysis_state =
 
 module Log :
 sig
-  
+
   type loglevel = 
     | BN_DebugLog
     | BN_InfoLog
     | BN_WarningLog
     | BN_ErrorLog
     | BN_AlertLog
-      
+
   val log : loglevel -> string -> unit
-    
+
   val log_debug : string -> unit
 
   val log_info : string -> unit
@@ -37,11 +38,35 @@ end
 module Plugin :
 sig
 
-  type action_for_range = bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> unit
+  module type BinjaPlugin =
+  sig
+    val name : string
+    val descr : string
+    val action : bn_binary_view -> unit          
+    val is_valid : bn_binary_view -> bool          
+  end
 
-  type is_valid_for_range = bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> bool
+  module GeneratePlugin( B : BinjaPlugin) :
+  sig
+    val write_c : unit -> unit
+    val core_plugin_init : unit -> bool
+  end
 
-  val bn_register_plugin_command_for_range : string -> string -> action_for_range -> is_valid_for_range -> unit
+
+
+  module type BinjaPluginForAddress =
+  sig
+    val name : string
+    val descr : string
+    val action : bn_binary_view -> Unsigned.uint64 -> unit          
+    val is_valid : bn_binary_view -> Unsigned.uint64 -> bool          
+  end
+
+  module GeneratePluginForAddress ( B : BinjaPluginForAddress) :
+  sig
+    val write_c : unit -> unit
+    val core_plugin_init : unit -> bool
+  end
 
   module type BinjaPluginForRange =
   sig
@@ -50,12 +75,27 @@ sig
     val action : bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> unit          
     val is_valid : bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> bool          
   end
-  
+
   module GeneratePluginForRange ( B : BinjaPluginForRange) :
   sig
     val write_c : unit -> unit
     val core_plugin_init : unit -> bool
   end
+
+  module type BinjaPluginForFunction =
+  sig
+    val name : string
+    val descr : string
+    val action : bn_binary_view -> bn_function -> unit          
+    val is_valid : bn_binary_view -> bn_function -> bool          
+  end
+
+  module GeneratePluginForFunction ( B : BinjaPluginForFunction) :
+  sig
+    val write_c : unit -> unit
+    val core_plugin_init : unit -> bool
+  end
+
 
 end
 
@@ -66,8 +106,6 @@ val init_core_plugins : unit -> unit
 
 val init_user_plugins : unit -> unit
 
-
-(* val create_file_metadata : unit -> Ffi_bindings.bn_file_metadata structure ptr *)
 val create_file_metadata : unit -> bn_file_metadata
 
 val create_binary_dataview_from_filename : bn_file_metadata -> string -> bn_binary_view

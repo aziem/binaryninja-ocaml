@@ -12,6 +12,7 @@ module Plugin = Plugin
 
 type bn_file_metadata = Ffi_bindings.bn_file_metadata Ctypes.structure Ctypes_static.ptr
 type bn_binary_view = Ffi_bindings.bn_binary_view Ctypes.structure Ctypes_static.ptr
+type bn_function = Ffi_bindings.bn_function Ctypes.structure Ctypes_static.ptr 
 type bn_platform = Ffi_bindings.bn_platform Ctypes.structure Ctypes_static.ptr
 type bn_architecture = Ffi_bindings.bn_architecture Ctypes.structure Ctypes_static.ptr
 
@@ -26,7 +27,7 @@ let get_build_id () =
 
 let init_core_plugins () =
   B.bn_init_core_plugins ()
-             
+
 let init_user_plugins () =
   B.bn_init_user_plugins ()
 
@@ -47,7 +48,7 @@ let get_default_architecture binary_view =
 
 let get_default_architecture_name bn_arch =
   B.bn_get_architecture_name bn_arch
-  
+
 let get_platform_name platform =
   B.bn_get_platform_name platform 
 
