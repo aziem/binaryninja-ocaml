@@ -38,11 +38,15 @@ end
 module Platform :
 sig
   type bn_platform
+
   val create_platform : bn_architecture -> string -> bn_platform
   val get_platform_name : bn_platform -> string
   val get_architecture : bn_platform -> bn_architecture
   val get_platform_list : unit -> bn_platform list
-  val get_platform_list_by_arch : bn_architecture -> bn_platform list 
+  val get_platform_list_by_arch : bn_architecture -> bn_platform list
+  val get_platform_list_by_os : string -> bn_platform list
+  val get_platform_list_by_os_and_arch : string -> bn_architecture -> bn_platform list
+  val get_platform_by_name : string -> bn_platform option
 end
 
 

@@ -1062,9 +1062,10 @@ struct
 
   let bn_get_platform_list = F.foreign "BNGetPlatformList" (T.ptr T.size_t @-> returning (T.ptr (T.ptr bn_platform)))
   let bn_get_platform_list_by_architecture = F.foreign "BNGetPlatformListByArchitecture" (T.ptr bn_architecture @-> T.ptr T.size_t @-> returning (T.ptr (T.ptr bn_platform)))
+  let bn_get_platform_list_by_os = F.foreign "BNGetPlatformListByOS" (T.string @-> T.ptr T.size_t @-> returning (T.ptr (T.ptr bn_platform)))
+  let bn_get_platform_list_by_os_and_architecture = F.foreign "BNGetPlatformListByOSAndArchitecture" (T.string @-> T.ptr bn_architecture @-> T.ptr T.size_t @-> returning (T.ptr (T.ptr bn_platform)))
 
-  
-
+  let bn_get_platform_by_name = F.foreign "BNGetPlatformByName" (T.string @-> returning (T.ptr bn_platform))
 
 
 
