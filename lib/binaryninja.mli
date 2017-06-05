@@ -51,64 +51,32 @@ end
 module Plugin :
 sig
 
-  module type BinjaPlugin =
+  type action =
+    | ActionForCommand of (bn_binary_view -> unit)
+    | ActionForRange of (bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> unit)
+    | ActionForAddress of (bn_binary_view -> Unsigned.uint64 -> unit)
+    | ActionForFunction of (bn_binary_view -> bn_function -> unit)
+
+  type is_valid =
+    | IsValidForCommand of (bn_binary_view -> bool)
+    | IsValidForRange of  (bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> bool)
+    | IsValidForAddress of (bn_binary_view -> Unsigned.uint64 -> bool)
+    | IsValidForFunction of (bn_binary_view -> bn_function -> bool)
+
+
+  module type BinaryNinjaPlugin =
   sig
     val name : string
     val descr : string
-    val action : bn_binary_view -> unit          
-    val is_valid : bn_binary_view -> bool          
+    val action : action
+    val is_valid : is_valid
   end
 
-  module GeneratePlugin( B : BinjaPlugin) :
+  module  GeneratePlugin(B:BinaryNinjaPlugin) :
   sig
+    val core_plugin_init : unit -> unit
     val write_c : unit -> unit
-    val core_plugin_init : unit -> bool
   end
-
-
-
-  module type BinjaPluginForAddress =
-  sig
-    val name : string
-    val descr : string
-    val action : bn_binary_view -> Unsigned.uint64 -> unit          
-    val is_valid : bn_binary_view -> Unsigned.uint64 -> bool          
-  end
-
-  module GeneratePluginForAddress ( B : BinjaPluginForAddress) :
-  sig
-    val write_c : unit -> unit
-    val core_plugin_init : unit -> bool
-  end
-
-  module type BinjaPluginForRange =
-  sig
-    val name : string
-    val descr : string
-    val action : bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> unit          
-    val is_valid : bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> bool          
-  end
-
-  module GeneratePluginForRange ( B : BinjaPluginForRange) :
-  sig
-    val write_c : unit -> unit
-    val core_plugin_init : unit -> bool
-  end
-
-  module type BinjaPluginForFunction =
-  sig
-    val name : string
-    val descr : string
-    val action : bn_binary_view -> bn_function -> unit          
-    val is_valid : bn_binary_view -> bn_function -> bool          
-  end
-
-  module GeneratePluginForFunction ( B : BinjaPluginForFunction) :
-  sig
-    val write_c : unit -> unit
-    val core_plugin_init : unit -> bool
-  end
-
 
 end
 
