@@ -258,8 +258,8 @@ let bn_platform : bn_platform Ctypes.structure typ = structure "BNPlatform"
 let bn_architecture : bn_architecture Ctypes.structure typ = structure "BNArchitecture"
 let bn_temporaryfile : bn_temporaryfile Ctypes.structure typ = structure "BNTemporaryFile"
 let bn_scripting_provider : bn_scripting_provider Ctypes.structure typ = structure "BNScriptingProvider"
-
-
+let bn_symbol : bn_symbol Ctypes.structure typ = structure "BNSymbol"
+let bn_basicblock : bn_basicblock Ctypes.structure typ = structure "BNBasicBlock"
 
 
 
@@ -1068,7 +1068,15 @@ struct
   let bn_get_platform_by_name = F.foreign "BNGetPlatformByName" (T.string @-> returning (T.ptr bn_platform))
 
 
+  (* Function Stuff *)
+  let bn_get_function_platform = F.foreign "BNGetFunctionPlatform" (T.ptr bn_function @-> returning (T.ptr bn_platform))
 
+  let bn_get_function_architecture = F.foreign "BNGetFunctionArchitecture" F.( T.ptr bn_function @-> returning (T.ptr bn_architecture))
+  let bn_get_function_start = F.foreign "BNGetFunctionStart" F.( T.ptr bn_function @-> returning T.uint64_t)
+  let bn_get_function_symbol = F.foreign "BNGetFunctionSymbol" F.( T.ptr bn_function @-> returning (T.ptr bn_symbol)) 
+  let bn_was_function_automatically_discovered = F.foreign "BNWasFunctionAutomaticallyDiscovered" F.( T.ptr bn_function @-> returning T.bool)
+  let bn_can_function_return = F.foreign "BNCanFunctionReturn" F.( T.ptr bn_function @-> returning T.bool)
 
-  
+  let bn_get_function_basic_block_list = F.foreign "BNGetFunctionBasicBlockList" F.( T.ptr bn_function @-> T.ptr T.size_t @-> returning (T.ptr (T.ptr bn_basicblock)))
+      
 end

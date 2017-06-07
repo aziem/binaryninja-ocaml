@@ -1,9 +1,10 @@
 
 type bn_file_metadata
 type bn_binary_view
-type bn_function 
 type bn_platform
 type bn_architecture
+type bn_symbol
+type bn_basicblock
 
 
 type analysis_state = 
@@ -50,6 +51,18 @@ sig
 end
 
 
+module Function :
+sig
+  type bn_function
+  val get_platform : bn_function -> bn_platform
+  val get_architecture : bn_function -> bn_architecture
+  val get_start : bn_function -> Unsigned.uint64
+  val get_symbol : bn_function -> bn_symbol
+  val was_function_auto_discovered : bn_function -> bool
+  val can_function_return : bn_function -> bool
+  val get_basic_blocks : bn_function -> bn_basicblock list
+end
+
 
 
 module Plugin :
@@ -59,13 +72,13 @@ sig
     | ActionForCommand of (bn_binary_view -> unit)
     | ActionForRange of (bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> unit)
     | ActionForAddress of (bn_binary_view -> Unsigned.uint64 -> unit)
-    | ActionForFunction of (bn_binary_view -> bn_function -> unit)
+    | ActionForFunction of (bn_binary_view -> Function.bn_function -> unit)
 
   type is_valid =
     | IsValidForCommand of (bn_binary_view -> bool)
     | IsValidForRange of  (bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> bool)
     | IsValidForAddress of (bn_binary_view -> Unsigned.uint64 -> bool)
-    | IsValidForFunction of (bn_binary_view -> bn_function -> bool)
+    | IsValidForFunction of (bn_binary_view -> Function.bn_function -> bool)
 
 
   module type BinaryNinjaPlugin =
