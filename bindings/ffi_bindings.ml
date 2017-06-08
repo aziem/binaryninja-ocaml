@@ -258,9 +258,18 @@ let bn_platform : bn_platform Ctypes.structure typ = structure "BNPlatform"
 let bn_architecture : bn_architecture Ctypes.structure typ = structure "BNArchitecture"
 let bn_temporaryfile : bn_temporaryfile Ctypes.structure typ = structure "BNTemporaryFile"
 let bn_scripting_provider : bn_scripting_provider Ctypes.structure typ = structure "BNScriptingProvider"
-let bn_symbol : bn_symbol Ctypes.structure typ = structure "BNSymbol"
 let bn_basicblock : bn_basicblock Ctypes.structure typ = structure "BNBasicBlock"
+let bn_functiongraph : bn_functiongraph Ctypes.structure typ = structure "BNFunctionGraph"
+let bn_functiongraphblock : bn_functiongraphblock Ctypes.structure typ = structure "BNFunctionGraphBlock"
 
+let bn_symbol : bn_symbol Ctypes.structure typ = structure "BNSymbol"
+let bn_temporaryfile : bn_temporaryfile Ctypes.structure typ = structure "BNTemporaryFile"
+let bn_lowlevelilfunction : bn_lowlevelilfunction Ctypes.structure typ = structure "BNLowLevelILFunction"
+let bn_type : bn_type Ctypes.structure typ = structure "BNType"
+let bn_structure : bn_structure Ctypes.structure typ = structure "BNStructure"
+let bn_enumeration : bn_enumeration Ctypes.structure typ = structure "BNEnumeration"
+let bn_callingconvention : bn_callingconvention Ctypes.structure typ = structure "BNCallingConvention"
+let bn_analysis_completionevent : bn_analysis_completionevent Ctypes.structure typ = structure "BNAnalysisCompletionEvent"
 
 
 
@@ -1078,5 +1087,33 @@ struct
   let bn_can_function_return = F.foreign "BNCanFunctionReturn" F.( T.ptr bn_function @-> returning T.bool)
 
   let bn_get_function_basic_block_list = F.foreign "BNGetFunctionBasicBlockList" F.( T.ptr bn_function @-> T.ptr T.size_t @-> returning (T.ptr (T.ptr bn_basicblock)))
-      
+
+
+  let bn_create_symbol = F.foreign "BNCreateSymbol" F.( E.bn_symbol_type @-> T.string @-> T.string  @-> T.string @-> T.uint64_t @-> returning (T.ptr bn_symbol))
+  let bn_new_symbol_reference = F.foreign "BNNewSymbolReference" F.( T.ptr bn_symbol @-> returning (T.ptr bn_symbol))
+  let bn_get_symbol_type = F.foreign "BNGetSymbolType" F.( T.ptr bn_symbol @-> returning (E.bn_symbol_type))
+  let bn_get_symbol_shortname = F.foreign "BNGetSymbolShortName" F.( T.ptr bn_symbol @-> returning T.string)
+  let bn_get_symbol_fullname = F.foreign "BNGetSymbolFullName" F.( T.ptr bn_symbol @-> returning T.string)
+  let bn_get_symbol_rawname = F.foreign "BNGetSymbolRawName" F.( T.ptr bn_symbol @-> returning T.string)
+  let bn_get_symbol_address = F.foreign "BNGetSymbolAddress" F.( T.ptr bn_symbol  @-> returning T.uint64_t)
+  let bn_is_symbol_autodefined = F.foreign "BNIsSymbolAutoDefined" F.( T.ptr bn_symbol @-> returning T.bool)
+  let bn_set_symbol_autodefined = F.foreign "BNSetSymbolAutoDefined" F.( T.ptr bn_symbol @-> T.bool @-> returning T.void)
+  let bn_get_symbol_by_address = F.foreign "BNGetSymbolByAddress" F.( T.ptr bn_binary_view @->  T.uint64_t @-> returning (T.ptr bn_symbol))
+  let bn_get_symbol_by_rawname = F.foreign "BNGetSymbolByRawName" F.( T.ptr bn_binary_view @->  T.string @-> returning (T.ptr bn_symbol))
+
+
+(* let bngetsymbolsinrange = F.foreign "BNGetSymbolsInRange" F.( int *,  uint64_t,  uint64_t,  struct BNBinaryView *,  @-> returning struct BNSymbol **\) *)
+(* let bngetsymbolsoftype = F.foreign "BNGetSymbolsOfType" F.( int *,  enum BNSymbolType,  struct BNBinaryView *,  @-> returning struct BNSymbol **\) *)
+(* let bngetsymbolsoftypeinrange = F.foreign "BNGetSymbolsOfTypeInRange" F.( int *,  uint64_t,  uint64_t,  enum BNSymbolType,  struct BNBinaryView *,  @-> returning struct BNSymbol **\) *)
+(* let bnfreesymbollist = F.foreign "BNFreeSymbolList" F.( int,  struct BNSymbol **,  @-> returning void) *)
+(* let bndefineautosymbol = F.foreign "BNDefineAutoSymbol" F.( struct BNSymbol *,  struct BNBinaryView *,  @-> returning void) *)
+(* let bnundefineautosymbol = F.foreign "BNUndefineAutoSymbol" F.( struct BNSymbol *,  struct BNBinaryView *,  @-> returning void) *)
+(* let bndefineusersymbol = F.foreign "BNDefineUserSymbol" F.( struct BNSymbol *,  struct BNBinaryView *,  @-> returning void) *)
+(* let bnundefineusersymbol = F.foreign "BNUndefineUserSymbol" F.( struct BNSymbol *,  struct BNBinaryView *,  @-> returning void) *)
+(* let bndefineimportedfunction = F.foreign "BNDefineImportedFunction" F.( struct BNFunction *,  struct BNSymbol *,  struct BNBinaryView *,  @-> returning void) *)
+(* let bnimportedfunctionfromimportaddresssymbol = F.foreign "BNImportedFunctionFromImportAddressSymbol" F.( uint64_t,  struct BNSymbol *,  @-> returning struct BNSymbol *\) *)
+
+
+
+  
 end

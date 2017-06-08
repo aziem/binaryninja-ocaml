@@ -8,6 +8,7 @@ open B
 
 
 module Log = Log
+module Symbol = Symbol 
 module Platform = Platform
 module Function = Function 
 module Plugin = Plugin
@@ -16,7 +17,6 @@ type bn_file_metadata = Ffi_bindings.bn_file_metadata Ctypes.structure Ctypes_st
 type bn_binary_view = Ffi_bindings.bn_binary_view Ctypes.structure Ctypes_static.ptr
 type bn_platform = Ffi_bindings.bn_platform Ctypes.structure Ctypes_static.ptr
 type bn_architecture = Ffi_bindings.bn_architecture Ctypes.structure Ctypes_static.ptr
-type bn_symbol = Ffi_bindings.bn_symbol Ctypes.structure Ctypes_static.ptr
 type bn_basicblock = Ffi_bindings.bn_basicblock Ctypes.structure Ctypes_static.ptr
 
 type analysis_state = Ffi_bindings.bn_analysis_state =

@@ -3,7 +3,6 @@ type bn_file_metadata
 type bn_binary_view
 type bn_platform
 type bn_architecture
-type bn_symbol
 type bn_basicblock
 
 
@@ -36,6 +35,29 @@ sig
 
 end
 
+module Symbol :
+sig
+  type bn_symbol
+
+  type bn_symbol_type =
+    | BN_FunctionSymbol 
+    | BN_ImportAddressSymbol 
+    | BN_ImportedFunctionSymbol 
+    | BN_DataSymbol 
+    | BN_ImportedDataSymbol
+
+  val get_type : bn_symbol -> bn_symbol_type
+  val get_short_name : bn_symbol -> string
+  val get_full_name : bn_symbol -> string
+  val get_raw_name : bn_symbol -> string
+  val get_address : bn_symbol -> Unsigned.uint64
+  val is_auto_defined : bn_symbol -> bool
+  val set_auto_defined : bn_symbol -> bool -> unit
+  val get_symbol_by_address : bn_binary_view -> Unsigned.uint64 -> bn_symbol
+  val get_symbol_by_raw_name : bn_binary_view -> string -> bn_symbol 
+  
+end
+
 module Platform :
 sig
   type bn_platform
@@ -57,7 +79,7 @@ sig
   val get_platform : bn_function -> bn_platform
   val get_architecture : bn_function -> bn_architecture
   val get_start : bn_function -> Unsigned.uint64
-  val get_symbol : bn_function -> bn_symbol
+  val get_symbol : bn_function -> Symbol.bn_symbol
   val was_function_auto_discovered : bn_function -> bool
   val can_function_return : bn_function -> bool
   val get_basic_blocks : bn_function -> bn_basicblock list
