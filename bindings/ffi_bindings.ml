@@ -1113,7 +1113,23 @@ struct
 (* let bndefineimportedfunction = F.foreign "BNDefineImportedFunction" F.( struct BNFunction *,  struct BNSymbol *,  struct BNBinaryView *,  @-> returning void) *)
 (* let bnimportedfunctionfromimportaddresssymbol = F.foreign "BNImportedFunctionFromImportAddressSymbol" F.( uint64_t,  struct BNSymbol *,  @-> returning struct BNSymbol *\) *)
 
+  let bn_create_function_graph = F.foreign "BNCreateFunctionGraph" F.(T.ptr bn_function @-> returning (T.ptr bn_functiongraph))
+  let bn_new_function_graph_reference = F.foreign "BNNewFunctionGraphReference" F.(T.ptr bn_functiongraph @-> returning (T.ptr bn_functiongraph))
 
+  let bn_free_function_graph = F.foreign "BNFreeFunctionGraph" F.(T.ptr bn_functiongraph @-> returning T.void)
+
+  let bn_get_function_for_function_graph = F.foreign "BNGetFunctionForFunctionGraph" F.(T.ptr bn_functiongraph @-> returning (T.ptr bn_function))
+
+  let bn_get_horizontal_function_graph_block_margin = F.foreign "BNGetHorizontalFunctionGraphBlockMargin" F.( T.ptr bn_functiongraph  @-> returning T.int)
+
+  let bn_get_vertical_function_graph_block_margin = F.foreign "BNGetVerticalFunctionGraphBlockMargin" F.( T.ptr bn_functiongraph @-> returning T.int)
+      
+  let bn_set_function_graph_block_margins = F.foreign "BNSetFunctionGraphBlockMargins" F.(T.ptr bn_functiongraph @-> T.int @-> T.int @-> returning T.void)
+
+  let bn_start_function_graph_layout = F.foreign "BNStartFunctionGraphLayout" F.( T.ptr bn_functiongraph @-> E.bn_function_graph_type @-> returning T.void)
+
+  let bn_get_function_graph_blocks = F.foreign  "BNGetFunctionGraphBlocks" (T.ptr bn_functiongraph @-> T.ptr T.size_t @-> returning (T.ptr (T.ptr bn_functiongraphblock )))
+      
 
   
 end

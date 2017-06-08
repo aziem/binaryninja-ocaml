@@ -85,7 +85,29 @@ sig
   val get_basic_blocks : bn_function -> bn_basicblock list
 end
 
+module FunctionGraph :
+sig
+  type bn_functiongraph
+  type bn_functiongraphblock 
+ 
+  type bn_function_graph_type = 
+    | BN_NormalFunctionGraph 
+    | BN_LowLevelILFunctionGraph 
+    | BN_LiftedILFunctionGraph
+      
+  
+  type bn_function_graph_option = 
+    | BN_ShowAddress 
+    | BN_ShowBasicBlockRegisterState 
+    | BN_ShowFlagUsage
+      
+  val create_function_graph : Function.bn_function -> bn_functiongraph
 
+  val get_function : bn_functiongraph -> Function.bn_function
+
+  val get_graph_blocks : bn_functiongraph -> bn_functiongraphblock list 
+  
+end
 
 module Plugin :
 sig

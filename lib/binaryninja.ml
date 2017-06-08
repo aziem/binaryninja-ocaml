@@ -10,7 +10,8 @@ open B
 module Log = Log
 module Symbol = Symbol 
 module Platform = Platform
-module Function = Function 
+module Function = Function
+module FunctionGraph = Functiongraph
 module Plugin = Plugin
 
 type bn_file_metadata = Ffi_bindings.bn_file_metadata Ctypes.structure Ctypes_static.ptr

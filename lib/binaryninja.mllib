@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 084b73ca8f04105ab51186537352440c)
+# DO NOT EDIT (digest: 439e00c604fbb26cdf25e3498c23a7ef)
 Binaryninja
 Ffi_generated
 Ffi_generated_types
@@ -8,4 +8,5 @@ Plugin
 Platform
 Function
 Symbol
+Functiongraph
 # OASIS_STOP
