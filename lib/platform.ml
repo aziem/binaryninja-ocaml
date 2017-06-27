@@ -1,9 +1,10 @@
 open Ctypes
 
-type bn_platform = Ffi_bindings.bn_platform Ctypes.structure Ctypes_static.ptr
 
 
 module B = Ffi_bindings.Bindings(Ffi_generated_types)(Ffi_generated)
+type bn_platform = Ffi_bindings.bn_platform Ctypes.structure Ctypes_static.ptr 
+
 
 let create_platform arch name =
   B.bn_create_platform arch name
@@ -68,6 +69,6 @@ let get_platform_list_by_os_and_arch os arch =
     
 let get_platform_by_name name =
   let res = B.bn_get_platform_by_name name in
-  match (Ffi_generated_types.coerce (ptr (Ffi_bindings.bn_platform)) (ptr_opt (Ffi_bindings.bn_platform)) res) with
+  match (Ffi_generated_types.coerce (ptr (B.E.bn_platform)) (ptr_opt (B.E.bn_platform)) res) with
   | None -> None
   | Some plat -> Some plat 

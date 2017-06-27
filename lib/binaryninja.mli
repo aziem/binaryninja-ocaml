@@ -95,12 +95,6 @@ sig
     | BN_LowLevelILFunctionGraph 
     | BN_LiftedILFunctionGraph
       
-  
-  type bn_function_graph_option = 
-    | BN_ShowAddress 
-    | BN_ShowBasicBlockRegisterState 
-    | BN_ShowFlagUsage
-      
   val create_function_graph : Function.bn_function -> bn_functiongraph
 
   val get_function : bn_functiongraph -> Function.bn_function

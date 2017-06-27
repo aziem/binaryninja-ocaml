@@ -14,12 +14,6 @@ type bn_function_graph_type =  Ffi_bindings.bn_function_graph_type =
   | BN_LowLevelILFunctionGraph 
   | BN_LiftedILFunctionGraph
 
-
-type bn_function_graph_option =  Ffi_bindings.bn_function_graph_option = 
-  | BN_ShowAddress 
-  | BN_ShowBasicBlockRegisterState 
-  | BN_ShowFlagUsage
-
 let create_function_graph f =
   B.bn_create_function_graph f 
 
