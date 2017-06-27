@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 439e00c604fbb26cdf25e3498c23a7ef)
+# DO NOT EDIT (digest: c481e021340ee09f57bf8bbbf3c0625e)
 Binaryninja
 Ffi_generated
 Ffi_generated_types
@@ -9,4 +9,6 @@ Platform
 Function
 Symbol
 Functiongraph
+Basicblock
+Utils
 # OASIS_STOP
