@@ -34,6 +34,7 @@ type bn_platform
 type bn_analysis_completionevent
 type bnmain_thread_action
 type bndisassembly_settings
+type bnscripting_instance
 
 type bn_plugin_load_order =
   | BN_EarlyPluginLoadOrder
@@ -1532,15 +1533,6 @@ struct
       ReadyForScriptProgramInput, readyforscriptprograminput;
     ]
 
-  let invalidscriptinput = T.constant "InvalidScriptInput" T.int64_t
-  let incompletescriptinput = T.constant "IncompleteScriptInput" T.int64_t
-  let successfulscriptexecution = T.constant "SuccessfulScriptExecution" T.int64_t
-  let bnscriptingproviderexecuteresult = T.enum "BNScriptingProviderExecuteResult" [ 
-      InvalidScriptInput, invalidscriptinput;
-      IncompleteScriptInput, incompletescriptinput;
-      SuccessfulScriptExecution, successfulscriptexecution;
-    ]
-
   let standardhighlightcolor = T.constant "StandardHighlightColor" T.int64_t
   let mixedhighlightcolor = T.constant "MixedHighlightColor" T.int64_t
   let customhighlightcolor = T.constant "CustomHighlightColor" T.int64_t
@@ -1677,12 +1669,13 @@ struct
   let bn_lowlevelilfunction : bn_lowlevelilfunction Ctypes.structure T.typ = T.structure "BNLowLevelILFunction"
   let bn_type : bn_type Ctypes.structure T.typ = T.structure "BNType"
   let bn_structure : bn_structure Ctypes.structure T.typ = T.structure "BNStructure"
-let bnunknown_type : bnunknown_type Ctypes.structure T.typ = T.structure "BNUnknownType"
+  let bnunknown_type : bnunknown_type Ctypes.structure T.typ = T.structure "BNUnknownType"
   let bn_enumeration : bn_enumeration Ctypes.structure T.typ = T.structure "BNEnumeration"
   let bn_callingconvention : bn_callingconvention Ctypes.structure T.typ = T.structure "BNCallingConvention"
   let bn_analysis_completionevent : bn_analysis_completionevent Ctypes.structure T.typ = T.structure "BNAnalysisCompletionEvent"
   let bndisassembly_settings : bndisassembly_settings Ctypes.structure T.typ = T.structure "BNDisassemblySettings"
   let bnmain_thread_action : bnmain_thread_action Ctypes.structure T.typ = T.structure "BNMainThreadAction"
+  let bnscripting_instance : bnscripting_instance Ctypes.structure T.typ = T.structure "BNScriptingInstance"
 
 
 
@@ -2230,6 +2223,44 @@ let bnunknown_type : bnunknown_type Ctypes.structure T.typ = T.structure "BNUnkn
   let name = T.field bnname_and_type "name" (T.string)
   let type_ = T.field bnname_and_type "type" (T.ptr bn_type)
   let () = T.seal bnname_and_type
+
+  type bnstructure_member
+  let bnstructure_member : bnstructure_member Ctypes.structure T.typ = T.structure "BNStructureMember"
+  let type_ = T.field bnstructure_member "type" (T.ptr bn_type)
+  let name = T.field bnstructure_member "name" (T.string)
+  let offset = T.field bnstructure_member "offset" (T.uint64_t)
+  let () = T.seal bnstructure_member
+
+  type bnenumeration_member
+  let bnenumeration_member : bnenumeration_member Ctypes.structure T.typ = T.structure "BNEnumerationMember"
+  let name = T.field bnenumeration_member "name" (T.string)
+  let value = T.field bnenumeration_member "value" (T.uint64_t)
+  let isdefault = T.field bnenumeration_member "isDefault" (T.bool)
+  let () = T.seal bnenumeration_member
+
+  type bntype_parser_result
+  let bntype_parser_result : bntype_parser_result Ctypes.structure T.typ = T.structure "BNTypeParserResult"
+  let types = T.field bntype_parser_result "types" (T.ptr bnname_and_type )
+  let variables = T.field bntype_parser_result "variables" (T.ptr bnname_and_type )
+  let functions = T.field bntype_parser_result "functions" (T.ptr bnname_and_type )
+  let typecount = T.field bntype_parser_result "typeCount" (T.size_t)
+  let variablecount = T.field bntype_parser_result "variableCount" (T.size_t)
+  let functioncount = T.field bntype_parser_result "functionCount" (T.size_t)
+  let () = T.seal bntype_parser_result
+
+  type bnupdate_channel
+  let bnupdate_channel : bnupdate_channel Ctypes.structure T.typ = T.structure "BNUpdateChannel"
+  let name = T.field bnupdate_channel "name" (T.string)
+  let description = T.field bnupdate_channel "description" T.string
+  let latestversion = T.field bnupdate_channel "latestVersion" T.string
+  let () = T.seal bnupdate_channel
+  type bnupdate_version
+  let bnupdate_version : bnupdate_version Ctypes.structure T.typ = T.structure "BNUpdateVersion"
+  let version = T.field bnupdate_version "version" (T.string)
+  let notes = T.field bnupdate_version "notes" (T.string)
+  let time = T.field bnupdate_version "time" (T.uint64_t)
+  let () = T.seal bnupdate_version
+
 
 
 end
@@ -2966,141 +2997,142 @@ struct
   let bnget_type_string_after_name = F.foreign  "BNGetTypeStringAfterName" (T.ptr bn_type   @-> returning (T.string  ))
   let bncreate_unknown_named_type = F.foreign  "BNCreateUnknownNamedType" (T.ptr bnunknown_type   @-> returning (T.ptr bn_type  ))
   let bncreate_unknown_type = F.foreign  "BNCreateUnknownType" (T.void @-> returning (T.ptr E.bnunknown_type  ))
-  (* (\* let bnset_unknown_type_name = F.foreign  "BNSetUnknownTypeName" (T.ptr E.bnunknown_type   @-> T.ptr T.string    @-> T.int  @-> returning (T.void )) *\) *)
-  (* (\* let bnget_unknown_type_name = F.foreign  "BNGetUnknownTypeName" (T.ptr E.bnunknown_type   @-> T.ptr T.size_t   @-> returning (T.ptr T.string   )) *\) *)
-  (* (\* let bnfree_unknown_type = F.foreign  "BNFreeUnknownType" (T.ptr E.bnunknown_type   @-> returning (T.void )) *\) *)
-  (* (\* let bnnew_unknown_type_reference = F.foreign  "BNNewUnknownTypeReference" (T.ptr E.bnunknown_type   @-> returning (T.ptr E.bnunknown_type  )) *\) *)
-  (* (\* let bncreate_structure = F.foreign  "BNCreateStructure" (returning (T.ptr E.bnstructure  )) *\) *)
-  (* (\* let bnnew_structure_reference = F.foreign  "BNNewStructureReference" (T.ptr E.bnstructure   @-> returning (T.ptr E.bnstructure  )) *\) *)
-  (* (\* let bnfree_structure = F.foreign  "BNFreeStructure" (T.ptr E.bnstructure   @-> returning (T.void )) *\) *)
-  (* (\* let bnget_structure_name = F.foreign  "BNGetStructureName" (T.ptr E.bnstructure   @-> T.ptr T.size_t   @-> returning (T.ptr T.string   )) *\) *)
-  (* (\* let bnset_structure_name = F.foreign  "BNSetStructureName" (T.ptr E.bnstructure   @-> T.ptr T.string    @-> T.int  @-> returning (T.void )) *\) *)
-  (* (\* let bnget_structure_members = F.foreign  "BNGetStructureMembers" (T.ptr E.bnstructure   @-> T.ptr T.size_t   @-> returning (T.ptr E.bnstructure_member  )) *\) *)
-  (* (\* let bnfree_structure_member_list = F.foreign  "BNFreeStructureMemberList" (T.ptr E.bnstructure_member   @-> T.int  @-> returning (T.void )) *\) *)
-  (* (\* let bnget_structure_width = F.foreign  "BNGetStructureWidth" (T.ptr E.bnstructure   @-> returning (uint64_t )) *\) *)
-  (* (\* let bnget_structure_alignment = F.foreign  "BNGetStructureAlignment" (returning (T.int )) *\) *)
-  (* (\* let bnis_structure_packed = F.foreign  "BNIsStructurePacked" (returning (T.int )) *\) *)
-  (* (\* let bnset_structure_packed = F.foreign  "BNSetStructurePacked" (T.ptr E.bnstructure   @-> bool  @-> returning (T.void )) *\) *)
-  (* (\* let bnis_structure_union = F.foreign  "BNIsStructureUnion" (returning (T.int )) *\) *)
-  (* (\* let bnset_structure_union = F.foreign  "BNSetStructureUnion" (T.ptr E.bnstructure   @-> bool  @-> returning (T.void )) *\) *)
-  (* (\* let bnadd_structure_member = F.foreign  "BNAddStructureMember" (T.ptr E.bnstructure   @-> T.ptr bn_type   @-> T.string   @-> returning (T.void )) *\) *)
-  (* (\* let bnadd_structure_member_at_offset = F.foreign  "BNAddStructureMemberAtOffset" (T.ptr E.bnstructure   @-> T.ptr bn_type   @-> T.string   @->T.uint64_t  @-> returning (T.void )) *\) *)
-  (* (\* let bnremove_structure_member = F.foreign  "BNRemoveStructureMember" (T.ptr E.bnstructure   @-> T.int  @-> returning (T.void )) *\) *)
-  (* (\* let bncreate_enumeration = F.foreign  "BNCreateEnumeration" (returning (T.ptr E.bnenumeration  )) *\) *)
-  (* (\* let bnnew_enumeration_reference = F.foreign  "BNNewEnumerationReference" (T.ptr E.bnenumeration   @-> returning (T.ptr E.bnenumeration  )) *\) *)
-  (* (\* let bnfree_enumeration = F.foreign  "BNFreeEnumeration" (T.ptr bn_enumeration   @-> returning (T.void )) *\) *)
+  let bnset_unknown_type_name = F.foreign  "BNSetUnknownTypeName" (T.ptr E.bnunknown_type   @-> T.ptr T.string    @-> T.int  @-> returning (T.void ))
+  let bnget_unknown_type_name = F.foreign  "BNGetUnknownTypeName" (T.ptr E.bnunknown_type   @-> T.ptr T.size_t   @-> returning (T.ptr T.string   ))
+  let bnfree_unknown_type = F.foreign  "BNFreeUnknownType" (T.ptr E.bnunknown_type   @-> returning (T.void ))
+  let bnnew_unknown_type_reference = F.foreign  "BNNewUnknownTypeReference" (T.ptr E.bnunknown_type   @-> returning (T.ptr E.bnunknown_type  ))
+  let bncreate_structure = F.foreign  "BNCreateStructure" (T.void @-> returning (T.ptr bn_structure  ))
+  let bnnew_structure_reference = F.foreign  "BNNewStructureReference" (T.ptr bn_structure   @-> returning (T.ptr bn_structure  ))
+  let bnfree_structure = F.foreign  "BNFreeStructure" (T.ptr bn_structure   @-> returning (T.void ))
+  let bnget_structure_name = F.foreign  "BNGetStructureName" (T.ptr bn_structure   @-> T.ptr T.size_t   @-> returning (T.ptr T.string   ))
+  let bnset_structure_name = F.foreign  "BNSetStructureName" (T.ptr bn_structure   @-> T.ptr T.string    @-> T.size_t  @-> returning (T.void ))
+  let bnget_structure_members = F.foreign  "BNGetStructureMembers" (T.ptr bn_structure   @-> T.ptr T.size_t   @-> returning (T.ptr bnstructure_member  ))
+  let bnfree_structure_member_list = F.foreign  "BNFreeStructureMemberList" (T.ptr bnstructure_member   @-> T.size_t  @-> returning (T.void ))
+  let bnget_structure_width = F.foreign  "BNGetStructureWidth" (T.ptr bn_structure   @-> returning (T.uint64_t ))
+  let bnget_structure_alignment = F.foreign  "BNGetStructureAlignment" (T.ptr bn_structure @-> returning (T.size_t))
+  let bnis_structure_packed = F.foreign  "BNIsStructurePacked" (T.ptr bn_structure @-> returning (T.bool))
+  let bnset_structure_packed = F.foreign  "BNSetStructurePacked" (T.ptr bn_structure   @-> T.bool  @-> returning (T.void ))
+  let bnis_structure_union = F.foreign  "BNIsStructureUnion" (T.ptr bn_structure @-> returning (T.bool))
+  let bnset_structure_union = F.foreign  "BNSetStructureUnion" (T.ptr bn_structure   @-> T.bool  @-> returning (T.void ))
+  let bnadd_structure_member = F.foreign  "BNAddStructureMember" (T.ptr bn_structure   @-> T.ptr bn_type   @-> T.string   @-> returning (T.void ))
+  let bnadd_structure_member_at_offset = F.foreign  "BNAddStructureMemberAtOffset" (T.ptr bn_structure   @-> T.ptr bn_type   @-> T.string   @->T.uint64_t  @-> returning (T.void ))
+  let bnremove_structure_member = F.foreign  "BNRemoveStructureMember" (T.ptr bn_structure   @-> T.size_t  @-> returning (T.void ))
+  let bncreate_enumeration = F.foreign  "BNCreateEnumeration" (T.void @-> returning (T.ptr bn_enumeration  ))
+  let bnnew_enumeration_reference = F.foreign  "BNNewEnumerationReference" (T.ptr bn_enumeration   @-> returning (T.ptr bn_enumeration  ))
+  let bnfree_enumeration = F.foreign  "BNFreeEnumeration" (T.ptr bn_enumeration   @-> returning (T.void ))
   let bnget_enumeration_name = F.foreign  "BNGetEnumerationName" (T.ptr bn_enumeration   @-> T.ptr T.size_t   @-> returning ( T.ptr T.string   ))
   let bnset_enumeration_name = F.foreign  "BNSetEnumerationName" (T.ptr bn_enumeration   @-> T.ptr T.string    @-> T.int  @-> returning (T.void ))
-  (* let bnget_enumeration_members = F.foreign  "BNGetEnumerationMembers" (T.ptr bn_enumeration   @-> T.ptr T.size_t   @-> returning (T.ptr E.bnenumeration_member  )) *)
-  (* let bnfree_enumeration_member_list = F.foreign  "BNFreeEnumerationMemberList" (T.ptr E.bnenumeration_member   @-> T.int  @-> returning (T.void )) *)
+  let bnget_enumeration_members = F.foreign  "BNGetEnumerationMembers" (T.ptr bn_enumeration   @-> T.ptr T.size_t   @-> returning (T.ptr bnenumeration_member  ))
+  let bnfree_enumeration_member_list = F.foreign  "BNFreeEnumerationMemberList" (T.ptr bnenumeration_member   @-> T.size_t  @-> returning (T.void ))
   let bnadd_enumeration_member = F.foreign  "BNAddEnumerationMember" (T.ptr bn_enumeration   @-> T.string   @-> returning (T.void ))
   let bnadd_enumeration_member_with_value = F.foreign  "BNAddEnumerationMemberWithValue" (T.ptr bn_enumeration   @-> T.string   @->T.uint64_t  @-> returning (T.void ))
-  (* (\* let bnpreprocess_source = F.foreign  "BNPreprocessSource" (returning (T.int )) *\) *)
-  (* (\* let bnparse_types_from_source = F.foreign  "BNParseTypesFromSource" (returning (T.int )) *\) *)
-  (* (\* let bnparse_types_from_source_file = F.foreign  "BNParseTypesFromSourceFile" (returning (T.int )) *\) *)
-  (* (\* let bnfree_type_parser_result = F.foreign  "BNFreeTypeParserResult" (T.ptr bn_type_parser_result   @-> returning (T.void )) *\) *)
-  (* (\* let bnget_update_channels = F.foreign  "BNGetUpdateChannels" (T.ptr T.size_t   @-> T.ptr T.string    @-> returning (T.ptr E.bnupdate_channel  )) *\) *)
-  (* (\* let bnfree_update_channel_list = F.foreign  "BNFreeUpdateChannelList" (T.ptr E.bnupdate_channel   @-> T.int  @-> returning (T.void )) *\) *)
-  (* (\* let bnget_update_channel_versions = F.foreign  "BNGetUpdateChannelVersions" (T.string   @-> T.ptr T.size_t   @-> T.ptr T.string    @-> returning (T.ptr E.bnupdate_version  )) *\) *)
-  (* (\* let bnfree_update_channel_version_list = F.foreign  "BNFreeUpdateChannelVersionList" (T.ptr E.bnupdate_version   @-> T.int  @-> returning (T.void )) *\) *)
-  (* (\* let bnare_updates_available = F.foreign  "BNAreUpdatesAvailable" (returning (T.int )) *\) *)
-  (* (\* let bnupdate_to_version = F.foreign  "BNUpdateToVersion" (T.string   @-> T.string   @-> T.ptr T.string    @-> T.ptr int (void *,T.uint64_t,T.uint64_t)   @-> T.ptr T.void   @-> returning (enum E.bnupdate_result )) *\) *)
-  (* (\* let bnupdate_to_latest_version = F.foreign  "BNUpdateToLatestVersion" (T.string   @-> T.ptr T.string    @-> T.ptr int (void *,T.uint64_t,T.uint64_t)   @-> T.ptr T.void   @-> returning (enum E.bnupdate_result )) *\) *)
-  (* (\* let bnare_auto_updates_enabled = F.foreign  "BNAreAutoUpdatesEnabled" (returning (T.int )) *\) *)
-  (* (\* let bnset_auto_updates_enabled = F.foreign  "BNSetAutoUpdatesEnabled" (bool  @-> returning (T.void )) *\) *)
-  (* (\* let bnget_time_since_last_update_check = F.foreign  "BNGetTimeSinceLastUpdateCheck" (returning (uint64_t )) *\) *)
-  (* (\* let bnupdates_checked = F.foreign  "BNUpdatesChecked" (returning (T.void )) *\) *)
-  (* (\* let bnget_active_update_channel = F.foreign  "BNGetActiveUpdateChannel" (returning (T.string  )) *\) *)
-  (* (\* let bnset_active_update_channel = F.foreign  "BNSetActiveUpdateChannel" (T.string   @-> returning (T.void )) *\) *)
-  (* (\* let bnis_update_installation_pending = F.foreign  "BNIsUpdateInstallationPending" (returning (T.int )) *\) *)
-  (* (\* let bninstall_pending_update = F.foreign  "BNInstallPendingUpdate" (T.ptr T.string    @-> returning (T.void )) *\) *)
-  (* (\* let bnregister_plugin_command = F.foreign  "BNRegisterPluginCommand" (T.string   @-> T.string   @-> T.ptr void (void *,bn_binary_view *\\)   @-> T.ptr int (void *,bn_binary_view *\\)   @-> T.ptr T.void   @-> returning (T.void )) *\) *)
-  (* (\* let bnregister_plugin_command_for_address = F.foreign  "BNRegisterPluginCommandForAddress" (T.string   @-> T.string   @-> T.ptr void (void *,bn_binary_view *,T.uint64_t)   @-> T.ptr int (void *,bn_binary_view *,T.uint64_t)   @-> T.ptr T.void   @-> returning (T.void )) *\) *)
-  (* (\* let bnregister_plugin_command_for_range = F.foreign  "BNRegisterPluginCommandForRange" (T.string   @-> T.string   @-> T.ptr void (void *,bn_binary_view *,T.uint64_t,T.uint64_t)   @-> T.ptr int (void *,bn_binary_view *,T.uint64_t,T.uint64_t)   @-> T.ptr T.void   @-> returning (T.void )) *\) *)
-  (* (\* let bnregister_plugin_command_for_function = F.foreign  "BNRegisterPluginCommandForFunction" (T.string   @-> T.string   @-> T.ptr void (void *,bn_binary_view *,bn_function *\\)   @-> T.ptr int (void *,bn_binary_view *,bn_function *\\)   @-> T.ptr T.void   @-> returning (T.void )) *\) *)
-  (* (\* let bnget_all_plugin_commands = F.foreign  "BNGetAllPluginCommands" (T.ptr T.size_t   @-> returning (T.ptr E.bnplugin_command  )) *\) *)
-  (* (\* let bnget_valid_plugin_commands = F.foreign  "BNGetValidPluginCommands" (T.ptr bn_binary_view   @-> T.ptr T.size_t   @-> returning (T.ptr E.bnplugin_command  )) *\) *)
-  (* (\* let bnget_valid_plugin_commands_for_address = F.foreign  "BNGetValidPluginCommandsForAddress" (T.ptr bn_binary_view   @->T.uint64_t  @-> T.ptr T.size_t   @-> returning (T.ptr E.bnplugin_command  )) *\) *)
-  (* (\* let bnget_valid_plugin_commands_for_range = F.foreign  "BNGetValidPluginCommandsForRange" (T.ptr bn_binary_view   @->T.uint64_t  @->T.uint64_t  @-> T.ptr T.size_t   @-> returning (T.ptr E.bnplugin_command  )) *\) *)
-  (* (\* let bnget_valid_plugin_commands_for_function = F.foreign  "BNGetValidPluginCommandsForFunction" (T.ptr bn_binary_view   @-> T.ptr bn_function   @-> T.ptr T.size_t   @-> returning (T.ptr E.bnplugin_command  )) *\) *)
-  (* (\* let bnfree_plugin_command_list = F.foreign  "BNFreePluginCommandList" (T.ptr E.bnplugin_command   @-> returning (T.void )) *\) *)
-  (* (\* let bncreate_calling_convention = F.foreign  "BNCreateCallingConvention" (T.ptr bn_architecture   @-> T.string   @-> T.ptr E.bncustom_calling_convention   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnregister_calling_convention = F.foreign  "BNRegisterCallingConvention" (T.ptr bn_architecture   @-> T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bnnew_calling_convention_reference = F.foreign  "BNNewCallingConventionReference" (T.ptr E.bncalling_convention   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnfree_calling_convention = F.foreign  "BNFreeCallingConvention" (T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bnget_architecture_calling_conventions = F.foreign  "BNGetArchitectureCallingConventions" (T.ptr bn_architecture   @-> T.ptr T.size_t   @-> returning (T.ptr T.ptr E.bncalling_convention   )) *\) *)
-  (* (\* let bnfree_calling_convention_list = F.foreign  "BNFreeCallingConventionList" (T.ptr T.ptr E.bncalling_convention    @-> T.int  @-> returning (T.void )) *\) *)
-  (* (\* let bnget_architecture_calling_convention_by_name = F.foreign  "BNGetArchitectureCallingConventionByName" (T.ptr bn_architecture   @-> T.string   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnget_calling_convention_architecture = F.foreign  "BNGetCallingConventionArchitecture" (T.ptr E.bncalling_convention   @-> returning (T.ptr bn_architecture  )) *\) *)
-  (* (\* let bnget_calling_convention_name = F.foreign  "BNGetCallingConventionName" (T.ptr E.bncalling_convention   @-> returning (T.string  )) *\) *)
-  (* (\* let bnget_caller_saved_registers = F.foreign  "BNGetCallerSavedRegisters" (T.ptr E.bncalling_convention   @-> T.ptr T.size_t   @-> returning (T.ptrT.uint32_t  )) *\) *)
-  (* (\* let bnget_integer_argument_registers = F.foreign  "BNGetIntegerArgumentRegisters" (T.ptr E.bncalling_convention   @-> T.ptr T.size_t   @-> returning (T.ptrT.uint32_t  )) *\) *)
-  (* (\* let bnget_float_argument_registers = F.foreign  "BNGetFloatArgumentRegisters" (T.ptr E.bncalling_convention   @-> T.ptr T.size_t   @-> returning (T.ptrT.uint32_t  )) *\) *)
-  (* (\* let bnare_argument_registers_shared_index = F.foreign  "BNAreArgumentRegistersSharedIndex" (returning (T.int )) *\) *)
-  (* (\* let bnis_stack_reserved_for_argument_registers = F.foreign  "BNIsStackReservedForArgumentRegisters" (returning (T.int )) *\) *)
-  (* (\* let bnget_integer_return_value_register = F.foreign  "BNGetIntegerReturnValueRegister" (T.ptr E.bncalling_convention   @-> returning (uint32_t )) *\) *)
-  (* (\* let bnget_high_integer_return_value_register = F.foreign  "BNGetHighIntegerReturnValueRegister" (T.ptr E.bncalling_convention   @-> returning (uint32_t )) *\) *)
-  (* (\* let bnget_float_return_value_register = F.foreign  "BNGetFloatReturnValueRegister" (T.ptr E.bncalling_convention   @-> returning (uint32_t )) *\) *)
-  (* (\* let bnget_architecture_default_calling_convention = F.foreign  "BNGetArchitectureDefaultCallingConvention" (T.ptr bn_architecture   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnget_architecture_cdecl_calling_convention = F.foreign  "BNGetArchitectureCdeclCallingConvention" (T.ptr bn_architecture   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnget_architecture_stdcall_calling_convention = F.foreign  "BNGetArchitectureStdcallCallingConvention" (T.ptr bn_architecture   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnget_architecture_fastcall_calling_convention = F.foreign  "BNGetArchitectureFastcallCallingConvention" (T.ptr bn_architecture   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnset_architecture_default_calling_convention = F.foreign  "BNSetArchitectureDefaultCallingConvention" (T.ptr bn_architecture   @-> T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bnset_architecture_cdecl_calling_convention = F.foreign  "BNSetArchitectureCdeclCallingConvention" (T.ptr bn_architecture   @-> T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bnset_architecture_stdcall_calling_convention = F.foreign  "BNSetArchitectureStdcallCallingConvention" (T.ptr bn_architecture   @-> T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bnset_architecture_fastcall_calling_convention = F.foreign  "BNSetArchitectureFastcallCallingConvention" (T.ptr bn_architecture   @-> T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bncreate_platform = F.foreign  "BNCreatePlatform" (T.ptr bn_architecture   @-> T.string   @-> returning (T.ptr bn_platform  )) *\) *)
-  (* (\* let bnregister_platform = F.foreign  "BNRegisterPlatform" (T.string   @-> T.ptr bn_platform   @-> returning (T.void )) *\) *)
-  (* (\* let bnnew_platform_reference = F.foreign  "BNNewPlatformReference" (T.ptr bn_platform   @-> returning (T.ptr bn_platform  )) *\) *)
-  (* (\* let bnfree_platform = F.foreign  "BNFreePlatform" (T.ptr bn_platform   @-> returning (T.void )) *\) *)
-  (* (\* let bnget_platform_name = F.foreign  "BNGetPlatformName" (T.ptr bn_platform   @-> returning (T.string  )) *\) *)
-  (* (\* let bnget_platform_architecture = F.foreign  "BNGetPlatformArchitecture" (T.ptr bn_platform   @-> returning (T.ptr bn_architecture  )) *\) *)
-  (* (\* let bnget_platform_by_name = F.foreign  "BNGetPlatformByName" (T.string   @-> returning (T.ptr bn_platform  )) *\) *)
-  (* (\* let bnget_platform_list = F.foreign  "BNGetPlatformList" (T.ptr T.size_t   @-> returning (T.ptr T.ptr bn_platform   )) *\) *)
-  (* (\* let bnget_platform_list_by_architecture = F.foreign  "BNGetPlatformListByArchitecture" (T.ptr bn_architecture   @-> T.ptr T.size_t   @-> returning (T.ptr T.ptr bn_platform   )) *\) *)
-  (* (\* let bnget_platform_list_by_os = F.foreign  "BNGetPlatformListByOS" (T.string   @-> T.ptr T.size_t   @-> returning (T.ptr T.ptr bn_platform   )) *\) *)
-  (* (\* let bnget_platform_list_by_osand_architecture = F.foreign  "BNGetPlatformListByOSAndArchitecture" (T.string   @-> T.ptr bn_architecture   @-> T.ptr T.size_t   @-> returning (T.ptr T.ptr bn_platform   )) *\) *)
-  (* (\* let bnfree_platform_list = F.foreign  "BNFreePlatformList" (T.ptr T.ptr bn_platform    @-> T.int  @-> returning (T.void )) *\) *)
-  (* (\* let bnget_platform_oslist = F.foreign  "BNGetPlatformOSList" (T.ptr T.size_t   @-> returning (T.ptr T.string   )) *\) *)
-  (* (\* let bnfree_platform_oslist = F.foreign  "BNFreePlatformOSList" (T.ptr T.string    @-> T.int  @-> returning (T.void )) *\) *)
-  (* (\* let bnget_platform_default_calling_convention = F.foreign  "BNGetPlatformDefaultCallingConvention" (T.ptr bn_platform   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnget_platform_cdecl_calling_convention = F.foreign  "BNGetPlatformCdeclCallingConvention" (T.ptr bn_platform   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnget_platform_stdcall_calling_convention = F.foreign  "BNGetPlatformStdcallCallingConvention" (T.ptr bn_platform   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnget_platform_fastcall_calling_convention = F.foreign  "BNGetPlatformFastcallCallingConvention" (T.ptr bn_platform   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnget_platform_calling_conventions = F.foreign  "BNGetPlatformCallingConventions" (T.ptr bn_platform   @-> T.ptr T.size_t   @-> returning (T.ptr T.ptr E.bncalling_convention   )) *\) *)
-  (* (\* let bnget_platform_system_call_convention = F.foreign  "BNGetPlatformSystemCallConvention" (T.ptr bn_platform   @-> returning (T.ptr E.bncalling_convention  )) *\) *)
-  (* (\* let bnregister_platform_calling_convention = F.foreign  "BNRegisterPlatformCallingConvention" (T.ptr bn_platform   @-> T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bnregister_platform_default_calling_convention = F.foreign  "BNRegisterPlatformDefaultCallingConvention" (T.ptr bn_platform   @-> T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bnregister_platform_cdecl_calling_convention = F.foreign  "BNRegisterPlatformCdeclCallingConvention" (T.ptr bn_platform   @-> T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bnregister_platform_stdcall_calling_convention = F.foreign  "BNRegisterPlatformStdcallCallingConvention" (T.ptr bn_platform   @-> T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bnregister_platform_fastcall_calling_convention = F.foreign  "BNRegisterPlatformFastcallCallingConvention" (T.ptr bn_platform   @-> T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bnset_platform_system_call_convention = F.foreign  "BNSetPlatformSystemCallConvention" (T.ptr bn_platform   @-> T.ptr E.bncalling_convention   @-> returning (T.void )) *\) *)
-  (* (\* let bnget_architecture_standalone_platform = F.foreign  "BNGetArchitectureStandalonePlatform" (T.ptr bn_architecture   @-> returning (T.ptr bn_platform  )) *\) *)
-  (* (\* let bnget_related_platform = F.foreign  "BNGetRelatedPlatform" (T.ptr bn_platform   @-> T.ptr bn_architecture   @-> returning (T.ptr bn_platform  )) *\) *)
-  (* (\* let bnadd_related_platform = F.foreign  "BNAddRelatedPlatform" (T.ptr bn_platform   @-> T.ptr bn_architecture   @-> T.ptr bn_platform   @-> returning (T.void )) *\) *)
-  (* (\* let bnget_associated_platform_by_address = F.foreign  "BNGetAssociatedPlatformByAddress" (T.ptr bn_platform   @-> T.ptrT.uint64_t   @-> returning (T.ptr bn_platform  )) *\) *)
-  (* (\* let bndemangle_ms = F.foreign  "BNDemangleMS" (returning (T.int )) *\) *)
-  (* (\* let bnregister_scripting_provider = F.foreign  "BNRegisterScriptingProvider" (T.string   @-> T.ptr E.bnscripting_provider_callbacks   @-> returning (T.ptr E.bnscripting_provider  )) *\) *)
-  (* (\* let bnget_scripting_provider_list = F.foreign  "BNGetScriptingProviderList" (T.ptr T.size_t   @-> returning (T.ptr T.ptr E.bnscripting_provider   )) *\) *)
-  (* (\* let bnfree_scripting_provider_list = F.foreign  "BNFreeScriptingProviderList" (T.ptr T.ptr E.bnscripting_provider    @-> returning (T.void )) *\) *)
-  (* (\* let bnget_scripting_provider_by_name = F.foreign  "BNGetScriptingProviderByName" (T.string   @-> returning (T.ptr E.bnscripting_provider  )) *\) *)
-  (* (\* let bnget_scripting_provider_name = F.foreign  "BNGetScriptingProviderName" (T.ptr E.bnscripting_provider   @-> returning (T.string  )) *\) *)
-  (* (\* let bncreate_scripting_provider_instance = F.foreign  "BNCreateScriptingProviderInstance" (T.ptr E.bnscripting_provider   @-> returning (T.ptr E.bnscripting_instance  )) *\) *)
-  (* (\* let bninit_scripting_instance = F.foreign  "BNInitScriptingInstance" (T.ptr E.bnscripting_provider   @-> T.ptr E.bnscripting_instance_callbacks   @-> returning (T.ptr E.bnscripting_instance  )) *\) *)
-  (* (\* let bnnew_scripting_instance_reference = F.foreign  "BNNewScriptingInstanceReference" (T.ptr E.bnscripting_instance   @-> returning (T.ptr E.bnscripting_instance  )) *\) *)
-  (* (\* let bnfree_scripting_instance = F.foreign  "BNFreeScriptingInstance" (T.ptr E.bnscripting_instance   @-> returning (T.void )) *\) *)
-  (* (\* let bnnotify_output_for_scripting_instance = F.foreign  "BNNotifyOutputForScriptingInstance" (T.ptr E.bnscripting_instance   @-> T.string   @-> returning (T.void )) *\) *)
-  (* (\* let bnnotify_error_for_scripting_instance = F.foreign  "BNNotifyErrorForScriptingInstance" (T.ptr E.bnscripting_instance   @-> T.string   @-> returning (T.void )) *\) *)
-  (* (\* let bnnotify_input_ready_state_for_scripting_instance = F.foreign  "BNNotifyInputReadyStateForScriptingInstance" (T.ptr E.bnscripting_instance   @-> enum E.bnscripting_provider_input_ready_state  @-> returning (T.void )) *\) *)
-  (* (\* let bnregister_scripting_instance_output_listener = F.foreign  "BNRegisterScriptingInstanceOutputListener" (T.ptr E.bnscripting_instance   @-> T.ptr E.bnscripting_output_listener   @-> returning (T.void )) *\) *)
-  (* (\* let bnunregister_scripting_instance_output_listener = F.foreign  "BNUnregisterScriptingInstanceOutputListener" (T.ptr E.bnscripting_instance   @-> T.ptr E.bnscripting_output_listener   @-> returning (T.void )) *\) *)
-  (* (\* let bnget_scripting_instance_input_ready_state = F.foreign  "BNGetScriptingInstanceInputReadyState" (T.ptr E.bnscripting_instance   @-> returning (enum E.bnscripting_provider_input_ready_state )) *\) *)
-  (* (\* let bnexecute_script_input = F.foreign  "BNExecuteScriptInput" (T.ptr E.bnscripting_instance   @-> T.string   @-> returning (enum E.bnscripting_provider_execute_result )) *\) *)
-  (* (\* let bnset_scripting_instance_current_binary_view = F.foreign  "BNSetScriptingInstanceCurrentBinaryView" (T.ptr E.bnscripting_instance   @-> T.ptr bn_binary_view   @-> returning (T.void )) *\) *)
-  (* (\* let bnset_scripting_instance_current_function = F.foreign  "BNSetScriptingInstanceCurrentFunction" (T.ptr E.bnscripting_instance   @-> T.ptr bn_function   @-> returning (T.void )) *\) *)
-  (* (\* let bnset_scripting_instance_current_basic_block = F.foreign  "BNSetScriptingInstanceCurrentBasicBlock" (T.ptr E.bnscripting_instance   @-> T.ptr bn_basicblock   @-> returning (T.void )) *\) *)
-  (* (\* let bnset_scripting_instance_current_address = F.foreign  "BNSetScriptingInstanceCurrentAddress" (T.ptr E.bnscripting_instance   @->T.uint64_t  @-> returning (T.void )) *\) *)
-  (* (\* let bnset_scripting_instance_current_selection = F.foreign  "BNSetScriptingInstanceCurrentSelection" (T.ptr E.bnscripting_instance   @->T.uint64_t  @->T.uint64_t  @-> returning (T.void )) *\) *)
+  let bnpreprocess_source = F.foreign  "BNPreprocessSource"
+      (T.string @-> T.string @-> T.ptr T.string @-> T.ptr T.string @-> T.ptr T.string @-> T.size_t @-> returning T.bool)
+  let bnparse_types_from_source = F.foreign  "BNParseTypesFromSource"
+      (T.ptr bn_architecture @-> T.string @-> T.string @-> T.ptr bntype_parser_result @-> T.ptr T.string @-> T.ptr T.string @-> T.size_t @-> returning T.bool )
+  let bnparse_types_from_source_file = F.foreign  "BNParseTypesFromSourceFile"
+      (T.ptr bn_architecture @-> T.string @-> T.ptr bntype_parser_result @-> T.ptr T.string @-> T.ptr T.string @-> T.size_t @-> returning T.bool )
+  let bnfree_type_parser_result = F.foreign  "BNFreeTypeParserResult" (T.ptr bntype_parser_result   @-> returning (T.void ))
+  let bnget_update_channels = F.foreign  "BNGetUpdateChannels" (T.ptr T.size_t   @-> T.ptr T.string    @-> returning (T.ptr E.bnupdate_channel  ))
+  let bnfree_update_channel_list = F.foreign  "BNFreeUpdateChannelList" (T.ptr E.bnupdate_channel   @-> T.size_t  @-> returning (T.void ))
+  let bnget_update_channel_versions = F.foreign  "BNGetUpdateChannelVersions" (T.string   @-> T.ptr T.size_t   @-> T.ptr T.string    @-> returning (T.ptr E.bnupdate_version  ))
+  let bnfree_update_channel_version_list = F.foreign  "BNFreeUpdateChannelVersionList" (T.ptr E.bnupdate_version   @-> T.size_t  @-> returning (T.void ))
+  let bnare_updates_available = F.foreign  "BNAreUpdatesAvailable" (T.string @-> T.ptr T.string @-> returning (T.bool ))
+  let bnupdate_to_version = F.foreign  "BNUpdateToVersion"
+      (T.string   @-> T.string   @-> T.ptr T.string @-> T.static_funptr T.(T.ptr T.void @-> T.uint64_t @-> T.uint64_t @-> returning T.bool) @-> T.ptr T.void   @-> returning (bnupdateresult ))
+  let bnupdate_to_latest_version = F.foreign  "BNUpdateToLatestVersion" 
+      (T.string   @-> T.ptr T.string @-> T.static_funptr T.(T.ptr T.void @-> T.uint64_t @-> T.uint64_t @-> returning T.bool) @-> T.ptr T.void   @-> returning (bnupdateresult ))
+  let bnare_auto_updates_enabled = F.foreign  "BNAreAutoUpdatesEnabled" (T.void @-> returning (T.bool))
+  let bnset_auto_updates_enabled = F.foreign  "BNSetAutoUpdatesEnabled" (T.bool  @-> returning (T.void ))
+  let bnget_time_since_last_update_check = F.foreign  "BNGetTimeSinceLastUpdateCheck" (T.void @-> returning (T.uint64_t ))
+  let bnupdates_checked = F.foreign  "BNUpdatesChecked" (T.void @-> returning (T.void ))
+  let bnget_active_update_channel = F.foreign  "BNGetActiveUpdateChannel" (T.void @-> returning (T.string  ))
+  let bnset_active_update_channel = F.foreign  "BNSetActiveUpdateChannel" (T.string @-> returning (T.void ))
+  let bnis_update_installation_pending = F.foreign  "BNIsUpdateInstallationPending" (T.void @-> returning (T.bool ))
+  let bninstall_pending_update = F.foreign  "BNInstallPendingUpdate" (T.ptr T.string @-> returning (T.void ))
+  let bnget_all_plugin_commands = F.foreign  "BNGetAllPluginCommands" (T.ptr T.size_t   @-> returning (T.ptr E.bnplugin_command  ))
+  let bnget_valid_plugin_commands = F.foreign  "BNGetValidPluginCommands" (T.ptr bn_binary_view   @-> T.ptr T.size_t   @-> returning (T.ptr E.bnplugin_command  ))
+  let bnget_valid_plugin_commands_for_address = F.foreign  "BNGetValidPluginCommandsForAddress" (T.ptr bn_binary_view   @->T.uint64_t  @-> T.ptr T.size_t   @-> returning (T.ptr E.bnplugin_command  ))
+  let bnget_valid_plugin_commands_for_range = F.foreign  "BNGetValidPluginCommandsForRange" (T.ptr bn_binary_view   @->T.uint64_t  @->T.uint64_t  @-> T.ptr T.size_t   @-> returning (T.ptr E.bnplugin_command  ))
+  let bnget_valid_plugin_commands_for_function = F.foreign  "BNGetValidPluginCommandsForFunction" (T.ptr bn_binary_view   @-> T.ptr bn_function   @-> T.ptr T.size_t   @-> returning (T.ptr E.bnplugin_command  ))
+  let bnfree_plugin_command_list = F.foreign  "BNFreePluginCommandList" (T.ptr E.bnplugin_command   @-> returning (T.void ))
+  let bncreate_calling_convention = F.foreign  "BNCreateCallingConvention" (T.ptr bn_architecture   @-> T.string   @-> T.ptr E.bncustom_calling_convention   @-> returning (T.ptr E.bn_callingconvention  ))
+  let bnregister_calling_convention = F.foreign  "BNRegisterCallingConvention" (T.ptr bn_architecture   @-> T.ptr E.bn_callingconvention   @-> returning (T.void))
+  let bnnew_calling_convention_reference = F.foreign  "BNNewCallingConventionReference" (T.ptr E.bn_callingconvention   @-> returning (T.ptr E.bn_callingconvention))
+  let bnfree_calling_convention = F.foreign  "BNFreeCallingConvention" (T.ptr E.bn_callingconvention   @-> returning (T.void ))
+  let bnget_architecture_calling_conventions = F.foreign  "BNGetArchitectureCallingConventions" (T.ptr bn_architecture   @-> T.ptr T.size_t   @-> returning (T.ptr (T.ptr E.bn_callingconvention)))
+  let bnfree_calling_convention_list = F.foreign  "BNFreeCallingConventionList" (T.ptr (T.ptr E.bn_callingconvention) @-> T.size_t  @-> returning (T.void ))
+  let bnget_architecture_calling_convention_by_name = F.foreign  "BNGetArchitectureCallingConventionByName" (T.ptr bn_architecture   @-> T.string   @-> returning (T.ptr E.bn_callingconvention))
+  let bnget_calling_convention_architecture = F.foreign  "BNGetCallingConventionArchitecture" (T.ptr E.bn_callingconvention   @-> returning (T.ptr bn_architecture  ))
+  let bnget_calling_convention_name = F.foreign  "BNGetCallingConventionName" (T.ptr E.bn_callingconvention   @-> returning (T.string  ))
+  let bnget_caller_saved_registers = F.foreign  "BNGetCallerSavedRegisters" (T.ptr bn_callingconvention   @-> T.ptr T.size_t   @-> returning (T.ptr T.uint32_t  ))
+  let bnget_integer_argument_registers = F.foreign  "BNGetIntegerArgumentRegisters" (T.ptr bn_callingconvention   @-> T.ptr T.size_t   @-> returning (T.ptr T.uint32_t  ))
+  let bnget_float_argument_registers = F.foreign  "BNGetFloatArgumentRegisters" (T.ptr bn_callingconvention   @-> T.ptr T.size_t   @-> returning (T.ptr T.uint32_t  ))
+  let bnare_argument_registers_shared_index = F.foreign  "BNAreArgumentRegistersSharedIndex" (T.ptr bn_callingconvention @-> returning (T.bool))
+  let bnis_stack_reserved_for_argument_registers = F.foreign  "BNIsStackReservedForArgumentRegisters" (T.ptr bn_callingconvention @-> returning (T.bool))
+  let bnget_integer_return_value_register = F.foreign  "BNGetIntegerReturnValueRegister" (T.ptr bn_callingconvention   @-> returning (T.uint32_t ))
+  let bnget_high_integer_return_value_register = F.foreign  "BNGetHighIntegerReturnValueRegister" (T.ptr bn_callingconvention   @-> returning (T.uint32_t ))
+  let bnget_float_return_value_register = F.foreign  "BNGetFloatReturnValueRegister" (T.ptr bn_callingconvention   @-> returning (T.uint32_t))
+  let bnget_architecture_default_calling_convention = F.foreign  "BNGetArchitectureDefaultCallingConvention" (T.ptr bn_architecture   @-> returning (T.ptr bn_callingconvention  ))
+  let bnget_architecture_cdecl_calling_convention = F.foreign  "BNGetArchitectureCdeclCallingConvention" (T.ptr bn_architecture @-> returning (T.ptr bn_callingconvention  ))
+  let bnget_architecture_stdcall_calling_convention = F.foreign  "BNGetArchitectureStdcallCallingConvention" (T.ptr bn_architecture @-> returning (T.ptr bn_callingconvention  ))
+  let bnget_architecture_fastcall_calling_convention = F.foreign  "BNGetArchitectureFastcallCallingConvention" (T.ptr bn_architecture  @-> returning (T.ptr bn_callingconvention  ))
+  let bnset_architecture_default_calling_convention = F.foreign  "BNSetArchitectureDefaultCallingConvention" (T.ptr bn_architecture   @-> T.ptr bn_callingconvention   @-> returning (T.void ))
+  let bnset_architecture_cdecl_calling_convention = F.foreign  "BNSetArchitectureCdeclCallingConvention" (T.ptr bn_architecture   @-> T.ptr bn_callingconvention   @-> returning (T.void ))
+  let bnset_architecture_stdcall_calling_convention = F.foreign  "BNSetArchitectureStdcallCallingConvention" (T.ptr bn_architecture   @-> T.ptr bn_callingconvention   @-> returning (T.void ))
+  let bnset_architecture_fastcall_calling_convention = F.foreign  "BNSetArchitectureFastcallCallingConvention" (T.ptr bn_architecture   @-> T.ptr bn_callingconvention   @-> returning (T.void ))
+  let bncreate_platform = F.foreign  "BNCreatePlatform" (T.ptr bn_architecture   @-> T.string   @-> returning (T.ptr bn_platform  ))
+  let bnregister_platform = F.foreign  "BNRegisterPlatform" (T.string   @-> T.ptr bn_platform   @-> returning (T.void ))
+  let bnnew_platform_reference = F.foreign  "BNNewPlatformReference" (T.ptr bn_platform   @-> returning (T.ptr bn_platform  ))
+  let bnfree_platform = F.foreign  "BNFreePlatform" (T.ptr bn_platform   @-> returning (T.void ))
+  let bnget_platform_name = F.foreign  "BNGetPlatformName" (T.ptr bn_platform   @-> returning (T.string  ))
+  let bnget_platform_architecture = F.foreign  "BNGetPlatformArchitecture" (T.ptr bn_platform   @-> returning (T.ptr bn_architecture  ))
+  let bnget_platform_by_name = F.foreign  "BNGetPlatformByName" (T.string   @-> returning (T.ptr bn_platform  ))
+  let bnget_platform_list = F.foreign  "BNGetPlatformList" (T.ptr T.size_t   @-> returning (T.ptr (T.ptr bn_platform)))
+  let bnget_platform_list_by_architecture = F.foreign  "BNGetPlatformListByArchitecture" (T.ptr bn_architecture   @-> T.ptr T.size_t   @-> returning (T.ptr (T.ptr bn_platform)))
+  let bnget_platform_list_by_os = F.foreign  "BNGetPlatformListByOS" (T.string   @-> T.ptr T.size_t   @-> returning (T.ptr (T.ptr bn_platform)))
+  let bnget_platform_list_by_osand_architecture = F.foreign  "BNGetPlatformListByOSAndArchitecture" (T.string   @-> T.ptr bn_architecture   @-> T.ptr T.size_t   @-> returning (T.ptr (T.ptr bn_platform)))
+  let bnfree_platform_list = F.foreign  "BNFreePlatformList" (T.ptr (T.ptr bn_platform) @-> T.size_t  @-> returning (T.void ))
+  let bnget_platform_oslist = F.foreign  "BNGetPlatformOSList" (T.ptr T.size_t   @-> returning (T.ptr T.string   ))
+  let bnfree_platform_oslist = F.foreign  "BNFreePlatformOSList" (T.ptr T.string    @-> T.size_t  @-> returning (T.void ))
+  let bnget_platform_default_calling_convention = F.foreign  "BNGetPlatformDefaultCallingConvention" (T.ptr bn_platform   @-> returning (T.ptr bn_callingconvention  ))
+  let bnget_platform_cdecl_calling_convention = F.foreign  "BNGetPlatformCdeclCallingConvention" (T.ptr bn_platform   @-> returning (T.ptr bn_callingconvention  ))
+  let bnget_platform_stdcall_calling_convention = F.foreign  "BNGetPlatformStdcallCallingConvention" (T.ptr bn_platform   @-> returning (T.ptr bn_callingconvention  ))
+  let bnget_platform_fastcall_calling_convention = F.foreign  "BNGetPlatformFastcallCallingConvention" (T.ptr bn_platform   @-> returning (T.ptr bn_callingconvention  ))
+  let bnget_platform_calling_conventions = F.foreign  "BNGetPlatformCallingConventions" (T.ptr bn_platform   @-> T.ptr T.size_t   @-> returning (T.ptr (T.ptr bn_callingconvention)))
+  let bnget_platform_system_call_convention = F.foreign  "BNGetPlatformSystemCallConvention" (T.ptr bn_platform   @-> returning (T.ptr bn_callingconvention  ))
+  let bnregister_platform_calling_convention = F.foreign  "BNRegisterPlatformCallingConvention" (T.ptr bn_platform   @-> T.ptr bn_callingconvention   @-> returning (T.void ))
+  let bnregister_platform_default_calling_convention = F.foreign  "BNRegisterPlatformDefaultCallingConvention" (T.ptr bn_platform   @-> T.ptr bn_callingconvention   @-> returning (T.void ))
+  let bnregister_platform_cdecl_calling_convention = F.foreign  "BNRegisterPlatformCdeclCallingConvention" (T.ptr bn_platform   @-> T.ptr bn_callingconvention   @-> returning (T.void ))
+  let bnregister_platform_stdcall_calling_convention = F.foreign  "BNRegisterPlatformStdcallCallingConvention" (T.ptr bn_platform   @-> T.ptr bn_callingconvention   @-> returning (T.void ))
+  let bnregister_platform_fastcall_calling_convention = F.foreign  "BNRegisterPlatformFastcallCallingConvention" (T.ptr bn_platform   @-> T.ptr bn_callingconvention   @-> returning (T.void ))
+  let bnset_platform_system_call_convention = F.foreign  "BNSetPlatformSystemCallConvention" (T.ptr bn_platform   @-> T.ptr bn_callingconvention   @-> returning (T.void ))
+  let bnget_architecture_standalone_platform = F.foreign  "BNGetArchitectureStandalonePlatform" (T.ptr bn_architecture   @-> returning (T.ptr bn_platform  ))
+  let bnget_related_platform = F.foreign  "BNGetRelatedPlatform" (T.ptr bn_platform   @-> T.ptr bn_architecture   @-> returning (T.ptr bn_platform  ))
+  let bnadd_related_platform = F.foreign  "BNAddRelatedPlatform" (T.ptr bn_platform   @-> T.ptr bn_architecture   @-> T.ptr bn_platform   @-> returning (T.void ))
+  let bnget_associated_platform_by_address = F.foreign  "BNGetAssociatedPlatformByAddress" (T.ptr bn_platform   @-> T.ptr T.uint64_t   @-> returning (T.ptr bn_platform))
+  let bndemangle_ms = F.foreign  "BNDemangleMS"
+      (T.ptr bn_architecture @-> T.string @-> T.ptr (T.ptr bn_type) @-> T.ptr (T.ptr (T.string)) @-> T.ptr T.size_t @-> returning (T.bool ))
+  let bnregister_scripting_provider = F.foreign  "BNRegisterScriptingProvider" (T.string   @-> T.ptr E.bnscripting_provider_callbacks   @-> returning (T.ptr E.bn_scripting_provider  ))
+  let bnget_scripting_provider_list = F.foreign  "BNGetScriptingProviderList" (T.ptr T.size_t   @-> returning (T.ptr (T.ptr E.bn_scripting_provider)))
+  let bnfree_scripting_provider_list = F.foreign  "BNFreeScriptingProviderList" (T.ptr (T.ptr E.bn_scripting_provider)    @-> returning (T.void ))
+  let bnget_scripting_provider_by_name = F.foreign  "BNGetScriptingProviderByName" (T.string   @-> returning (T.ptr E.bn_scripting_provider  ))
+  let bnget_scripting_provider_name = F.foreign  "BNGetScriptingProviderName" (T.ptr E.bn_scripting_provider   @-> returning (T.string  ))
+  let bncreate_scripting_provider_instance = F.foreign  "BNCreateScriptingProviderInstance" (T.ptr E.bn_scripting_provider   @-> returning (T.ptr E.bnscripting_instance  ))
+  let bninit_scripting_instance = F.foreign  "BNInitScriptingInstance" (T.ptr E.bn_scripting_provider   @-> T.ptr E.bnscripting_instance_callbacks   @-> returning (T.ptr E.bnscripting_instance  ))
+  let bnnew_scripting_instance_reference = F.foreign  "BNNewScriptingInstanceReference" (T.ptr E.bnscripting_instance   @-> returning (T.ptr E.bnscripting_instance  ))
+  let bnfree_scripting_instance = F.foreign  "BNFreeScriptingInstance" (T.ptr E.bnscripting_instance   @-> returning (T.void ))
+  let bnnotify_output_for_scripting_instance = F.foreign  "BNNotifyOutputForScriptingInstance" (T.ptr E.bnscripting_instance   @-> T.string   @-> returning (T.void ))
+  let bnnotify_error_for_scripting_instance = F.foreign  "BNNotifyErrorForScriptingInstance" (T.ptr E.bnscripting_instance   @-> T.string   @-> returning (T.void ))
+  let bnnotify_input_ready_state_for_scripting_instance = F.foreign  "BNNotifyInputReadyStateForScriptingInstance" (T.ptr E.bnscripting_instance   @-> E.bnscriptingproviderinputreadystate  @-> returning (T.void ))
+  let bnregister_scripting_instance_output_listener = F.foreign  "BNRegisterScriptingInstanceOutputListener" (T.ptr E.bnscripting_instance   @-> T.ptr E.bnscripting_output_listener   @-> returning (T.void ))
+  let bnunregister_scripting_instance_output_listener = F.foreign  "BNUnregisterScriptingInstanceOutputListener" (T.ptr E.bnscripting_instance   @-> T.ptr E.bnscripting_output_listener   @-> returning (T.void ))
+  let bnget_scripting_instance_input_ready_state = F.foreign  "BNGetScriptingInstanceInputReadyState" (T.ptr E.bnscripting_instance   @-> returning ( E.bnscriptingproviderinputreadystate ))
+  let bnset_scripting_instance_current_binary_view = F.foreign  "BNSetScriptingInstanceCurrentBinaryView" (T.ptr E.bnscripting_instance   @-> T.ptr bn_binary_view   @-> returning (T.void ))
+  let bnset_scripting_instance_current_function = F.foreign  "BNSetScriptingInstanceCurrentFunction" (T.ptr E.bnscripting_instance   @-> T.ptr bn_function   @-> returning (T.void ))
+  let bnset_scripting_instance_current_basic_block = F.foreign  "BNSetScriptingInstanceCurrentBasicBlock" (T.ptr E.bnscripting_instance   @-> T.ptr bn_basicblock   @-> returning (T.void ))
+  let bnset_scripting_instance_current_address = F.foreign  "BNSetScriptingInstanceCurrentAddress" (T.ptr E.bnscripting_instance   @->T.uint64_t  @-> returning (T.void ))
+  let bnset_scripting_instance_current_selection = F.foreign  "BNSetScriptingInstanceCurrentSelection" (T.ptr E.bnscripting_instance   @->T.uint64_t  @->T.uint64_t  @-> returning (T.void ))
   (* (\* let bnregister_main_thread = F.foreign  "BNRegisterMainThread" (T.ptr E.bnmain_thread_callbacks   @-> returning (T.void )) *\) *)
   (* (\* let bnnew_main_thread_action_reference = F.foreign  "BNNewMainThreadActionReference" (T.ptr E.bnmain_thread_action   @-> returning (T.ptr E.bnmain_thread_action  )) *\) *)
   (* (\* let bnfree_main_thread_action = F.foreign  "BNFreeMainThreadAction" (T.ptr E.bnmain_thread_action   @-> returning (T.void )) *\) *)
