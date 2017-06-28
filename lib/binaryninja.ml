@@ -14,13 +14,13 @@ module Function = Function
 module FunctionGraph = Functiongraph
 module Plugin = Plugin
 
-type bn_file_metadata = Ffi_bindings.bn_file_metadata Ctypes.structure Ctypes_static.ptr
-type bn_binary_view = Ffi_bindings.bn_binary_view Ctypes.structure Ctypes_static.ptr
-type bn_platform = Ffi_bindings.bn_platform Ctypes.structure Ctypes_static.ptr
-type bn_architecture = Ffi_bindings.bn_architecture Ctypes.structure Ctypes_static.ptr
-type bn_basicblock = Ffi_bindings.bn_basicblock Ctypes.structure Ctypes_static.ptr
+type bn_file_metadata = Typedefs.bn_file_metadata Ctypes.structure Ctypes_static.ptr
+type bn_binary_view = Typedefs.bn_binary_view Ctypes.structure Ctypes_static.ptr
+type bn_platform = Typedefs.bn_platform Ctypes.structure Ctypes_static.ptr
+type bn_architecture = Typedefs.bn_architecture Ctypes.structure Ctypes_static.ptr
+type bn_basicblock = Typedefs.bn_basicblock Ctypes.structure Ctypes_static.ptr
 
-type analysis_state = Ffi_bindings.bn_analysis_state =
+type analysis_state = Typedefs.bn_analysis_state =
   | IdleState
   | DisassembleState
   | AnalyzeState

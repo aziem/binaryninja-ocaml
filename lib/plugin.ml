@@ -47,17 +47,17 @@ let write_c () =
   let f = open_out "./binding.c" in
   let fmtr = Format.formatter_of_out_channel f in
   c_prologue fmtr; c_init_func fmtr; c_binja_plugin_func fmtr
-type action_for_command = bn_binary_view Ctypes.structure Ctypes_static.ptr -> unit 
-type is_valid_for_command = bn_binary_view Ctypes.structure Ctypes_static.ptr -> bool
+type action_for_command = Typedefs.bn_binary_view Ctypes.structure Ctypes_static.ptr -> unit 
+type is_valid_for_command = Typedefs.bn_binary_view Ctypes.structure Ctypes_static.ptr -> bool
 
-type action_for_range = bn_binary_view Ctypes.structure Ctypes_static.ptr -> Unsigned.uint64 -> Unsigned.uint64 -> unit
-type is_valid_for_range = bn_binary_view Ctypes.structure Ctypes_static.ptr -> Unsigned.uint64 -> Unsigned.uint64 -> bool
+type action_for_range = Typedefs.bn_binary_view Ctypes.structure Ctypes_static.ptr -> Unsigned.uint64 -> Unsigned.uint64 -> unit
+type is_valid_for_range = Typedefs.bn_binary_view Ctypes.structure Ctypes_static.ptr -> Unsigned.uint64 -> Unsigned.uint64 -> bool
 
-type action_for_address = bn_binary_view Ctypes.structure Ctypes_static.ptr -> Unsigned.uint64 -> unit
-type is_valid_for_address = bn_binary_view Ctypes.structure Ctypes_static.ptr -> Unsigned.uint64 -> bool
+type action_for_address = Typedefs.bn_binary_view Ctypes.structure Ctypes_static.ptr -> Unsigned.uint64 -> unit
+type is_valid_for_address = Typedefs.bn_binary_view Ctypes.structure Ctypes_static.ptr -> Unsigned.uint64 -> bool
 
-type action_for_function = bn_binary_view Ctypes.structure Ctypes_static.ptr -> bn_function Ctypes.structure Ctypes_static.ptr -> unit
-type is_valid_for_function = bn_binary_view Ctypes.structure Ctypes_static.ptr -> bn_function Ctypes.structure Ctypes_static.ptr -> bool
+type action_for_function = Typedefs.bn_binary_view Ctypes.structure Ctypes_static.ptr -> Typedefs.bn_function Ctypes.structure Ctypes_static.ptr -> unit
+type is_valid_for_function = Typedefs.bn_binary_view Ctypes.structure Ctypes_static.ptr -> Typedefs.bn_function Ctypes.structure Ctypes_static.ptr -> bool
 
 
 type action =

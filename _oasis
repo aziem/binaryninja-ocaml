@@ -23,7 +23,7 @@ Library binaryninja
 Library binaryninja_bindings
   Install: true
   Path: bindings
-  Modules: Ffi_bindings
+  Modules: Ffi_bindings, Ffi_types, Typedefs
   BuildDepends: ctypes.stubs
 
 Document binaryninja

@@ -6,7 +6,7 @@ open Ffi_bindings
 open B
 
 
-type bn_function = Ffi_bindings.bn_function Ctypes.structure Ctypes_static.ptr
+type bn_function = Typedefs.bn_function Ctypes.structure Ctypes_static.ptr
     
 let get_platform f =
   B.bn_get_function_platform f

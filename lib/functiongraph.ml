@@ -5,11 +5,11 @@ module B = Ffi_bindings.Bindings(Ffi_generated_types)(Ffi_generated)
 open Ffi_bindings
 open B
 
-type bn_functiongraph = Ffi_bindings.bn_functiongraph Ctypes.structure Ctypes_static.ptr
+type bn_functiongraph = Typedefs.bn_functiongraph Ctypes.structure Ctypes_static.ptr
 
-type bn_functiongraphblock = Ffi_bindings.bn_functiongraphblock Ctypes.structure Ctypes_static.ptr
+type bn_functiongraphblock = Typedefs.bn_functiongraphblock Ctypes.structure Ctypes_static.ptr
 
-type bn_function_graph_type =  Ffi_bindings.bn_function_graph_type = 
+type bn_function_graph_type =  Typedefs.bn_function_graph_type = 
   | BN_NormalFunctionGraph 
   | BN_LowLevelILFunctionGraph 
   | BN_LiftedILFunctionGraph

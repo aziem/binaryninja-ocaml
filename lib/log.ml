@@ -5,7 +5,7 @@ module B = Ffi_bindings.Bindings(Ffi_generated_types)(Ffi_generated)
 open Ffi_bindings
 open B
 
-type loglevel = Ffi_bindings.bn_log_level =
+type loglevel = Typedefs.bn_log_level =
   | BN_DebugLog
   | BN_InfoLog
   | BN_WarningLog

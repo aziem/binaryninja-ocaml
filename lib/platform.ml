@@ -3,7 +3,7 @@ open Ctypes
 
 
 module B = Ffi_bindings.Bindings(Ffi_generated_types)(Ffi_generated)
-type bn_platform = Ffi_bindings.bn_platform Ctypes.structure Ctypes_static.ptr 
+type bn_platform = Typedefs.bn_platform Ctypes.structure Ctypes_static.ptr 
 
 
 let create_platform arch name =

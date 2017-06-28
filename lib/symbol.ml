@@ -5,9 +5,9 @@ module B = Ffi_bindings.Bindings(Ffi_generated_types)(Ffi_generated)
 open Ffi_bindings
 open B
 
-type bn_symbol = Ffi_bindings.bn_symbol Ctypes.structure Ctypes_static.ptr
+type bn_symbol = Typedefs.bn_symbol Ctypes.structure Ctypes_static.ptr
 
-type bn_symbol_type = Ffi_bindings.bn_symbol_type = 
+type bn_symbol_type = Typedefs.bn_symbol_type = 
   | BN_FunctionSymbol 
   | BN_ImportAddressSymbol 
   | BN_ImportedFunctionSymbol 
