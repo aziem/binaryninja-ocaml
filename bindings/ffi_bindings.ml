@@ -24,6 +24,7 @@ type bn_functiongraph
 type bn_functiongraphblock
 type bn_symbol
 type bn_temporaryfile
+type bnbackground_task
 type bn_lowlevelilfunction
 type bn_type
 type bn_structure
@@ -1666,6 +1667,7 @@ struct
   let bn_binary_writer : bn_binary_writer Ctypes.structure T.typ = T.structure "BNBinaryWriter"
   let bn_data_buffer : bn_data_buffer Ctypes.structure T.typ = T.structure "BNDataBuffer"
   let bn_temporaryfile : bn_temporaryfile Ctypes.structure T.typ = T.structure "BNTemporaryFile"
+let bnbackground_task : bnbackground_task Ctypes.structure T.typ = T.structure "BNBackgroundTask"
   let bn_lowlevelilfunction : bn_lowlevelilfunction Ctypes.structure T.typ = T.structure "BNLowLevelILFunction"
   let bn_type : bn_type Ctypes.structure T.typ = T.structure "BNType"
   let bn_structure : bn_structure Ctypes.structure T.typ = T.structure "BNStructure"
@@ -2260,11 +2262,7 @@ struct
   let notes = T.field bnupdate_version "notes" (T.string)
   let time = T.field bnupdate_version "time" (T.uint64_t)
   let () = T.seal bnupdate_version
-
-
-
 end
-
 
 module Bindings (T : Cstubs_structs.TYPE with type 'a typ = 'a typ) (F : Cstubs.FOREIGN) =
 struct
@@ -3133,32 +3131,32 @@ struct
   let bnset_scripting_instance_current_basic_block = F.foreign  "BNSetScriptingInstanceCurrentBasicBlock" (T.ptr E.bnscripting_instance   @-> T.ptr bn_basicblock   @-> returning (T.void ))
   let bnset_scripting_instance_current_address = F.foreign  "BNSetScriptingInstanceCurrentAddress" (T.ptr E.bnscripting_instance   @->T.uint64_t  @-> returning (T.void ))
   let bnset_scripting_instance_current_selection = F.foreign  "BNSetScriptingInstanceCurrentSelection" (T.ptr E.bnscripting_instance   @->T.uint64_t  @->T.uint64_t  @-> returning (T.void ))
-  (* (\* let bnregister_main_thread = F.foreign  "BNRegisterMainThread" (T.ptr E.bnmain_thread_callbacks   @-> returning (T.void )) *\) *)
-  (* (\* let bnnew_main_thread_action_reference = F.foreign  "BNNewMainThreadActionReference" (T.ptr E.bnmain_thread_action   @-> returning (T.ptr E.bnmain_thread_action  )) *\) *)
-  (* (\* let bnfree_main_thread_action = F.foreign  "BNFreeMainThreadAction" (T.ptr E.bnmain_thread_action   @-> returning (T.void )) *\) *)
-  (* (\* let bnexecute_main_thread_action = F.foreign  "BNExecuteMainThreadAction" (T.ptr E.bnmain_thread_action   @-> returning (T.void )) *\) *)
-  (* (\* let bnis_main_thread_action_done = F.foreign  "BNIsMainThreadActionDone" (returning (T.int )) *\) *)
-  (* (\* let bnwait_for_main_thread_action = F.foreign  "BNWaitForMainThreadAction" (T.ptr E.bnmain_thread_action   @-> returning (T.void )) *\) *)
-  (* (\* let bnexecute_on_main_thread = F.foreign  "BNExecuteOnMainThread" (T.ptr T.void   @-> T.ptr void (void *\\)   @-> returning (T.ptr E.bnmain_thread_action  )) *\) *)
-  (* (\* let bnexecute_on_main_thread_and_wait = F.foreign  "BNExecuteOnMainThreadAndWait" (T.ptr T.void   @-> T.ptr void (void *\\)   @-> returning (T.void )) *\) *)
-  (* (\* let bnworker_enqueue = F.foreign  "BNWorkerEnqueue" (T.ptr T.void   @-> T.ptr void (void *\\)   @-> returning (T.void )) *\) *)
-  (* (\* let bnworker_priority_enqueue = F.foreign  "BNWorkerPriorityEnqueue" (T.ptr T.void   @-> T.ptr void (void *\\)   @-> returning (T.void )) *\) *)
-  (* (\* let bnworker_interactive_enqueue = F.foreign  "BNWorkerInteractiveEnqueue" (T.ptr T.void   @-> T.ptr void (void *\\)   @-> returning (T.void )) *\) *)
-  (* (\* let bnget_worker_thread_count = F.foreign  "BNGetWorkerThreadCount" (returning (T.int )) *\) *)
-  (* (\* let bnset_worker_thread_count = F.foreign  "BNSetWorkerThreadCount" (T.int  @-> returning (T.void )) *\) *)
-  (* (\* let bnbegin_background_task = F.foreign  "BNBeginBackgroundTask" (T.string   @-> bool  @-> returning (T.ptr E.bnbackground_task  )) *\) *)
-  (* (\* let bnfinish_background_task = F.foreign  "BNFinishBackgroundTask" (T.ptr E.bnbackground_task   @-> returning (T.void )) *\) *)
-  (* (\* let bnset_background_task_progress_text = F.foreign  "BNSetBackgroundTaskProgressText" (T.ptr E.bnbackground_task   @-> T.string   @-> returning (T.void )) *\) *)
-  (* (\* let bnis_background_task_cancelled = F.foreign  "BNIsBackgroundTaskCancelled" (returning (T.int )) *\) *)
-  (* (\* let bnget_running_background_tasks = F.foreign  "BNGetRunningBackgroundTasks" (T.ptr T.size_t   @-> returning (T.ptr T.ptr E.bnbackground_task   )) *\) *)
-  (* (\* let bnnew_background_task_reference = F.foreign  "BNNewBackgroundTaskReference" (T.ptr E.bnbackground_task   @-> returning (T.ptr E.bnbackground_task  )) *\) *)
-  (* (\* let bnfree_background_task = F.foreign  "BNFreeBackgroundTask" (T.ptr E.bnbackground_task   @-> returning (T.void )) *\) *)
-  (* (\* let bnfree_background_task_list = F.foreign  "BNFreeBackgroundTaskList" (T.ptr T.ptr E.bnbackground_task    @-> T.int  @-> returning (T.void )) *\) *)
-  (* (\* let bnget_background_task_progress_text = F.foreign  "BNGetBackgroundTaskProgressText" (T.ptr E.bnbackground_task   @-> returning (T.string  )) *\) *)
-  (* (\* let bncan_cancel_background_task = F.foreign  "BNCanCancelBackgroundTask" (returning (T.int )) *\) *)
-  (* (\* let bncancel_background_task = F.foreign  "BNCancelBackgroundTask" (T.ptr E.bnbackground_task   @-> returning (T.void )) *\) *)
-  (* (\* let bnis_background_task_finished = F.foreign  "BNIsBackgroundTaskFinished" (returning (T.int )) *\) *)
-  (* (\* let bnregister_interaction_handler = F.foreign  "BNRegisterInteractionHandler" (T.ptr E.bninteraction_handler_callbacks   @-> returning (T.void )) *\) *)
+  let bnregister_main_thread = F.foreign  "BNRegisterMainThread" (T.ptr E.bnmain_thread_callbacks   @-> returning (T.void ))
+  let bnnew_main_thread_action_reference = F.foreign  "BNNewMainThreadActionReference" (T.ptr E.bnmain_thread_action   @-> returning (T.ptr E.bnmain_thread_action  ))
+  let bnfree_main_thread_action = F.foreign  "BNFreeMainThreadAction" (T.ptr E.bnmain_thread_action   @-> returning (T.void ))
+  let bnexecute_main_thread_action = F.foreign  "BNExecuteMainThreadAction" (T.ptr E.bnmain_thread_action   @-> returning (T.void ))
+  let bnis_main_thread_action_done = F.foreign  "BNIsMainThreadActionDone" (T.ptr bnmain_thread_action @-> returning (T.bool ))
+  let bnwait_for_main_thread_action = F.foreign  "BNWaitForMainThreadAction" (T.ptr E.bnmain_thread_action   @-> returning (T.void ))
+  let bnexecute_on_main_thread = F.foreign  "BNExecuteOnMainThread" (T.ptr T.void   @-> T.static_funptr T.(T.ptr T.void @-> returning T.void) @-> returning (T.ptr E.bnmain_thread_action  ))
+  let bnexecute_on_main_thread_and_wait = F.foreign  "BNExecuteOnMainThreadAndWait" (T.ptr T.void   @-> T.static_funptr T.(T.ptr T.void @-> returning T.void) @-> returning (T.void))
+  let bnworker_enqueue = F.foreign  "BNWorkerEnqueue" (T.ptr T.void   @-> T.static_funptr T.(T.ptr T.void @-> returning T.void)  @-> returning (T.void ))
+  let bnworker_priority_enqueue = F.foreign  "BNWorkerPriorityEnqueue" (T.ptr T.void   @->T.static_funptr T.(T.ptr T.void @-> returning T.void)@-> returning (T.void ))
+  let bnworker_interactive_enqueue = F.foreign  "BNWorkerInteractiveEnqueue" (T.ptr T.void   @->  T.static_funptr T.(T.ptr T.void @-> returning T.void)@-> returning (T.void ))
+  let bnget_worker_thread_count = F.foreign  "BNGetWorkerThreadCount" (T.void @-> returning (T.size_t ))
+  let bnset_worker_thread_count = F.foreign  "BNSetWorkerThreadCount" (T.size_t  @-> returning (T.void ))
+  let bnbegin_background_task = F.foreign  "BNBeginBackgroundTask" (T.string   @-> bool  @-> returning (T.ptr E.bnbackground_task  ))
+  let bnfinish_background_task = F.foreign  "BNFinishBackgroundTask" (T.ptr E.bnbackground_task   @-> returning (T.void ))
+  let bnset_background_task_progress_text = F.foreign  "BNSetBackgroundTaskProgressText" (T.ptr E.bnbackground_task   @-> T.string   @-> returning (T.void ))
+  let bnis_background_task_cancelled = F.foreign  "BNIsBackgroundTaskCancelled" (T.ptr bnbackground_task @-> returning (T.bool))
+  let bnget_running_background_tasks = F.foreign  "BNGetRunningBackgroundTasks" (T.ptr T.size_t   @-> returning (T.ptr (T.ptr E.bnbackground_task )  ))
+  let bnnew_background_task_reference = F.foreign  "BNNewBackgroundTaskReference" (T.ptr E.bnbackground_task   @-> returning (T.ptr E.bnbackground_task  ))
+  let bnfree_background_task = F.foreign  "BNFreeBackgroundTask" (T.ptr E.bnbackground_task   @-> returning (T.void ))
+  let bnfree_background_task_list = F.foreign  "BNFreeBackgroundTaskList" (T.ptr (T.ptr E.bnbackground_task) @-> T.int  @-> returning (T.void ))
+  let bnget_background_task_progress_text = F.foreign  "BNGetBackgroundTaskProgressText" (T.ptr E.bnbackground_task   @-> returning (T.string  ))
+  let bncan_cancel_background_task = F.foreign  "BNCanCancelBackgroundTask" (T.ptr bnbackground_task @-> returning (T.bool ))
+  let bncancel_background_task = F.foreign  "BNCancelBackgroundTask" (T.ptr E.bnbackground_task   @-> returning (T.void ))
+  let bnis_background_task_finished = F.foreign  "BNIsBackgroundTaskFinished" (T.ptr bnbackground_task @-> returning (T.bool ))
+  (* let bnregister_interaction_handler = F.foreign  "BNRegisterInteractionHandler" (T.ptr E.bninteraction_handler_callbacks   @-> returning (T.void )) *)
   (* (\* let bnmarkdown_to_html = F.foreign  "BNMarkdownToHTML" (T.string   @-> returning (T.string  )) *\) *)
   (* (\* let bnshow_plain_text_report = F.foreign  "BNShowPlainTextReport" (T.ptr bn_binary_view   @-> T.string   @-> T.string   @-> returning (T.void )) *\) *)
   (* (\* let bnshow_markdown_report = F.foreign  "BNShowMarkdownReport" (T.ptr bn_binary_view   @-> T.string   @-> T.string   @-> T.string   @-> returning (T.void )) *\) *)
