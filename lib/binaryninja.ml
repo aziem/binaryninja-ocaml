@@ -10,15 +10,17 @@ open B
 module Log = Log
 module Symbol = Symbol 
 module Platform = Platform
+module BinaryView = Binaryview 
 module Function = Function
+module BasicBlock = Basicblock 
 module FunctionGraph = Functiongraph
 module Plugin = Plugin
+module Lowlevelil = Lowlevelil
+
 
 type bn_file_metadata = Typedefs.bn_file_metadata Ctypes.structure Ctypes_static.ptr
-type bn_binary_view = Typedefs.bn_binary_view Ctypes.structure Ctypes_static.ptr
 type bn_platform = Typedefs.bn_platform Ctypes.structure Ctypes_static.ptr
 type bn_architecture = Typedefs.bn_architecture Ctypes.structure Ctypes_static.ptr
-type bn_basicblock = Typedefs.bn_basicblock Ctypes.structure Ctypes_static.ptr
 
 type analysis_state = Typedefs.bn_analysis_state =
   | IdleState

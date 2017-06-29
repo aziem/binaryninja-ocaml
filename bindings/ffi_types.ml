@@ -1166,7 +1166,7 @@ struct
   let bn_binary_writer : bn_binary_writer Ctypes.structure T.typ = T.structure "BNBinaryWriter"
   let bn_data_buffer : bn_data_buffer Ctypes.structure T.typ = T.structure "BNDataBuffer"
   let bn_temporaryfile : bn_temporaryfile Ctypes.structure T.typ = T.structure "BNTemporaryFile"
-let bnbackground_task : bnbackground_task Ctypes.structure T.typ = T.structure "BNBackgroundTask"
+  let bnbackground_task : bnbackground_task Ctypes.structure T.typ = T.structure "BNBackgroundTask"
   let bn_lowlevelilfunction : bn_lowlevelilfunction Ctypes.structure T.typ = T.structure "BNLowLevelILFunction"
   let bn_type : bn_type Ctypes.structure T.typ = T.structure "BNType"
   let bn_structure : bn_structure Ctypes.structure T.typ = T.structure "BNStructure"

@@ -1,14 +1,17 @@
 # OASIS_START
-# DO NOT EDIT (digest: c481e021340ee09f57bf8bbbf3c0625e)
+# DO NOT EDIT (digest: 891483b67b2ffcaa822a18480a79ff73)
 Binaryninja
 Ffi_generated
 Ffi_generated_types
 Log
+Binaryview
+Callingconvention
 Plugin
 Platform
 Function
+Basicblock
 Symbol
 Functiongraph
-Basicblock
+Lowlevelil
 Utils
 # OASIS_STOP

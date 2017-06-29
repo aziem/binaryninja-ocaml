@@ -13,7 +13,7 @@ Library binaryninja
   Install: true
   Path: lib
   Modules: Binaryninja
-  InternalModules: Ffi_generated, Ffi_generated_types, Log, Plugin, Platform, Function, Symbol, Functiongraph, Basicblock, Utils
+  InternalModules: Ffi_generated, Ffi_generated_types, Log, Binaryview, Callingconvention, Plugin, Platform, Function, Basicblock, Symbol, Functiongraph, Lowlevelil, Utils
   CSources: ffi_generated_stubs.c
   CCLib: -L/home/aziem/Downloads/binaryninja -lbinaryninjacore
   CCOpt: -I $pkg_ctypes_stubs
