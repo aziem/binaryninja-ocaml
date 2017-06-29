@@ -39,3 +39,4 @@ let has_undetermined_outgoing_edges b =
 
 let mark_recently_used b =
   B.bnmark_basic_block_as_recently_used b
+

@@ -52,6 +52,15 @@ let mark_recently_used f =
   B.bnmark_function_as_recently_used f
 
 
+let get_function_lowlevelil f =
+  B.bnget_function_low_level_il f
+
+
+ 
+
+
+
+
 
 
 

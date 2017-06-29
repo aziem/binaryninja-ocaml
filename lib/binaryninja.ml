@@ -15,7 +15,6 @@ module FunctionGraph = Functiongraph
 module Plugin = Plugin
 
 type bn_file_metadata = Typedefs.bn_file_metadata Ctypes.structure Ctypes_static.ptr
-type bn_binary_view = Typedefs.bn_binary_view Ctypes.structure Ctypes_static.ptr
 type bn_platform = Typedefs.bn_platform Ctypes.structure Ctypes_static.ptr
 type bn_architecture = Typedefs.bn_architecture Ctypes.structure Ctypes_static.ptr
 type bn_basicblock = Typedefs.bn_basicblock Ctypes.structure Ctypes_static.ptr
