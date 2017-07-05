@@ -1,6 +1,5 @@
 
 type bn_file_metadata
-type bn_binary_view
 type bn_platform
 type bn_architecture
 
@@ -34,28 +33,7 @@ sig
 
 end
 
-module Symbol :
-sig
-  type bn_symbol
 
-  type bn_symbol_type =
-    | BN_FunctionSymbol 
-    | BN_ImportAddressSymbol 
-    | BN_ImportedFunctionSymbol 
-    | BN_DataSymbol 
-    | BN_ImportedDataSymbol
-
-  val get_type : bn_symbol -> bn_symbol_type
-  val get_short_name : bn_symbol -> string
-  val get_full_name : bn_symbol -> string
-  val get_raw_name : bn_symbol -> string
-  val get_address : bn_symbol -> Unsigned.uint64
-  val is_auto_defined : bn_symbol -> bool
-  val set_auto_defined : bn_symbol -> bool -> unit
-  val get_symbol_by_address : bn_binary_view -> Unsigned.uint64 -> bn_symbol
-  val get_symbol_by_raw_name : bn_binary_view -> string -> bn_symbol 
-
-end
 
 module Platform :
 sig
@@ -71,14 +49,22 @@ sig
   val get_platform_by_name : string -> bn_platform option
 end
 
-
-module rec Function :
+module rec BinaryView :
+sig
+  type bn_binary_view
+  val is_modified : bn_binary_view -> bool
+  val functions : bn_binary_view -> Function.bn_function list 
+end
+and Function :
 sig
   type bn_function
   val get_platform : bn_function -> bn_platform
   val get_architecture : bn_function -> bn_architecture
   val get_start : bn_function -> Unsigned.uint64
   val get_symbol : bn_function -> Symbol.bn_symbol
+  val get_name : bn_function -> string 
+  val get_full_name : bn_function -> string
+  val get_short_name : bn_function -> string
   val was_function_auto_discovered : bn_function -> bool
   val can_function_return : bn_function -> bool
   val get_basic_blocks : bn_function -> BasicBlock.bn_basicblock list
@@ -205,6 +191,30 @@ sig
 
 
 end
+and Symbol :
+sig
+  type bn_symbol
+
+  type bn_symbol_type =
+    | BN_FunctionSymbol 
+    | BN_ImportAddressSymbol 
+    | BN_ImportedFunctionSymbol 
+    | BN_DataSymbol 
+    | BN_ImportedDataSymbol
+
+  val get_type : bn_symbol -> bn_symbol_type
+  val get_short_name : bn_symbol -> string
+  val get_full_name : bn_symbol -> string
+  val get_raw_name : bn_symbol -> string
+  val get_address : bn_symbol -> Unsigned.uint64
+  val is_auto_defined : bn_symbol -> bool
+  val set_auto_defined : bn_symbol -> bool -> unit
+  val get_symbol_by_address : BinaryView.bn_binary_view -> Unsigned.uint64 -> bn_symbol
+  val get_symbol_by_raw_name : BinaryView.bn_binary_view -> string -> bn_symbol 
+
+end
+
+
 
  
 
@@ -232,16 +242,16 @@ module Plugin :
 sig
 
   type action =
-    | ActionForCommand of (bn_binary_view -> unit)
-    | ActionForRange of (bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> unit)
-    | ActionForAddress of (bn_binary_view -> Unsigned.uint64 -> unit)
-    | ActionForFunction of (bn_binary_view -> Function.bn_function -> unit)
+    | ActionForCommand of (BinaryView.bn_binary_view -> unit)
+    | ActionForRange of (BinaryView.bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> unit)
+    | ActionForAddress of (BinaryView.bn_binary_view -> Unsigned.uint64 -> unit)
+    | ActionForFunction of (BinaryView.bn_binary_view -> Function.bn_function -> unit)
 
   type is_valid =
-    | IsValidForCommand of (bn_binary_view -> bool)
-    | IsValidForRange of  (bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> bool)
-    | IsValidForAddress of (bn_binary_view -> Unsigned.uint64 -> bool)
-    | IsValidForFunction of (bn_binary_view -> Function.bn_function -> bool)
+    | IsValidForCommand of (BinaryView.bn_binary_view -> bool)
+    | IsValidForRange of  (BinaryView.bn_binary_view -> Unsigned.uint64 -> Unsigned.uint64 -> bool)
+    | IsValidForAddress of (BinaryView.bn_binary_view -> Unsigned.uint64 -> bool)
+    | IsValidForFunction of (BinaryView.bn_binary_view -> Function.bn_function -> bool)
 
 
   module type BinaryNinjaPlugin =
@@ -271,22 +281,22 @@ val init_user_plugins : unit -> unit
 
 val create_file_metadata : unit -> bn_file_metadata
 
-val create_binary_dataview_from_filename : bn_file_metadata -> string -> bn_binary_view
+val create_binary_dataview_from_filename : bn_file_metadata -> string -> BinaryView.bn_binary_view
 
-val update_analysis : bn_binary_view -> unit
+val update_analysis : BinaryView.bn_binary_view -> unit
 
-val get_default_platform : bn_binary_view -> bn_platform
+val get_default_platform : BinaryView.bn_binary_view -> bn_platform
 
-val get_default_architecture : bn_binary_view -> bn_architecture
+val get_default_architecture : BinaryView.bn_binary_view -> bn_architecture
 
 val get_default_architecture_name : bn_architecture -> string
 
 val get_platform_name : bn_platform -> string
 
-val get_analysis_progress : bn_binary_view -> analysis_state
+val get_analysis_progress : BinaryView.bn_binary_view -> analysis_state
 
 val bn_get_scripting_provider_list : unit -> unit
 
-val bn_write_view_data : bn_binary_view -> Unsigned.uint64 -> string -> Unsigned.size_t -> Unsigned.size_t
+val bn_write_view_data : BinaryView.bn_binary_view -> Unsigned.uint64 -> string -> Unsigned.size_t -> Unsigned.size_t
 
 

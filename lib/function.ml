@@ -7,7 +7,7 @@ open Ffi_bindings
 open B
 
 type bn_function = Typedefs.bn_function Ctypes.structure Ctypes_static.ptr
-    
+ 
 let get_platform f =
   B.bn_get_function_platform f
     
@@ -19,6 +19,15 @@ let get_start f =
 
 let get_symbol f =
   B.bn_get_function_symbol f
+
+let get_name f =
+  get_symbol f |> Symbol.get_raw_name
+
+let get_full_name f =
+  get_symbol f |> Symbol.get_full_name
+
+let get_short_name f =
+  get_symbol f |> Symbol.get_short_name
 
 let was_function_auto_discovered f =
   B.bn_was_function_automatically_discovered f
@@ -51,17 +60,11 @@ let get_basic_block_at_addr f arch addr =
 let mark_recently_used f =
   B.bnmark_function_as_recently_used f
 
-
 let get_function_lowlevelil f =
   B.bnget_function_low_level_il f
 
 let get_lowlevelil_for_instruction f arch addr =
   B.bnget_low_level_ilfor_instruction f arch addr
- 
-
-
-
-
 
 
 
