@@ -32,7 +32,7 @@ let has_explicitly_defined_type f =
 let needs_update f =
   B.bnis_function_update_needed f 
 
-let get_basic_blocks f =
+let get_basic_blocks (f:bn_function) = 
   let i = allocate size_t (Unsigned.Size_t.of_int 0) in
   let lst = B.bn_get_function_basic_block_list f i in
   let sz = (Unsigned.Size_t.to_int !@i) in
@@ -55,7 +55,8 @@ let mark_recently_used f =
 let get_function_lowlevelil f =
   B.bnget_function_low_level_il f
 
-
+let get_lowlevelil_for_instruction f arch addr =
+  B.bnget_low_level_ilfor_instruction f arch addr
  
 
 

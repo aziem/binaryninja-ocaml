@@ -479,7 +479,7 @@ struct
   let bnnew_basic_block_reference = F.foreign  "BNNewBasicBlockReference" (T.ptr bn_basicblock   @-> returning (T.ptr bn_basicblock  ))
   let bnfree_basic_block = F.foreign  "BNFreeBasicBlock" (T.ptr bn_basicblock   @-> returning (T.void ))
   let bnget_function_basic_block_list = F.foreign  "BNGetFunctionBasicBlockList" (T.ptr bn_function   @-> T.ptr T.size_t   @-> returning (T.ptr ( T.ptr bn_basicblock  )  ))
-  let bnfree_basic_block_list = F.foreign  "BNFreeBasicBlockList" (T.ptr ( T.ptr bn_basicblock  )   @-> T.int  @-> returning (T.void ))
+  let bnfree_basic_block_list = F.foreign  "BNFreeBasicBlockList" (T.ptr ( T.ptr bn_basicblock  )   @-> T.size_t  @-> returning (T.void ))
   let bnget_function_basic_block_at_address = F.foreign  "BNGetFunctionBasicBlockAtAddress" (T.ptr bn_function   @-> T.ptr bn_architecture   @->T.uint64_t  @-> returning (T.ptr bn_basicblock  ))
   let bnget_recent_basic_block_for_address = F.foreign  "BNGetRecentBasicBlockForAddress" (T.ptr bn_binary_view   @->T.uint64_t  @-> returning (T.ptr bn_basicblock  ))
   let bnget_basic_blocks_for_address = F.foreign  "BNGetBasicBlocksForAddress" (T.ptr bn_binary_view   @->T.uint64_t  @-> T.ptr T.size_t   @-> returning (T.ptr ( T.ptr bn_basicblock  )  ))
