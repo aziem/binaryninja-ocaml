@@ -1,7 +1,6 @@
 
 type bn_file_metadata
 type bn_platform
-type bn_architecture
 
 
 type analysis_state = 
@@ -39,13 +38,13 @@ module Platform :
 sig
   type bn_platform
 
-  val create_platform : bn_architecture -> string -> bn_platform
+  val create_platform : Architecture.bn_architecture -> string -> bn_platform
   val get_platform_name : bn_platform -> string
-  val get_architecture : bn_platform -> bn_architecture
+  val get_architecture : bn_platform -> Architecture.bn_architecture
   val get_platform_list : unit -> bn_platform list
-  val get_platform_list_by_arch : bn_architecture -> bn_platform list
+  val get_platform_list_by_arch : Architecture.bn_architecture -> bn_platform list
   val get_platform_list_by_os : string -> bn_platform list
-  val get_platform_list_by_os_and_arch : string -> bn_architecture -> bn_platform list
+  val get_platform_list_by_os_and_arch : string -> Architecture.bn_architecture -> bn_platform list
   val get_platform_by_name : string -> bn_platform option
 end
 
@@ -55,11 +54,16 @@ sig
   val is_modified : bn_binary_view -> bool
   val functions : bn_binary_view -> Function.bn_function list 
 end
+and Architecture :
+sig
+  type bn_architecture
+  val get_flag_name : bn_architecture -> Unsigned.uint32 -> string
+end
 and Function :
 sig
   type bn_function
   val get_platform : bn_function -> bn_platform
-  val get_architecture : bn_function -> bn_architecture
+  val get_architecture : bn_function -> Architecture.bn_architecture
   val get_start : bn_function -> Unsigned.uint64
   val get_symbol : bn_function -> Symbol.bn_symbol
   val get_name : bn_function -> string 
@@ -68,24 +72,40 @@ sig
   val was_function_auto_discovered : bn_function -> bool
   val can_function_return : bn_function -> bool
   val get_basic_blocks : bn_function -> BasicBlock.bn_basicblock list
+  val get_basic_block_at_addr : bn_function -> Architecture.bn_architecture -> Unsigned.uint64 -> BasicBlock.bn_basicblock option
 end
 and BasicBlock :
 sig
   type bn_basicblock
-  type bn_basicblock_edge 
+    module BasicBlockEdge : sig
+      type bn_basicblock_edge
+      type bn_branch_type = 
+        | BN_UnconditionalBranch 
+        | BN_FalseBranch 
+        | BN_TrueBranch 
+        | BN_CallDestination 
+        | BN_FunctionReturn 
+        | BN_SystemCall 
+        | BN_IndirectBranch 
+        | BN_UnresolvedBranch
+
+      val get_branch_type : bn_basicblock_edge -> bn_branch_type
+      val get_target : bn_basicblock_edge -> Unsigned.uint64
+      val get_arch : bn_basicblock_edge -> Architecture.bn_architecture
+
+    end
   val get_function : bn_basicblock -> Function.bn_function
-  val get_architecture : bn_basicblock -> bn_architecture
+  val get_architecture : bn_basicblock -> Architecture.bn_architecture
   val get_start : bn_basicblock -> Unsigned.uint64
   val get_end : bn_basicblock -> Unsigned.uint64
   val get_length : bn_basicblock -> Unsigned.uint64
-  val get_outgoing_edges : bn_basicblock -> bn_basicblock_edge list
+  val get_outgoing_edges : bn_basicblock -> BasicBlockEdge.bn_basicblock_edge list
   val has_undetermined_outgoing_edges : bn_basicblock -> bool
   val mark_recently_used : bn_basicblock -> unit
-  val get_instructions : bn_basicblock -> Lowlevelil.bn_low_level_il_instruction list
+  val get_instructions : bn_basicblock -> Lowlevelil.Instruction.instruction list
 end
 and Lowlevelil :
 sig
-  type bn_low_level_il_instruction 
 
   type bn_low_level_il_operation = 
     | BN_LLIL_NOP
@@ -172,21 +192,42 @@ sig
     | BN_LLFC_O
     | BN_LLFC_NO
 
-  module Function : sig
-    
-    type bn_lowlevelil_function 
+  module rec Instruction : sig
+    type instruction 
+    type bn_lowlevelil_instruction
+    type operand =
+    | OpExpr of instruction
+    | OpInteger of Unsigned.uint64
+    | OpIntList of Unsigned.uint64 list
+    | OpRegister of Unsigned.uint64 * string option
+    | OpFlag of string
+    | OpCond of bn_lowlevel_il_flag_condition
 
-    val get_current_address : bn_lowlevelil_function -> Unsigned.uint64
 
-    val set_current_address : bn_lowlevelil_function -> Unsigned.uint64 -> unit
+    val get_operation : instruction -> bn_low_level_il_operation
+    val create : LowFunction.lowlevelilfunction -> bn_lowlevelil_instruction -> instruction
+    val get_operands : instruction -> operand list
+    val get_text : instruction -> string option
+  end
+  and  
+  
+  LowFunction : sig
+    type lowlevelilfunction 
 
-    val get_index_for_instruction : bn_lowlevelil_function -> Unsigned.size_t -> Unsigned.size_t
+    val get_current_address : lowlevelilfunction -> Unsigned.uint64
 
-    val get_instruction_count : bn_lowlevelil_function -> int
+    val set_current_address : lowlevelilfunction -> Unsigned.uint64 -> unit
 
-    val get_lowlevelil_by_index : bn_lowlevelil_function -> Unsigned.size_t -> bn_low_level_il_instruction
+    val get_index_for_instruction : lowlevelilfunction -> Unsigned.size_t -> Unsigned.size_t
 
-    val get_instructions : bn_lowlevelil_function -> bn_low_level_il_instruction list
+    val get_instruction_count : lowlevelilfunction -> int
+
+    val get_lowlevelil_by_index : lowlevelilfunction -> Unsigned.size_t -> Instruction.instruction 
+
+    val get_instructions : lowlevelilfunction -> Instruction.instruction list
+
+    val get_function_lowlevel : Function.bn_function -> lowlevelilfunction
+
   end
 
 
@@ -287,9 +328,9 @@ val update_analysis : BinaryView.bn_binary_view -> unit
 
 val get_default_platform : BinaryView.bn_binary_view -> bn_platform
 
-val get_default_architecture : BinaryView.bn_binary_view -> bn_architecture
+val get_default_architecture : BinaryView.bn_binary_view -> Architecture.bn_architecture
 
-val get_default_architecture_name : bn_architecture -> string
+val get_default_architecture_name : Architecture.bn_architecture -> string
 
 val get_platform_name : bn_platform -> string
 

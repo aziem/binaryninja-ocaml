@@ -87,7 +87,21 @@ type bn_instruction_text_token_type =
   | BN_BeginMemoryOperandToken 
   | BN_EndMemoryOperandToken 
   | BN_FloatingPointToken 
-  | BN_AnnotationToken 
+  | BN_AnnotationToken
+
+  | BNStackVariableTypeToken
+  | BNDataVariableTypeToken
+  | BNFunctionReturnTypeToken
+  | BNFunctionAttributeToken
+  | BNArgumentTypeToken
+  | BNArgumentNameToken
+  | BNHexDumpByteValueToken
+  | BNHexDumpSkippedByteToken
+  | BNHexDumpInvalidByteToken
+  | BNOpcodeToken
+  | BNStringToken
+  | BNCharacterConstantToken
+
   | BN_CodeRelativeAddressToken 
   | BN_CodeSymbolToken 
   | BN_DataSymbolToken 

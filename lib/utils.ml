@@ -18,3 +18,11 @@ let get_list_of_things obj getfunc freefunc newreferencefunc =
   let res = List.rev (loop [] 0) in
   freefunc lst !@i;
   res
+
+
+let uint64_to_sizet i =
+  Unsigned.UInt64.to_int64 i |> Unsigned.Size_t.of_int64
+
+
+let uint64_to_uint32 i =
+  Unsigned.UInt64.to_int64 i |> Unsigned.UInt32.of_int64

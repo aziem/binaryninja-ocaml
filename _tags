@@ -65,5 +65,5 @@ true: annot, bin_annot
 <*.ml{,i,y}>: use_binaryninja
 <*.ml{,i,y}>: use_binaryninja_bindings
 # OASIS_STOP
-<example>: -traverse
+<examples>: -traverse
 <lib>: include

@@ -106,7 +106,22 @@ struct
   let stackvariabletoken = T.constant "StackVariableToken" T.int64_t
   let importtoken = T.constant "ImportToken" T.int64_t
   let addressdisplaytoken= T.constant "AddressDisplayToken" T.int64_t
+  let stackvariabletypetoken = T.constant "StackVariableTypeToken" T.int64_t
+  let datavariabletypetoken = T.constant "DataVariableTypeToken" T.int64_t
+  let functionreturntypetoken = T.constant "FunctionReturnTypeToken" T.int64_t
+  let functionattributetoken = T.constant "FunctionAttributeToken" T.int64_t
+  let argumenttypetoken = T.constant "ArgumentTypeToken" T.int64_t
+  let argumentnametoken = T.constant "ArgumentNameToken" T.int64_t
+  let hexdumpbytevaluetoken = T.constant "HexDumpByteValueToken" T.int64_t
+  let hexdumpskippedbytetoken = T.constant "HexDumpSkippedByteToken" T.int64_t
+  let hexdumpinvalidbytetoken = T.constant "HexDumpInvalidByteToken" T.int64_t
+  let opcodetoken = T.constant "OpcodeToken" T.int64_t
+  let stringtoken = T.constant "StringToken" T.int64_t
+  let characterconstanttoken = T.constant "CharacterConstantToken" T.int64_t
 
+
+
+  
   let bn_instruction_text_token_type =
     T.enum "BNInstructionTextTokenType"
       [
@@ -469,21 +484,19 @@ struct
       ]
 
   let bn_low_level_il_instruction : bn_low_level_il_instruction Ctypes.structure T.typ = T.structure "BNLowLevelILInstruction"
-
-  let operation = T.field bn_low_level_il_instruction "operation" bn_low_level_il_operation
-  let size = T.field bn_low_level_il_instruction "size" T.size_t
-  let flags = T.field bn_low_level_il_instruction "flags" T.uint32_t
-  let sourceOperand = T.field bn_low_level_il_instruction "sourceOperand" T.uint32_t
-  let operands = T.field bn_low_level_il_instruction "operands" (T.array 4 T.uint64_t)
-  let address = T.field bn_low_level_il_instruction "address" T.uint64_t
+  let il_instruction_operation = T.field bn_low_level_il_instruction "operation" bn_low_level_il_operation
+  let il_instruction_size = T.field bn_low_level_il_instruction "size" T.size_t
+  let il_instruction_flags = T.field bn_low_level_il_instruction "flags" T.uint32_t
+  let il_instruction_sourceOperand = T.field bn_low_level_il_instruction "sourceOperand" T.uint32_t
+  let il_instruction_operands = T.field bn_low_level_il_instruction "operands" (T.array 4 T.uint64_t)
+  let il_instruction_address = T.field bn_low_level_il_instruction "address" T.uint64_t
   let () = T.seal bn_low_level_il_instruction
 
 
   let bn_low_level_il_label : bn_low_level_il_label Ctypes.structure T.typ = T.structure "BNLowLevelILLabel"
-
-  let resolved = T.field bn_low_level_il_label "resolved" T.bool 
-  let ref = T.field bn_low_level_il_label "ref" T.size_t 
-  let operand = T.field bn_low_level_il_label "operand" T.size_t
+  let il_label_resolved = T.field bn_low_level_il_label "resolved" T.bool 
+  let il_label_ref = T.field bn_low_level_il_label "ref" T.size_t 
+  let il_label_operand = T.field bn_low_level_il_label "operand" T.size_t
   let () = T.seal bn_low_level_il_label
 
 
@@ -502,10 +515,10 @@ struct
   type bn_register_info
   let bn_register_info : bn_register_info Ctypes.structure T.typ = T.structure "BNRegisterInfo"
 
-  let fillwidthregister = T.field bn_register_info "fullWidthRegister" T.uint32_t
-  let offset = T.field bn_register_info "offset" T.size_t 
-  let size = T.field bn_register_info "size" T.size_t
-  let extend = T.field bn_register_info "extend" bn_implicit_register_extend
+  let register_info_fillwidthregister = T.field bn_register_info "fullWidthRegister" T.uint32_t
+  let register_info_offset = T.field bn_register_info "offset" T.size_t 
+  let register_info_size = T.field bn_register_info "size" T.size_t
+  let register_info_extend = T.field bn_register_info "extend" bn_implicit_register_extend
   let () = T.seal bn_register_info
 
   let entryvalue= T.constant "EntryValue" T.int64_t
@@ -1486,11 +1499,11 @@ struct
 
   type bninstruction_text_token
   let bninstruction_text_token : bninstruction_text_token Ctypes.structure T.typ = T.structure "BNInstructionTextToken"
-  let type_ = T.field bninstruction_text_token "type" (bn_instruction_text_token_type)
-  let text = T.field bninstruction_text_token "text" (T.string)
-  let value = T.field bninstruction_text_token "value" (T.uint64_t)
-  let size = T.field bninstruction_text_token "size" (T.size_t)
-  let operand = T.field bninstruction_text_token "operand" (T.size_t)
+  let bninstruction_text_token_type_ = T.field bninstruction_text_token "type" (bn_instruction_text_token_type)
+  let bninstruction_text_token_text = T.field bninstruction_text_token "text" (T.string)
+  let bninstruction_text_token_value = T.field bninstruction_text_token "value" (T.uint64_t)
+  let bninstruction_text_token_size = T.field bninstruction_text_token "size" (T.size_t)
+  let bninstruction_text_token_operand = T.field bninstruction_text_token "operand" (T.size_t)
   let () = T.seal bninstruction_text_token
 
   type bnfunction_recognizer
@@ -1510,11 +1523,11 @@ struct
 
   type bnstack_variable_reference
   let bnstack_variable_reference : bnstack_variable_reference Ctypes.structure T.typ = T.structure "BNStackVariableReference"
-  let sourceoperand = T.field bnstack_variable_reference "sourceOperand" (T.uint32_t)
-  let type_ = T.field bnstack_variable_reference "type" (T.ptr T.void)
-  let name = T.field bnstack_variable_reference "name" (T.string)
-  let startingoffset = T.field bnstack_variable_reference "startingOffset" (T.int64_t)
-  let referencedoffset = T.field bnstack_variable_reference "referencedOffset" (T.int64_t)
+  let bnstack_variable_sourceoperand = T.field bnstack_variable_reference "sourceOperand" (T.uint32_t)
+  let bnstack_variable_type_ = T.field bnstack_variable_reference "type" (T.ptr T.void)
+  let bnstack_variable_name = T.field bnstack_variable_reference "name" (T.string)
+  let bnstack_variable_startingoffset = T.field bnstack_variable_reference "startingOffset" (T.int64_t)
+  let bnstack_variable_referencedoffset = T.field bnstack_variable_reference "referencedOffset" (T.int64_t)
   let () = T.seal bnstack_variable_reference
 
   type bnindirect_branch_info
@@ -1571,9 +1584,9 @@ struct
 
   type bn_basic_block_edge
   let bn_basic_block_edge : bn_basic_block_edge Ctypes.structure T.typ = T.structure "BNBasicBlockEdge"
-  let type_ = T.field bn_basic_block_edge "type" (bn_branch_type)
-  let target = T.field bn_basic_block_edge "target" (T.uint64_t)
-  let arch = T.field bn_basic_block_edge "arch" (T.ptr bn_architecture)
+  let bn_basic_block_edge_type_ = T.field bn_basic_block_edge "type" (bn_branch_type)
+  let bn_basic_block_edge_target = T.field bn_basic_block_edge "target" (T.uint64_t)
+  let bn_basic_block_edge_arch = T.field bn_basic_block_edge "arch" (T.ptr bn_architecture)
   let () = T.seal bn_basic_block_edge 
 
   type bn_point
