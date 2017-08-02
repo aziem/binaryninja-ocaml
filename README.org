@@ -16,16 +16,17 @@ Note that you need a commercial version (not the
 personal version) to be able to run plugins in headless mode.
 
 1. First set some variables: in config.ml set the location of the
-   binaryninjacore.h file (which is part of the [[https://github.com/Vector35/binaryninja-api][Binary Ninja API]]
+   binaryninjacore.h file (which is part of the [[https://github.com/Vector35/binaryninja-api][Binary Ninja API]])
 
 2. In myocamlbuild.ml change the variable binaryninja_lib_loc to point
    to directory containing your Binary Ninja installation.
 
 3. Run oasis setup, then make.
+  
+   Building takes a few minutes due to large OCaml modules containing the
+   bindings. 
 
-Building takes a few minutes due to large OCaml modules containing the
-bindings. 
-TODO: fix this by splitting the bindings into smaller modules.
+   TODO: fix this by splitting the bindings into smaller modules.
 
 4. Run make install
 
@@ -38,7 +39,9 @@ installed into the Binary Ninja plugins directory
 
 Plugins:
 breakpoint: port of the Python plugin to set a breakpoint
+
 iterfuncnames: plugin which logs the list of functions in the binary
+
 walk-dfs: depth first walk over the control flow graph, printing some info.
 
 Each plugin is built by creating a C file to allow Binary Ninja to
