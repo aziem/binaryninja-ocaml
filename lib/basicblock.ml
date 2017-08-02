@@ -28,11 +28,8 @@ struct
     getf be B.E.bn_basic_block_edge_type_ 
   
   let get_target be =
-    getf be B.E.bn_basic_block_edge_target
+    getf be B.E.bnbasic_block_edge_target 
 
-  let get_arch be =
-    getf be B.E.bn_basic_block_edge_arch
-  
 end
 
 

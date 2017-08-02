@@ -6,8 +6,8 @@ module U = Utils
 open Ffi_bindings
 open B
 
-type bn_low_level_il_operation =  Typedefs.bn_low_level_il_operation = 
-  | BN_LLIL_NOP
+type bn_low_level_il_operation =  Typedefs.bn_low_level_il_operation =
+| BN_LLIL_NOP
   | BN_LLIL_SET_REG
   | BN_LLIL_SET_REG_SPLIT
   | BN_LLIL_SET_FLAG
@@ -17,6 +17,7 @@ type bn_low_level_il_operation =  Typedefs.bn_low_level_il_operation =
   | BN_LLIL_POP
   | BN_LLIL_REG
   | BN_LLIL_CONST
+  | BN_LLIL_CONST_PTR
   | BN_LLIL_FLAG
   | BN_LLIL_FLAG_BIT
   | BN_LLIL_ADD
@@ -48,6 +49,7 @@ type bn_low_level_il_operation =  Typedefs.bn_low_level_il_operation =
   | BN_LLIL_NOT
   | BN_LLIL_SX
   | BN_LLIL_ZX
+  | BN_LLIL_LOW_PART
   | BN_LLIL_JUMP
   | BN_LLIL_JUMP_TO
   | BN_LLIL_CALL
@@ -68,12 +70,32 @@ type bn_low_level_il_operation =  Typedefs.bn_low_level_il_operation =
   | BN_LLIL_CMP_UGT
   | BN_LLIL_TEST_BIT
   | BN_LLIL_BOOL_TO_INT
+  | BN_LLIL_ADD_OVERFLOW
   | BN_LLIL_SYSCALL
   | BN_LLIL_BP
   | BN_LLIL_TRAP
   | BN_LLIL_UNDEF
   | BN_LLIL_UNIMPL
   | BN_LLIL_UNIMPL_MEM
+  | BN_LLIL_SET_REG_SSA
+  | BN_LLIL_SET_REG_SSA_PARTIAL
+  | BN_LLIL_SET_REG_SPLIT_SSA
+  | BN_LLIL_REG_SPLIT_DEST_SSA
+  | BN_LLIL_REG_SSA
+  | BN_LLIL_REG_SSA_PARTIAL
+  | BN_LLIL_SET_FLAG_SSA
+  | BN_LLIL_FLAG_SSA
+  | BN_LLIL_FLAG_BIT_SSA
+  | BN_LLIL_CALL_SSA
+  | BN_LLIL_SYSCALL_SSA
+  | BN_LLIL_CALL_PARAM_SSA
+  | BN_LLIL_CALL_STACK_SSA
+  | BN_LLIL_CALL_OUTPUT_SSA
+  | BN_LLIL_LOAD_SSA
+  | BN_LLIL_STORE_SSA
+  | BN_LLIL_REG_PHI
+  | BN_LLIL_FLAG_PHI
+  | BN_LLIL_MEM_PHI
 
 type bn_lowlevel_il_flag_condition = Typedefs.bn_lowlevel_il_flag_condition = 
   | BN_LLFC_E
@@ -196,6 +218,7 @@ struct
     | BN_LLIL_POP           -> [] 
     | BN_LLIL_REG           -> [(Src, Reg)]
     | BN_LLIL_CONST         -> [(Constant, Int)]
+    | BN_LLIL_CONST_PTR     -> [(Constant, Int)]
     | BN_LLIL_FLAG          -> [(Src, Flag)]
     | BN_LLIL_FLAG_BIT      -> [(Src, Flag); (Bit, Int)]
     | BN_LLIL_ADD           -> [(Left, Expr); (Right, Expr)]
@@ -227,6 +250,7 @@ struct
     | BN_LLIL_NOT
     | BN_LLIL_SX
     | BN_LLIL_ZX            -> [(Src, Expr)]
+    | BN_LLIL_LOW_PART      -> [(Src, Expr)]
     | BN_LLIL_JUMP          -> [(Dest, Expr)]
     | BN_LLIL_JUMP_TO       -> [(Dest,Expr); (Targets, IntList)]
     | BN_LLIL_CALL          -> [(Dest, Expr)]
@@ -247,12 +271,35 @@ struct
     | BN_LLIL_CMP_UGT
     | BN_LLIL_TEST_BIT      -> [(Left, Expr); (Right, Expr)]
     | BN_LLIL_BOOL_TO_INT   -> [(Src, Expr)]
+    | BN_LLIL_ADD_OVERFLOW   -> [(Left, Expr); (Right, Expr)]
     | BN_LLIL_SYSCALL       -> []
     | BN_LLIL_BP            -> []
     | BN_LLIL_TRAP          -> [(Vector, Int)]
     | BN_LLIL_UNDEF         -> []
     | BN_LLIL_UNIMPL        -> []
     | BN_LLIL_UNIMPL_MEM    -> [(Src, Expr)]
+    | BN_LLIL_SET_REG_SSA   -> [(Dest, RegSSA); (Src, Expr)]
+    | BN_LLIL_SET_REG_SSA_PARTIAL -> [(FullReg, RegSSA); (Dest, Reg); (Src, Expr)]
+    | BN_LLIL_SET_REG_SPLIT_SSA -> [(Hi, Expr); (Low, Expr); (Src, Expr)]
+    | BN_LLIL_REG_SPLIT_DEST_SSA -> [(Dest, RegSSA)]
+    | BN_LLIL_REG_SSA -> [(Src, RegSSA)]
+    | BN_LLIL_REG_SSA_PARTIAL -> [(FullReg, RegSSA); (Src, Reg)]
+    | BN_LLIL_SET_FLAG_SSA -> [(Dest, FlagSSA); (Src, Expr)]
+    | BN_LLIL_FLAG_SSA -> [(Src, FlagSSA)]
+    | BN_LLIL_FLAG_BIT_SSA -> [(Src, FlagSSA); (Bit, Int)]
+    | BN_LLIL_CALL_SSA -> [(Output, Expr); (Dest, Expr); (Stack, Expr); (Param, Expr)]
+    | BN_LLIL_SYSCALL_SSA -> [(Output, Expr); (Stack, Expr); (Param, Expr)]
+    | BN_LLIL_CALL_OUTPUT_SSA -> [(DestMem, Int); (Dest, RegSSAList)]
+    | BN_LLIL_CALL_STACK_SSA -> [(Src, RegSSA); (SrcMem, Int)]
+    | BN_LLIL_CALL_PARAM_SSA -> [(Src, RegSSAList)]
+    | BN_LLIL_LOAD_SSA -> [(Src, Expr); (SrcMem, Int)]
+    | BN_LLIL_STORE_SSA -> [(Dest, Expr); (DestMem, Int); (SrcMem, Int); (Src, Expr)]
+    | BN_LLIL_REG_PHI -> [(Dest, RegSSA); (Src, RegSSAList)]
+    | BN_LLIL_FLAG_PHI -> [(Dest, FlagSSA); (Src, FlagSSAList)]
+    | BN_LLIL_MEM_PHI -> [(DestMem, Int); (SrcMem, IntList)]
+
+
+
 
   let get_operation i =
     getf i.instr B.E.il_instruction_operation
@@ -403,7 +450,7 @@ struct
     B.bnlow_level_ilget_current_address f.func
 
   let set_current_address f addr =
-    B.bnlow_level_ilset_current_address f.func addr
+    B.bnlow_level_ilset_current_address f.func f.arch addr
 
   let get_index_for_instruction f index =
     B.bnget_low_level_ilindex_for_instruction f.func index

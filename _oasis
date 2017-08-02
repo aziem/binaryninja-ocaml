@@ -15,7 +15,7 @@ Library binaryninja
   Modules: Binaryninja
   InternalModules: Ffi_generated, Ffi_generated_types, Log, Binaryview, Architecture, Callingconvention, Plugin, Platform, Function, Basicblock, Symbol, Functiongraph, Lowlevelil, Utils
   CSources: ffi_generated_stubs.c
-  CCLib: -L/home/aziem/Downloads/binaryninja -lbinaryninjacore
+  CCLib: -L/home/aziem/binaryninjainstallation/binaryninja -lbinaryninjacore
   CCOpt: -I $pkg_ctypes_stubs
   BuildDepends: binaryninja_bindings, ctypes, uchar, ctypes.stubs, ctypes.foreign, result
   CompiledObject: native

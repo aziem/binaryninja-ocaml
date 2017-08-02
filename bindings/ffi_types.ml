@@ -101,47 +101,71 @@ struct
   let floatingpointtoken = T.constant "FloatingPointToken" T.int64_t
   let annotationtoken = T.constant "AnnotationToken" T.int64_t
   let coderelativeaddresstoken = T.constant "CodeRelativeAddressToken" T.int64_t
-  let codesymboltoken = T.constant "CodeSymbolToken" T.int64_t
-  let datasymboltoken = T.constant "DataSymbolToken" T.int64_t
-  let stackvariabletoken = T.constant "StackVariableToken" T.int64_t
-  let importtoken = T.constant "ImportToken" T.int64_t
-  let addressdisplaytoken= T.constant "AddressDisplayToken" T.int64_t
-  let stackvariabletypetoken = T.constant "StackVariableTypeToken" T.int64_t
-  let datavariabletypetoken = T.constant "DataVariableTypeToken" T.int64_t
-  let functionreturntypetoken = T.constant "FunctionReturnTypeToken" T.int64_t
-  let functionattributetoken = T.constant "FunctionAttributeToken" T.int64_t
-  let argumenttypetoken = T.constant "ArgumentTypeToken" T.int64_t
   let argumentnametoken = T.constant "ArgumentNameToken" T.int64_t
   let hexdumpbytevaluetoken = T.constant "HexDumpByteValueToken" T.int64_t
   let hexdumpskippedbytetoken = T.constant "HexDumpSkippedByteToken" T.int64_t
   let hexdumpinvalidbytetoken = T.constant "HexDumpInvalidByteToken" T.int64_t
+  let hexdumptexttoken = T.constant "HexDumpTextToken" T.int64_t
   let opcodetoken = T.constant "OpcodeToken" T.int64_t
   let stringtoken = T.constant "StringToken" T.int64_t
   let characterconstanttoken = T.constant "CharacterConstantToken" T.int64_t
+  let keywordtoken = T.constant "KeywordToken" T.int64_t
+  let typenametoken = T.constant "TypeNameToken" T.int64_t
+  let fieldnametoken = T.constant "FieldNameToken" T.int64_t
+  let codesymboltoken = T.constant "CodeSymbolToken" T.int64_t
+  let datasymboltoken = T.constant "DataSymbolToken" T.int64_t
+  let localvariabletoken = T.constant "LocalVariableToken" T.int64_t
+  let importtoken = T.constant "ImportToken" T.int64_t
+  let addressdisplaytoken = T.constant "AddressDisplayToken" T.int64_t
 
 
 
-  
   let bn_instruction_text_token_type =
     T.enum "BNInstructionTextTokenType"
       [
-        BN_TextToken, texttoken;
-	BN_InstructionToken, instructiontoken;
-	BN_OperandSeparatorToken, operandseparatortoken;
-	BN_RegisterToken, registertoken;
-	BN_IntegerToken, integertoken;
-	BN_PossibleAddressToken, possibleaddresstoken;
-	BN_BeginMemoryOperandToken, beginmemoryoperandtoken;
-	BN_EndMemoryOperandToken, endmemoryoperandtoken;
-	BN_FloatingPointToken, floatingpointtoken;
-	BN_AnnotationToken, annotationtoken;
-	BN_CodeRelativeAddressToken, coderelativeaddresstoken;
-	BN_CodeSymbolToken, codesymboltoken;
-	BN_DataSymbolToken, datasymboltoken;
-	BN_StackVariableToken, stackvariabletoken;
-	BN_ImportToken, importtoken;
-	BN_AddressDisplayToken, addressdisplaytoken;
+	TextToken, texttoken;
+	InstructionToken, instructiontoken;
+	OperandSeparatorToken, operandseparatortoken;
+	RegisterToken, registertoken;
+	IntegerToken, integertoken;
+	PossibleAddressToken, possibleaddresstoken;
+	BeginMemoryOperandToken, beginmemoryoperandtoken;
+	EndMemoryOperandToken, endmemoryoperandtoken;
+	FloatingPointToken, floatingpointtoken;
+	AnnotationToken, annotationtoken;
+	CodeRelativeAddressToken, coderelativeaddresstoken;
+	ArgumentNameToken, argumentnametoken;
+	HexDumpByteValueToken, hexdumpbytevaluetoken;
+	HexDumpSkippedByteToken, hexdumpskippedbytetoken;
+	HexDumpInvalidByteToken, hexdumpinvalidbytetoken;
+	HexDumpTextToken, hexdumptexttoken;
+	OpcodeToken, opcodetoken;
+	StringToken, stringtoken;
+	CharacterConstantToken, characterconstanttoken;
+	KeywordToken, keywordtoken;
+	TypeNameToken, typenametoken;
+	FieldNameToken, fieldnametoken;
+	CodeSymbolToken, codesymboltoken;
+	DataSymbolToken, datasymboltoken;
+	LocalVariableToken, localvariabletoken;
+	ImportToken, importtoken;
+	AddressDisplayToken, addressdisplaytoken;
       ]
+
+  let notokencontext = T.constant "NoTokenContext" T.int64_t
+  let localvariabletokencontext = T.constant "LocalVariableTokenContext" T.int64_t
+  let datavariabletokencontext = T.constant "DataVariableTokenContext" T.int64_t
+  let functionreturntokencontext = T.constant "FunctionReturnTokenContext" T.int64_t
+  let argumenttokencontext = T.constant "ArgumentTokenContext" T.int64_t
+
+  let bninstructiontexttokencontext = T.enum "BNInstructionTextTokenContext" [ 
+      NoTokenContext, notokencontext;
+      LocalVariableTokenContext, localvariabletokencontext;
+      DataVariableTokenContext, datavariabletokencontext;
+      FunctionReturnTokenContext, functionreturntokencontext;
+      ArgumentTokenContext, argumenttokencontext;
+    ]
+
   let unconditionalbranch = T.constant "UnconditionalBranch" T.int64_t 
   let falsebranch = T.constant "FalseBranch" T.int64_t 
   let truebranch = T.constant "TrueBranch" T.int64_t 
@@ -162,44 +186,6 @@ struct
       BN_IndirectBranch , indirectbranch;
       BN_UnresolvedBranch, unresolvedbranch
     ]
-
-  let texttoken = T.constant "TextToken" T.int64_t
-  let instructiontoken = T.constant "InstructionToken" T.int64_t
-  let operandseparatortoken = T.constant "OperandSeparatorToken" T.int64_t
-  let registertoken = T.constant "RegisterToken" T.int64_t
-  let integertoken = T.constant "IntegerToken" T.int64_t
-  let possibleaddresstoken = T.constant "PossibleAddressToken" T.int64_t
-  let beginmemoryoperandtoken = T.constant "BeginMemoryOperandToken" T.int64_t
-  let endmemoryoperandtoken = T.constant "EndMemoryOperandToken" T.int64_t
-  let floatingpointtoken = T.constant "FloatingPointToken" T.int64_t
-  let annotationtoken = T.constant "AnnotationToken" T.int64_t
-  let coderelativeaddresstoken = T.constant "CodeRelativeAddressToken" T.int64_t
-  let codesymboltoken = T.constant "CodeSymbolToken" T.int64_t
-  let datasymboltoken = T.constant "DataSymbolToken" T.int64_t
-  let stackvariabletoken = T.constant "StackVariableToken" T.int64_t
-  let importtoken = T.constant "ImportToken" T.int64_t
-  let addressdisplaytoken= T.constant "AddressDisplayToken" T.int64_t
-
-  let bn_instruction_text_token_type =
-    T.enum "BNInstructionTextTokenType"
-      [
-        BN_TextToken, texttoken;
-	BN_InstructionToken, instructiontoken;
-	BN_OperandSeparatorToken, operandseparatortoken;
-	BN_RegisterToken, registertoken;
-	BN_IntegerToken, integertoken;
-	BN_PossibleAddressToken, possibleaddresstoken;
-	BN_BeginMemoryOperandToken, beginmemoryoperandtoken;
-	BN_EndMemoryOperandToken, endmemoryoperandtoken;
-	BN_FloatingPointToken, floatingpointtoken;
-	BN_AnnotationToken, annotationtoken;
-	BN_CodeRelativeAddressToken, coderelativeaddresstoken;
-	BN_CodeSymbolToken, codesymboltoken;
-	BN_DataSymbolToken, datasymboltoken;
-	BN_StackVariableToken, stackvariabletoken;
-	BN_ImportToken, importtoken;
-	BN_AddressDisplayToken, addressdisplaytoken;
-      ]
 
   let functionsymbol = T.constant "FunctionSymbol" T.int64_t
   let importaddresssymbol = T.constant "ImportAddressSymbol" T.int64_t
@@ -246,6 +232,7 @@ struct
   let llil_const         = T.constant "LLIL_CONST" T.int64_t
   let llil_flag          = T.constant "LLIL_FLAG" T.int64_t
   let llil_flag_bit      = T.constant "LLIL_FLAG_BIT" T.int64_t
+  let llil_const_ptr     = T.constant "LLIL_CONST_PTR" T.int64_t
   let llil_add           = T.constant "LLIL_ADD" T.int64_t
   let llil_adc           = T.constant "LLIL_ADC" T.int64_t
   let llil_sub           = T.constant "LLIL_SUB" T.int64_t
@@ -275,6 +262,7 @@ struct
   let llil_not           = T.constant "LLIL_NOT" T.int64_t
   let llil_sx            = T.constant "LLIL_SX" T.int64_t
   let llil_zx            = T.constant "LLIL_ZX" T.int64_t
+  let llil_low_part      = T.constant "LLIL_LOW_PART" T.int64_t
   let llil_jump          = T.constant "LLIL_JUMP" T.int64_t
   let llil_jump_to       = T.constant "LLIL_JUMP_TO" T.int64_t
   let llil_call          = T.constant "LLIL_CALL" T.int64_t
@@ -295,12 +283,32 @@ struct
   let llil_cmp_ugt       = T.constant "LLIL_CMP_UGT" T.int64_t
   let llil_test_bit      = T.constant "LLIL_TEST_BIT" T.int64_t
   let llil_bool_to_int   = T.constant "LLIL_BOOL_TO_INT" T.int64_t
+  let llil_add_overflow  = T.constant "LLIL_ADD_OVERFLOW" T.int64_t
   let llil_syscall       = T.constant "LLIL_SYSCALL" T.int64_t
   let llil_bp            = T.constant "LLIL_BP" T.int64_t
   let llil_trap          = T.constant "LLIL_TRAP" T.int64_t
   let llil_undef         = T.constant "LLIL_UNDEF" T.int64_t
   let llil_unimpl        = T.constant "LLIL_UNIMPL" T.int64_t
   let llil_unimpl_mem     = T.constant "LLIL_UNIMPL_MEM" T.int64_t
+  let llil_set_reg_ssa = T.constant "LLIL_SET_REG_SSA" T.int64_t
+  let llil_set_reg_ssa_partial = T.constant "LLIL_SET_REG_SSA_PARTIAL" T.int64_t
+  let llil_set_reg_split_ssa = T.constant "LLIL_SET_REG_SPLIT_SSA" T.int64_t
+  let llil_reg_split_dest_ssa = T.constant "LLIL_REG_SPLIT_DEST_SSA" T.int64_t
+  let llil_reg_ssa = T.constant "LLIL_REG_SSA" T.int64_t
+  let llil_reg_ssa_partial = T.constant "LLIL_REG_SSA_PARTIAL" T.int64_t
+  let llil_set_flag_ssa = T.constant "LLIL_SET_FLAG_SSA" T.int64_t
+  let llil_flag_ssa = T.constant "LLIL_FLAG_SSA" T.int64_t
+  let llil_flag_bit_ssa = T.constant "LLIL_FLAG_BIT_SSA" T.int64_t
+  let llil_call_ssa = T.constant "LLIL_CALL_SSA" T.int64_t
+  let llil_syscall_ssa = T.constant "LLIL_SYSCALL_SSA" T.int64_t
+  let llil_call_param_ssa = T.constant "LLIL_CALL_PARAM_SSA" T.int64_t
+  let llil_call_stack_ssa = T.constant "LLIL_CALL_STACK_SSA" T.int64_t
+  let llil_call_output_ssa = T.constant "LLIL_CALL_OUTPUT_SSA" T.int64_t
+  let llil_load_ssa = T.constant "LLIL_LOAD_SSA" T.int64_t
+  let llil_store_ssa = T.constant "LLIL_STORE_SSA" T.int64_t
+  let llil_reg_phi = T.constant "LLIL_REG_PHI" T.int64_t
+  let llil_flag_phi = T.constant "LLIL_FLAG_PHI" T.int64_t
+  let llil_mem_phi = T.constant "LLIL_MEM_PHI" T.int64_t
 
 
   let bn_low_level_il_operation =
@@ -316,6 +324,7 @@ struct
 	BN_LLIL_POP, llil_pop;
 	BN_LLIL_REG, llil_reg;
 	BN_LLIL_CONST, llil_const;
+	BN_LLIL_CONST_PTR, llil_const_ptr;
 	BN_LLIL_FLAG, llil_flag;
 	BN_LLIL_FLAG_BIT, llil_flag_bit;
 	BN_LLIL_ADD, llil_add;
@@ -347,6 +356,7 @@ struct
 	BN_LLIL_NOT, llil_not;
 	BN_LLIL_SX, llil_sx;
 	BN_LLIL_ZX, llil_zx;
+        BN_LLIL_LOW_PART, llil_low_part;
 	BN_LLIL_JUMP, llil_jump;
 	BN_LLIL_JUMP_TO, llil_jump_to;
 	BN_LLIL_CALL, llil_call;
@@ -367,12 +377,32 @@ struct
 	BN_LLIL_CMP_UGT, llil_cmp_ugt;
 	BN_LLIL_TEST_BIT, llil_test_bit;
 	BN_LLIL_BOOL_TO_INT, llil_bool_to_int;
+        BN_LLIL_ADD_OVERFLOW, llil_add_overflow;
 	BN_LLIL_SYSCALL, llil_syscall;
 	BN_LLIL_BP, llil_bp;
 	BN_LLIL_TRAP, llil_trap;
 	BN_LLIL_UNDEF, llil_undef;
 	BN_LLIL_UNIMPL, llil_unimpl;
 	BN_LLIL_UNIMPL_MEM, llil_unimpl_mem;
+        BN_LLIL_SET_REG_SSA, llil_set_reg_ssa;
+        BN_LLIL_SET_REG_SSA_PARTIAL, llil_set_reg_ssa_partial;
+        BN_LLIL_SET_REG_SPLIT_SSA, llil_set_reg_split_ssa;
+        BN_LLIL_REG_SPLIT_DEST_SSA, llil_reg_split_dest_ssa;
+        BN_LLIL_REG_SSA, llil_reg_ssa;
+        BN_LLIL_REG_SSA_PARTIAL, llil_reg_ssa_partial;
+        BN_LLIL_SET_FLAG_SSA, llil_set_flag_ssa;
+        BN_LLIL_FLAG_SSA, llil_flag_ssa;
+        BN_LLIL_FLAG_BIT_SSA, llil_flag_bit_ssa;
+        BN_LLIL_CALL_SSA, llil_call_ssa;
+        BN_LLIL_SYSCALL_SSA, llil_syscall_ssa;
+        BN_LLIL_CALL_PARAM_SSA, llil_call_param_ssa;
+        BN_LLIL_CALL_STACK_SSA, llil_call_stack_ssa;
+        BN_LLIL_CALL_OUTPUT_SSA, llil_call_output_ssa;
+        BN_LLIL_LOAD_SSA, llil_load_ssa;
+        BN_LLIL_STORE_SSA, llil_store_ssa;
+        BN_LLIL_REG_PHI, llil_reg_phi;
+        BN_LLIL_FLAG_PHI, llil_flag_phi;
+        BN_LLIL_MEM_PHI, llil_mem_phi;
       ]
 
   let llfc_e = T.constant "LLFC_E" T.int64_t
@@ -438,6 +468,11 @@ struct
   let normalfunctiongraph = T.constant "NormalFunctionGraph" T.int64_t
   let lowlevelilfunctiongraph = T.constant "LowLevelILFunctionGraph" T.int64_t
   let liftedilfunctiongraph= T.constant "LiftedILFunctionGraph" T.int64_t
+  let lowlevelilssaformfunctiongraph = T.constant "LowLevelILSSAFormFunctionGraph" T.int64_t
+  let mediumlevelilfunctiongraph = T.constant "MediumLevelILFunctionGraph" T.int64_t
+  let mediumlevelilssaformfunctiongraph = T.constant "MediumLevelILSSAFormFunctionGraph" T.int64_t
+  let mappedmediumlevelilfunctiongraph = T.constant "MappedMediumLevelILFunctionGraph" T.int64_t
+  let mappedmediumlevelilssaformfunctiongraph = T.constant "MappedMediumLevelILSSAFormFunctionGraph" T.int64_t
 
   let bn_function_graph_type =
     T.enum "BNFunctionGraphType"
@@ -445,6 +480,11 @@ struct
         BN_NormalFunctionGraph, normalfunctiongraph;
 	BN_LowLevelILFunctionGraph, lowlevelilfunctiongraph;
 	BN_LiftedILFunctionGraph, liftedilfunctiongraph;
+        BN_LowLevelILSSAFormFunctionGraph, lowlevelilssaformfunctiongraph;
+        BN_MediumLevelILFunctionGraph, mediumlevelilfunctiongraph;
+        BN_MediumLevelILSSAFormFunctionGraph, mediumlevelilssaformfunctiongraph;
+        BN_MappedMediumLevelILFunctionGraph, mappedmediumlevelilfunctiongraph;
+        BN_MappedMediumLevelILSSAFormFunctionGraph, mappedmediumlevelilssaformfunctiongraph
       ]
 
   let voidtypeclass = T.constant "VoidTypeClass" T.int64_t 
@@ -456,20 +496,43 @@ struct
   let pointertypeclass = T.constant "PointerTypeClass" T.int64_t
   let arraytypeclass = T.constant "ArrayTypeClass" T.int64_t
   let functiontypeclass = T.constant "FunctionTypeClass" T.int64_t
+  let varargstypeclass = T.constant "VarArgsTypeClass" T.int64_t
+  let valuetypeclass = T.constant "ValueTypeClass" T.int64_t
+  let namedtypereferenceclass = T.constant "NamedTypeReferenceClass" T.int64_t
 
   let bn_type_class =
     T.enum "BNTypeClass"
       [
 	BN_VoidTypeClass , voidtypeclass;
-	BN_BoolTypeClass , booltypeclass;
-	BN_IntegerTypeClass , integertypeclass;
-	BN_FloatTypeClass , floattypeclass;
-	BN_StructureTypeClass , structuretypeclass;
-	BN_EnumerationTypeClass , enumerationtypeclass;
-	BN_PointerTypeClass , pointertypeclass;
-	BN_ArrayTypeClass , arraytypeclass;
-	BN_FunctionTypeClass , functiontypeclass;
+        BN_BoolTypeClass , booltypeclass;
+        BN_IntegerTypeClass , integertypeclass;
+        BN_FloatTypeClass , floattypeclass;
+        BN_StructureTypeClass , structuretypeclass;
+        BN_EnumerationTypeClass , enumerationtypeclass;
+        BN_PointerTypeClass , pointertypeclass;
+        BN_ArrayTypeClass , arraytypeclass;
+        BN_FunctionTypeClass , functiontypeclass;
+        BN_VarArgsTypeClass, varargstypeclass;
+        BN_ValueTypeClass, valuetypeclass;
+        BN_NamedTypeReferenceClass, namedtypereferenceclass;
       ]
+
+  let unknownnamedtypeclass = T.constant "UnknownNamedTypeClass" T.int64_t
+  let typedefnamedtypeclass = T.constant "TypedefNamedTypeClass" T.int64_t
+  let classnamedtypeclass = T.constant "ClassNamedTypeClass" T.int64_t
+  let structnamedtypeclass = T.constant "StructNamedTypeClass" T.int64_t
+  let unionnamedtypeclass = T.constant "UnionNamedTypeClass" T.int64_t
+  let enumnamedtypeclass = T.constant "EnumNamedTypeClass" T.int64_t
+  let bnnamedtypereferenceclass = T.enum "BNNamedTypeReferenceClass" [ 
+      UnknownNamedTypeClass, unknownnamedtypeclass;
+      TypedefNamedTypeClass, typedefnamedtypeclass;
+      ClassNamedTypeClass, classnamedtypeclass;
+      StructNamedTypeClass, structnamedtypeclass;
+      UnionNamedTypeClass, unionnamedtypeclass;
+      EnumNamedTypeClass, enumnamedtypeclass;
+    ]
+
+
 
   let asciistring = T.constant "AsciiString" T.int64_t
   let utf16string = T.constant "Utf16String" T.int64_t
@@ -521,29 +584,32 @@ struct
   let register_info_extend = T.field bn_register_info "extend" bn_implicit_register_extend
   let () = T.seal bn_register_info
 
-  let entryvalue= T.constant "EntryValue" T.int64_t
-  let offsetfromentryvalue= T.constant "OffsetFromEntryValue" T.int64_t
-  let constantvalue= T.constant "ConstantValue" T.int64_t
-  let stackframeoffset= T.constant "StackFrameOffset" T.int64_t
-  let undeterminedvalue= T.constant "UndeterminedValue" T.int64_t
-  let offsetfromundeterminedvalue= T.constant "OffsetFromUndeterminedValue" T.int64_t
-  let signedrangevalue= T.constant "SignedRangeValue" T.int64_t
-  let unsignedrangevalue= T.constant "UnsignedRangeValue" T.int64_t
-  let lookuptablevalue= T.constant "LookupTableValue" T.int64_t
-  let comparisonresultvalue= T.constant "ComparisonResultValue" T.int64_t
+  let undeterminedvalue = T.constant "UndeterminedValue" T.int64_t
+  let entryvalue = T.constant "EntryValue" T.int64_t
+  let constantvalue = T.constant "ConstantValue" T.int64_t
+  let constantpointervalue = T.constant "ConstantPointerValue" T.int64_t
+  let stackframeoffset = T.constant "StackFrameOffset" T.int64_t
+  let returnaddressvalue = T.constant "ReturnAddressValue" T.int64_t
+  let signedrangevalue = T.constant "SignedRangeValue" T.int64_t
+  let unsignedrangevalue = T.constant "UnsignedRangeValue" T.int64_t
+  let lookuptablevalue = T.constant "LookupTableValue" T.int64_t
+  let insetofvalues = T.constant "InSetOfValues" T.int64_t
+  let notinsetofvalues = T.constant "NotInSetOfValues" T.int64_t
+
 
   let bn_register_value_type =
     T.enum "BNRegisterValueType" [
-      BN_EntryValue, entryvalue;
-      BN_OffsetFromEntryValue, offsetfromentryvalue;
-      BN_ConstantValue, constantvalue;
-      BN_StackFrameOffset, stackframeoffset;
-      BN_UndeterminedValue, undeterminedvalue;
-      BN_OffsetFromUndeterminedValue, offsetfromundeterminedvalue;
-      BN_SignedRangeValue, signedrangevalue;
-      BN_UnsignedRangeValue, unsignedrangevalue;
-      BN_LookupTableValue, lookuptablevalue;
-      BN_ComparisonResultValue, comparisonresultvalue;
+      UndeterminedValue, undeterminedvalue;
+      EntryValue, entryvalue;
+      ConstantValue, constantvalue;
+      ConstantPointerValue, constantpointervalue;
+      StackFrameOffset, stackframeoffset;
+      ReturnAddressValue, returnaddressvalue;
+      SignedRangeValue, signedrangevalue;
+      UnsignedRangeValue, unsignedrangevalue;
+      LookupTableValue, lookuptablevalue;
+      InSetOfValues, insetofvalues;
+      NotInSetOfValues, notinsetofvalues;
     ]
 
   let invalidscriptinput = T.constant "InvalidScriptInput" T.int64_t
@@ -679,8 +745,8 @@ struct
   let functionheaderstartlinetype = T.constant "FunctionHeaderStartLineType" T.int64_t
   let functionheaderendlinetype = T.constant "FunctionHeaderEndLineType" T.int64_t
   let functioncontinuationlinetype = T.constant "FunctionContinuationLineType" T.int64_t
-  let stackvariablelinetype = T.constant "StackVariableLineType" T.int64_t
-  let stackvariablelistendlinetype = T.constant "StackVariableListEndLineType" T.int64_t
+  let localvariablelinetype = T.constant "LocalVariableLineType" T.int64_t
+  let localvariablelistendlinetype = T.constant "LocalVariableListEndLineType" T.int64_t
   let functionendlinetype = T.constant "FunctionEndLineType" T.int64_t
   let notestartlinetype = T.constant "NoteStartLineType" T.int64_t
   let notelinetype = T.constant "NoteLineType" T.int64_t
@@ -698,8 +764,8 @@ struct
       FunctionHeaderStartLineType, functionheaderstartlinetype;
       FunctionHeaderEndLineType, functionheaderendlinetype;
       FunctionContinuationLineType, functioncontinuationlinetype;
-      StackVariableLineType, stackvariablelinetype;
-      StackVariableListEndLineType, stackvariablelistendlinetype;
+      LocalVariableLineType, localvariablelinetype;
+      LocalVariableListEndLineType, localvariablelistendlinetype;
       FunctionEndLineType, functionendlinetype;
       NoteStartLineType, notestartlinetype;
       NoteLineType, notelinetype;
@@ -715,14 +781,12 @@ struct
   let showopcode = T.constant "ShowOpcode" T.int64_t
   let expandlongopcode = T.constant "ExpandLongOpcode" T.int64_t
   let grouplineardisassemblyfunctions = T.constant "GroupLinearDisassemblyFunctions" T.int64_t
-  let showbasicblockregisterstate = T.constant "ShowBasicBlockRegisterState" T.int64_t
   let showflagusage = T.constant "ShowFlagUsage" T.int64_t
   let bndisassemblyoption = T.enum "BNDisassemblyOption" [ 
       ShowAddress, showaddress;
       ShowOpcode, showopcode;
       ExpandLongOpcode, expandlongopcode;
       GroupLinearDisassemblyFunctions, grouplineardisassemblyfunctions;
-      ShowBasicBlockRegisterState, showbasicblockregisterstate;
       ShowFlagUsage, showflagusage;
     ]
 
@@ -738,11 +802,13 @@ struct
   let staticscope = T.constant "StaticScope" T.int64_t
   let virtualscope = T.constant "VirtualScope" T.int64_t
   let thunkscope = T.constant "ThunkScope" T.int64_t
+  let friendscope = T.constant "FriendScope" T.int64_t
   let bnmemberscope = T.enum "BNMemberScope" [ 
       NoScope, noscope;
       StaticScope, staticscope;
       VirtualScope, virtualscope;
       ThunkScope, thunkscope;
+      FriendScope, friendscope;
     ]
 
   let noaccess = T.constant "NoAccess" T.int64_t
@@ -968,6 +1034,7 @@ struct
   let signedhexadecimaldisplaytype = T.constant "SignedHexadecimalDisplayType" T.int64_t
   let unsignedhexadecimaldisplaytype = T.constant "UnsignedHexadecimalDisplayType" T.int64_t
   let characterconstantdisplaytype = T.constant "CharacterConstantDisplayType" T.int64_t
+  let pointerdisplaytype = T.constant "PointerDisplayType" T.int64_t
   let bnintegerdisplaytype = T.enum "BNIntegerDisplayType" [ 
       DefaultIntegerDisplayType, defaultintegerdisplaytype;
       BinaryDisplayType, binarydisplaytype;
@@ -978,6 +1045,7 @@ struct
       SignedHexadecimalDisplayType, signedhexadecimaldisplaytype;
       UnsignedHexadecimalDisplayType, unsignedhexadecimaldisplaytype;
       CharacterConstantDisplayType, characterconstantdisplaytype;
+      PointerDisplayType, pointerdisplaytype;
     ]
 
   let noextend = T.constant "NoExtend" T.int64_t
@@ -989,28 +1057,46 @@ struct
       SignExtendToFullWidth, signextendtofullwidth;
     ]
 
-  let entryvalue = T.constant "EntryValue" T.int64_t
-  let offsetfromentryvalue = T.constant "OffsetFromEntryValue" T.int64_t
-  let constantvalue = T.constant "ConstantValue" T.int64_t
-  let stackframeoffset = T.constant "StackFrameOffset" T.int64_t
   let undeterminedvalue = T.constant "UndeterminedValue" T.int64_t
-  let offsetfromundeterminedvalue = T.constant "OffsetFromUndeterminedValue" T.int64_t
+  let entryvalue = T.constant "EntryValue" T.int64_t
+  let constantvalue = T.constant "ConstantValue" T.int64_t
+  let constantpointervalue = T.constant "ConstantPointerValue" T.int64_t
+  let stackframeoffset = T.constant "StackFrameOffset" T.int64_t
+  let returnaddressvalue = T.constant "ReturnAddressValue" T.int64_t
   let signedrangevalue = T.constant "SignedRangeValue" T.int64_t
   let unsignedrangevalue = T.constant "UnsignedRangeValue" T.int64_t
   let lookuptablevalue = T.constant "LookupTableValue" T.int64_t
-  let comparisonresultvalue = T.constant "ComparisonResultValue" T.int64_t
+  let insetofvalues = T.constant "InSetOfValues" T.int64_t
+  let notinsetofvalues = T.constant "NotInSetOfValues" T.int64_t
   let bnregistervaluetype = T.enum "BNRegisterValueType" [ 
-      EntryValue, entryvalue;
-      OffsetFromEntryValue, offsetfromentryvalue;
-      ConstantValue, constantvalue;
-      StackFrameOffset, stackframeoffset;
       UndeterminedValue, undeterminedvalue;
-      OffsetFromUndeterminedValue, offsetfromundeterminedvalue;
+      EntryValue, entryvalue;
+      ConstantValue, constantvalue;
+      ConstantPointerValue, constantpointervalue;
+      StackFrameOffset, stackframeoffset;
+      ReturnAddressValue, returnaddressvalue;
       SignedRangeValue, signedrangevalue;
       UnsignedRangeValue, unsignedrangevalue;
       LookupTableValue, lookuptablevalue;
-      ComparisonResultValue, comparisonresultvalue;
+      InSetOfValues, insetofvalues;
+      NotInSetOfValues, notinsetofvalues;
     ]
+
+  let officialpluginorigin = T.constant "OfficialPluginOrigin" T.int64_t
+  let communitypluginorigin = T.constant "CommunityPluginOrigin" T.int64_t
+  let otherpluginorigin = T.constant "OtherPluginOrigin" T.int64_t
+  let bnpluginorigin = T.enum "BNPluginOrigin" [ 
+      OfficialPluginOrigin, officialpluginorigin;
+      CommunityPluginOrigin, communitypluginorigin;
+      OtherPluginOrigin, otherpluginorigin;
+    ]
+  let uptodatepluginstatus = T.constant "UpToDatePluginStatus" T.int64_t
+  let updatesavailablepluginstatus = T.constant "UpdatesAvailablePluginStatus" T.int64_t
+  let bnpluginupdatestatus = T.enum "BNPluginUpdateStatus" [ 
+      UpToDatePluginStatus, uptodatepluginstatus;
+      UpdatesAvailablePluginStatus, updatesavailablepluginstatus;
+    ]
+
 
   let updatefailed = T.constant "UpdateFailed" T.int64_t
   let updatesuccess = T.constant "UpdateSuccess" T.int64_t
@@ -1020,6 +1106,18 @@ struct
       UpdateSuccess, updatesuccess;
       AlreadyUpToDate, alreadyuptodate;
     ]
+
+  let coreplugintype = T.constant "CorePluginType" T.int64_t
+  let uiplugintype = T.constant "UiPluginType" T.int64_t
+  let architectureplugintype = T.constant "ArchitecturePluginType" T.int64_t
+  let binaryviewplugintype = T.constant "BinaryViewPluginType" T.int64_t
+  let bnplugintype = T.enum "BNPluginType" [ 
+      CorePluginType, coreplugintype;
+      UiPluginType, uiplugintype;
+      ArchitecturePluginType, architectureplugintype;
+      BinaryViewPluginType, binaryviewplugintype;
+    ]
+
 
   let idlestate = T.constant "IdleState" T.int64_t
   let disassemblestate = T.constant "DisassembleState" T.int64_t
@@ -1160,11 +1258,215 @@ struct
       FunctionPluginCommand, functionplugincommand;
     ]
 
+  let mlil_nop = T.constant "MLIL_NOP" T.int64_t
+  let mlil_set_var = T.constant "MLIL_SET_VAR" T.int64_t
+  let mlil_set_var_field = T.constant "MLIL_SET_VAR_FIELD" T.int64_t
+  let mlil_set_var_split = T.constant "MLIL_SET_VAR_SPLIT" T.int64_t
+  let mlil_load = T.constant "MLIL_LOAD" T.int64_t
+  let mlil_store = T.constant "MLIL_STORE" T.int64_t
+  let mlil_var = T.constant "MLIL_VAR" T.int64_t
+  let mlil_var_field = T.constant "MLIL_VAR_FIELD" T.int64_t
+  let mlil_address_of = T.constant "MLIL_ADDRESS_OF" T.int64_t
+  let mlil_address_of_field = T.constant "MLIL_ADDRESS_OF_FIELD" T.int64_t
+  let mlil_const = T.constant "MLIL_CONST" T.int64_t
+  let mlil_const_ptr = T.constant "MLIL_CONST_PTR" T.int64_t
+  let mlil_add = T.constant "MLIL_ADD" T.int64_t
+  let mlil_adc = T.constant "MLIL_ADC" T.int64_t
+  let mlil_sub = T.constant "MLIL_SUB" T.int64_t
+  let mlil_sbb = T.constant "MLIL_SBB" T.int64_t
+  let mlil_and = T.constant "MLIL_AND" T.int64_t
+  let mlil_or = T.constant "MLIL_OR" T.int64_t
+  let mlil_xor = T.constant "MLIL_XOR" T.int64_t
+  let mlil_lsl = T.constant "MLIL_LSL" T.int64_t
+  let mlil_lsr = T.constant "MLIL_LSR" T.int64_t
+  let mlil_asr = T.constant "MLIL_ASR" T.int64_t
+  let mlil_rol = T.constant "MLIL_ROL" T.int64_t
+  let mlil_rlc = T.constant "MLIL_RLC" T.int64_t
+  let mlil_ror = T.constant "MLIL_ROR" T.int64_t
+  let mlil_rrc = T.constant "MLIL_RRC" T.int64_t
+  let mlil_mul = T.constant "MLIL_MUL" T.int64_t
+  let mlil_mulu_dp = T.constant "MLIL_MULU_DP" T.int64_t
+  let mlil_muls_dp = T.constant "MLIL_MULS_DP" T.int64_t
+  let mlil_divu = T.constant "MLIL_DIVU" T.int64_t
+  let mlil_divu_dp = T.constant "MLIL_DIVU_DP" T.int64_t
+  let mlil_divs = T.constant "MLIL_DIVS" T.int64_t
+  let mlil_divs_dp = T.constant "MLIL_DIVS_DP" T.int64_t
+  let mlil_modu = T.constant "MLIL_MODU" T.int64_t
+  let mlil_modu_dp = T.constant "MLIL_MODU_DP" T.int64_t
+  let mlil_mods = T.constant "MLIL_MODS" T.int64_t
+  let mlil_mods_dp = T.constant "MLIL_MODS_DP" T.int64_t
+  let mlil_neg = T.constant "MLIL_NEG" T.int64_t
+  let mlil_not = T.constant "MLIL_NOT" T.int64_t
+  let mlil_sx = T.constant "MLIL_SX" T.int64_t
+  let mlil_zx = T.constant "MLIL_ZX" T.int64_t
+  let mlil_low_part = T.constant "MLIL_LOW_PART" T.int64_t
+  let mlil_jump = T.constant "MLIL_JUMP" T.int64_t
+  let mlil_jump_to = T.constant "MLIL_JUMP_TO" T.int64_t
+  let mlil_call = T.constant "MLIL_CALL" T.int64_t
+  let mlil_call_untyped = T.constant "MLIL_CALL_UNTYPED" T.int64_t
+  let mlil_call_output = T.constant "MLIL_CALL_OUTPUT" T.int64_t
+  let mlil_call_param = T.constant "MLIL_CALL_PARAM" T.int64_t
+  let mlil_ret = T.constant "MLIL_RET" T.int64_t
+  let mlil_noret = T.constant "MLIL_NORET" T.int64_t
+  let mlil_if = T.constant "MLIL_IF" T.int64_t
+  let mlil_goto = T.constant "MLIL_GOTO" T.int64_t
+  let mlil_cmp_e = T.constant "MLIL_CMP_E" T.int64_t
+  let mlil_cmp_ne = T.constant "MLIL_CMP_NE" T.int64_t
+  let mlil_cmp_slt = T.constant "MLIL_CMP_SLT" T.int64_t
+  let mlil_cmp_ult = T.constant "MLIL_CMP_ULT" T.int64_t
+  let mlil_cmp_sle = T.constant "MLIL_CMP_SLE" T.int64_t
+  let mlil_cmp_ule = T.constant "MLIL_CMP_ULE" T.int64_t
+  let mlil_cmp_sge = T.constant "MLIL_CMP_SGE" T.int64_t
+  let mlil_cmp_uge = T.constant "MLIL_CMP_UGE" T.int64_t
+  let mlil_cmp_sgt = T.constant "MLIL_CMP_SGT" T.int64_t
+  let mlil_cmp_ugt = T.constant "MLIL_CMP_UGT" T.int64_t
+  let mlil_test_bit = T.constant "MLIL_TEST_BIT" T.int64_t
+  let mlil_bool_to_int = T.constant "MLIL_BOOL_TO_INT" T.int64_t
+  let mlil_add_overflow = T.constant "MLIL_ADD_OVERFLOW" T.int64_t
+  let mlil_syscall = T.constant "MLIL_SYSCALL" T.int64_t
+  let mlil_syscall_untyped = T.constant "MLIL_SYSCALL_UNTYPED" T.int64_t
+  let mlil_bp = T.constant "MLIL_BP" T.int64_t
+  let mlil_trap = T.constant "MLIL_TRAP" T.int64_t
+  let mlil_undef = T.constant "MLIL_UNDEF" T.int64_t
+  let mlil_unimpl = T.constant "MLIL_UNIMPL" T.int64_t
+  let mlil_unimpl_mem = T.constant "MLIL_UNIMPL_MEM" T.int64_t
+  let mlil_set_var_ssa = T.constant "MLIL_SET_VAR_SSA" T.int64_t
+  let mlil_set_var_ssa_field = T.constant "MLIL_SET_VAR_SSA_FIELD" T.int64_t
+  let mlil_set_var_split_ssa = T.constant "MLIL_SET_VAR_SPLIT_SSA" T.int64_t
+  let mlil_set_var_aliased = T.constant "MLIL_SET_VAR_ALIASED" T.int64_t
+  let mlil_set_var_aliased_field = T.constant "MLIL_SET_VAR_ALIASED_FIELD" T.int64_t
+  let mlil_var_ssa = T.constant "MLIL_VAR_SSA" T.int64_t
+  let mlil_var_ssa_field = T.constant "MLIL_VAR_SSA_FIELD" T.int64_t
+  let mlil_var_aliased = T.constant "MLIL_VAR_ALIASED" T.int64_t
+  let mlil_var_aliased_field = T.constant "MLIL_VAR_ALIASED_FIELD" T.int64_t
+  let mlil_call_ssa = T.constant "MLIL_CALL_SSA" T.int64_t
+  let mlil_call_untyped_ssa = T.constant "MLIL_CALL_UNTYPED_SSA" T.int64_t
+  let mlil_syscall_ssa = T.constant "MLIL_SYSCALL_SSA" T.int64_t
+  let mlil_syscall_untyped_ssa = T.constant "MLIL_SYSCALL_UNTYPED_SSA" T.int64_t
+  let mlil_call_param_ssa = T.constant "MLIL_CALL_PARAM_SSA" T.int64_t
+  let mlil_call_output_ssa = T.constant "MLIL_CALL_OUTPUT_SSA" T.int64_t
+  let mlil_load_ssa = T.constant "MLIL_LOAD_SSA" T.int64_t
+  let mlil_store_ssa = T.constant "MLIL_STORE_SSA" T.int64_t
+  let mlil_var_phi = T.constant "MLIL_VAR_PHI" T.int64_t
+  let mlil_mem_phi = T.constant "MLIL_MEM_PHI" T.int64_t
+  let bnmediumleveliloperation = T.enum "BNMediumLevelILOperation" [ 
+      MLIL_NOP, mlil_nop;
+      MLIL_SET_VAR, mlil_set_var;
+      MLIL_SET_VAR_FIELD, mlil_set_var_field;
+      MLIL_SET_VAR_SPLIT, mlil_set_var_split;
+      MLIL_LOAD, mlil_load;
+      MLIL_STORE, mlil_store;
+      MLIL_VAR, mlil_var;
+      MLIL_VAR_FIELD, mlil_var_field;
+      MLIL_ADDRESS_OF, mlil_address_of;
+      MLIL_ADDRESS_OF_FIELD, mlil_address_of_field;
+      MLIL_CONST, mlil_const;
+      MLIL_CONST_PTR, mlil_const_ptr;
+      MLIL_ADD, mlil_add;
+      MLIL_ADC, mlil_adc;
+      MLIL_SUB, mlil_sub;
+      MLIL_SBB, mlil_sbb;
+      MLIL_AND, mlil_and;
+      MLIL_OR, mlil_or;
+      MLIL_XOR, mlil_xor;
+      MLIL_LSL, mlil_lsl;
+      MLIL_LSR, mlil_lsr;
+      MLIL_ASR, mlil_asr;
+      MLIL_ROL, mlil_rol;
+      MLIL_RLC, mlil_rlc;
+      MLIL_ROR, mlil_ror;
+      MLIL_RRC, mlil_rrc;
+      MLIL_MUL, mlil_mul;
+      MLIL_MULU_DP, mlil_mulu_dp;
+      MLIL_MULS_DP, mlil_muls_dp;
+      MLIL_DIVU, mlil_divu;
+      MLIL_DIVU_DP, mlil_divu_dp;
+      MLIL_DIVS, mlil_divs;
+      MLIL_DIVS_DP, mlil_divs_dp;
+      MLIL_MODU, mlil_modu;
+      MLIL_MODU_DP, mlil_modu_dp;
+      MLIL_MODS, mlil_mods;
+      MLIL_MODS_DP, mlil_mods_dp;
+      MLIL_NEG, mlil_neg;
+      MLIL_NOT, mlil_not;
+      MLIL_SX, mlil_sx;
+      MLIL_ZX, mlil_zx;
+      MLIL_LOW_PART, mlil_low_part;
+      MLIL_JUMP, mlil_jump;
+      MLIL_JUMP_TO, mlil_jump_to;
+      MLIL_CALL, mlil_call;
+      MLIL_CALL_UNTYPED, mlil_call_untyped;
+      MLIL_CALL_OUTPUT, mlil_call_output;
+      MLIL_CALL_PARAM, mlil_call_param;
+      MLIL_RET, mlil_ret;
+      MLIL_NORET, mlil_noret;
+      MLIL_IF, mlil_if;
+      MLIL_GOTO, mlil_goto;
+      MLIL_CMP_E, mlil_cmp_e;
+      MLIL_CMP_NE, mlil_cmp_ne;
+      MLIL_CMP_SLT, mlil_cmp_slt;
+      MLIL_CMP_ULT, mlil_cmp_ult;
+      MLIL_CMP_SLE, mlil_cmp_sle;
+      MLIL_CMP_ULE, mlil_cmp_ule;
+      MLIL_CMP_SGE, mlil_cmp_sge;
+      MLIL_CMP_UGE, mlil_cmp_uge;
+      MLIL_CMP_SGT, mlil_cmp_sgt;
+      MLIL_CMP_UGT, mlil_cmp_ugt;
+      MLIL_TEST_BIT, mlil_test_bit;
+      MLIL_BOOL_TO_INT, mlil_bool_to_int;
+      MLIL_ADD_OVERFLOW, mlil_add_overflow;
+      MLIL_SYSCALL, mlil_syscall;
+      MLIL_SYSCALL_UNTYPED, mlil_syscall_untyped;
+      MLIL_BP, mlil_bp;
+      MLIL_TRAP, mlil_trap;
+      MLIL_UNDEF, mlil_undef;
+      MLIL_UNIMPL, mlil_unimpl;
+      MLIL_UNIMPL_MEM, mlil_unimpl_mem;
+      MLIL_SET_VAR_SSA, mlil_set_var_ssa;
+      MLIL_SET_VAR_SSA_FIELD, mlil_set_var_ssa_field;
+      MLIL_SET_VAR_SPLIT_SSA, mlil_set_var_split_ssa;
+      MLIL_SET_VAR_ALIASED, mlil_set_var_aliased;
+      MLIL_SET_VAR_ALIASED_FIELD, mlil_set_var_aliased_field;
+      MLIL_VAR_SSA, mlil_var_ssa;
+      MLIL_VAR_SSA_FIELD, mlil_var_ssa_field;
+      MLIL_VAR_ALIASED, mlil_var_aliased;
+      MLIL_VAR_ALIASED_FIELD, mlil_var_aliased_field;
+      MLIL_CALL_SSA, mlil_call_ssa;
+      MLIL_CALL_UNTYPED_SSA, mlil_call_untyped_ssa;
+      MLIL_SYSCALL_SSA, mlil_syscall_ssa;
+      MLIL_SYSCALL_UNTYPED_SSA, mlil_syscall_untyped_ssa;
+      MLIL_CALL_PARAM_SSA, mlil_call_param_ssa;
+      MLIL_CALL_OUTPUT_SSA, mlil_call_output_ssa;
+      MLIL_LOAD_SSA, mlil_load_ssa;
+      MLIL_STORE_SSA, mlil_store_ssa;
+      MLIL_VAR_PHI, mlil_var_phi;
+      MLIL_MEM_PHI, mlil_mem_phi;
+    ]
+
+  let stackvariablesourcetype = T.constant "StackVariableSourceType" T.int64_t
+  let registervariablesourcetype = T.constant "RegisterVariableSourceType" T.int64_t
+  let flagvariablesourcetype = T.constant "FlagVariableSourceType" T.int64_t
+  let bnvariablesourcetype = T.enum "BNVariableSourceType" [ 
+      StackVariableSourceType, stackvariablesourcetype;
+      RegisterVariableSourceType, registervariablesourcetype;
+      FlagVariableSourceType, flagvariablesourcetype;
+    ]
+
+  let notbranchdependent = T.constant "NotBranchDependent" T.int64_t
+  let truebranchdependent = T.constant "TrueBranchDependent" T.int64_t
+  let falsebranchdependent = T.constant "FalseBranchDependent" T.int64_t
+  let bnilbranchdependence = T.enum "BNILBranchDependence" [ 
+      NotBranchDependent, notbranchdependent;
+      TrueBranchDependent, truebranchdependent;
+      FalseBranchDependent, falsebranchdependent;
+    ]
+
 
 
   let bn_file_metadata : bn_file_metadata Ctypes.structure T.typ = T.structure "BNFileMetadata"
   let bn_binary_view : bn_binary_view Ctypes.structure T.typ = T.structure "BNBinaryView"
   let bn_function : bn_function Ctypes.structure T.typ = T.structure "BNFunction"
+  let bn_medium_level_ilfunction : bn_medium_level_ilfunction Ctypes.structure T.typ = T.structure "BNMediumLevelILFunction"
   let bn_binary_viewtype : bn_binary_viewtype Ctypes.structure T.typ = T.structure "BNBinaryViewType"
   let bn_platform : bn_platform Ctypes.structure T.typ = T.structure "BNPlatform"    
   let bn_architecture : bn_architecture Ctypes.structure T.typ = T.structure "BNArchitecture"
@@ -1183,14 +1485,17 @@ struct
   let bn_lowlevelilfunction : bn_lowlevelilfunction Ctypes.structure T.typ = T.structure "BNLowLevelILFunction"
   let bn_type : bn_type Ctypes.structure T.typ = T.structure "BNType"
   let bn_structure : bn_structure Ctypes.structure T.typ = T.structure "BNStructure"
-  let bnunknown_type : bnunknown_type Ctypes.structure T.typ = T.structure "BNUnknownType"
+  let bnnamed_type_reference : bnnamed_type_reference Ctypes.structure T.typ = T.structure "BNNamedTypeReference"
   let bn_enumeration : bn_enumeration Ctypes.structure T.typ = T.structure "BNEnumeration"
   let bn_callingconvention : bn_callingconvention Ctypes.structure T.typ = T.structure "BNCallingConvention"
   let bn_analysis_completionevent : bn_analysis_completionevent Ctypes.structure T.typ = T.structure "BNAnalysisCompletionEvent"
   let bndisassembly_settings : bndisassembly_settings Ctypes.structure T.typ = T.structure "BNDisassemblySettings"
   let bnmain_thread_action : bnmain_thread_action Ctypes.structure T.typ = T.structure "BNMainThreadAction"
   let bnscripting_instance : bnscripting_instance Ctypes.structure T.typ = T.structure "BNScriptingInstance"
-
+  let bnnamed_type_reference : bnnamed_type_reference Ctypes.structure T.typ = T.structure "BNNamedTypeReference"
+  let bnrepository : bnrepository Ctypes.structure T.typ = T.structure "BNRepository"
+  let bnrepo_plugin : bnrepo_plugin Ctypes.structure T.typ = T.structure "BNRepoPlugin"
+  let bnrepository_manager : bnrepository_manager Ctypes.structure T.typ = T.structure "BNRepositoryManager"
 
 
 
@@ -1204,13 +1509,32 @@ struct
   type bn_register_value
   let bn_register_value : bn_register_value Ctypes.structure T.typ = T.structure "BNRegisterValue"
   let state = T.field bn_register_value "state" bn_register_value_type
-  let reg = T.field bn_register_value "reg" T.uint32_t
   let value = T.field bn_register_value "value" T.int64_t
-  let range_start = T.field bn_register_value "rangeStart" T.uint64_t
-  let range_end = T.field bn_register_value "rangeEnd" T.uint64_t
-  let range_step = T.field bn_register_value "rangeStep" T.uint64_t
-  let table = T.field bn_register_value "table" (T.ptr bn_lookup_table_entry)
   let () = T.seal bn_register_value 
+
+  type bnvalue_range
+  let bnvalue_range : bnvalue_range Ctypes.structure T.typ = T.structure "BNValueRange"
+  let bnvalue_range_start = T.field bnvalue_range "start" (T.uint64_t)
+  let bnvalue_range_end = T.field bnvalue_range "end" (T.uint64_t)
+  let bnvalue_range_step = T.field bnvalue_range "step" (T.uint64_t)
+  let () = T.seal bnvalue_range
+
+  type bnpossible_value_set
+  let bnpossible_value_set : bnpossible_value_set Ctypes.structure T.typ = T.structure "BNPossibleValueSet"
+  let bnpossible_value_set_state = T.field bnpossible_value_set "state" (bn_register_value_type)
+  let bnpossible_value_set_value = T.field bnpossible_value_set "value" (T.int64_t)
+  let bnpossible_value_set_ranges = T.field bnpossible_value_set "ranges" (T.ptr bnvalue_range)
+  let bnpossible_value_set_valueset = T.field bnpossible_value_set "valueSet" (T.ptr T.int64_t )
+  let bnpossible_value_set_table = T.field bnpossible_value_set "table" (T.ptr bn_lookup_table_entry )
+  let bnpossible_value_set_count = T.field bnpossible_value_set "count" (T.size_t)
+  let () = T.seal bnpossible_value_set
+
+
+  type bnqualified_name
+  let bnqualified_name : bnqualified_name Ctypes.structure T.typ = T.structure "BNQualifiedName"
+  let bnqualified_name_name = T.field bnqualified_name "name" (T.ptr T.string)
+  let bnqualified_name_namecount = T.field bnqualified_name "nameCount" (T.size_t)
+  let () = T.seal bnqualified_name
 
   type bn_register_or_constant
   let bn_register_or_constant : bn_register_or_constant Ctypes.structure T.typ = T.structure "BNRegisterOrConstant"
@@ -1243,6 +1567,8 @@ struct
   let function_updated = T.field bn_binary_data_notification "functionUpdated" (T.static_funptr T.(T.ptr T.void @-> T.ptr T.void @-> T.ptr T.void @-> returning T.void))
   let string_found = T.field bn_binary_data_notification "stringFound" (T.static_funptr T.(T.ptr T.void @-> T.ptr T.void @-> bn_string_type @-> T.uint64_t @-> T.size_t @-> returning T.void))
   let string_removed = T.field bn_binary_data_notification "stringRemoved" (T.static_funptr T.(T.ptr void @-> T.ptr T.void @-> bn_string_type @-> T.uint64_t @-> T.size_t @-> returning T.void))
+  let type_defined = T.field bn_binary_data_notification "typeDefined" (T.static_funptr T.(T.ptr T.void @-> T.ptr bn_binary_view @-> T.ptr bnqualified_name @-> T.ptr bn_type @-> returning T.void))
+  let type_undefined = T.field bn_binary_data_notification "typeUndefined" (T.static_funptr T.(T.ptr T.void @-> T.ptr bn_binary_view @-> T.ptr bnqualified_name @-> T.ptr bn_type @-> returning T.void))
   let () = T.seal bn_binary_data_notification
 
   let bn_file_accessor : bn_file_accessor Ctypes.structure T.typ = T.structure "BNFileAccessor"
@@ -1398,6 +1724,8 @@ struct
   let bnconstant_reference : bnconstant_reference Ctypes.structure T.typ = T.structure "BNConstantReference"
   let value = T.field bnconstant_reference "value" (T.int64_t)
   let size = T.field bnconstant_reference "size" (T.size_t)
+  let bnconstant_reference_pointer = T.field bnconstant_reference "pointer" (T.bool)
+  let bnconstant_reference_intermediate = T.field bnconstant_reference "intermediate" (T.bool)
   let () = T.seal bnconstant_reference
 
   type bnhighlight_color
@@ -1484,6 +1812,26 @@ struct
   let end_ = T.field bnaddress_range "end" (T.uint64_t)
   let () = T.seal bnaddress_range
 
+  type bnsystem_call_info
+  let bnsystem_call_info : bnsystem_call_info Ctypes.structure T.typ = T.structure "BNSystemCallInfo"
+  let bnsystem_call_info_number = T.field bnsystem_call_info "number" (T.uint32_t)
+  let bnsystem_call_info_name = T.field bnsystem_call_info "name" (bnqualified_name)
+  let bnsystem_call_info_type = T.field bnsystem_call_info "type" (T.ptr bn_type)
+  let () = T.seal bnsystem_call_info
+
+  type bnilbranch_instruction_and_dependence
+  let bnilbranch_instruction_and_dependence : bnilbranch_instruction_and_dependence Ctypes.structure T.typ = T.structure "BNILBranchInstructionAndDependence"
+  let bnilbranch_instruction_and_dependence_branch = T.field bnilbranch_instruction_and_dependence "branch" (T.size_t)
+  let bnilbranch_instruction_and_dependence_dependence = T.field bnilbranch_instruction_and_dependence "dependence" (bnilbranchdependence)
+  let () = T.seal bnilbranch_instruction_and_dependence
+
+  type bnperformance_info
+  let bnperformance_info : bnperformance_info Ctypes.structure T.typ = T.structure "BNPerformanceInfo"
+  let bnperformance_info_name = T.field bnperformance_info "name" (T.string)
+  let bnperformance_info_seconds = T.field bnperformance_info "seconds" (T.double)
+  let () = T.seal bnperformance_info
+
+
   type bncustom_transform
   let bncustom_transform : bncustom_transform Ctypes.structure T.typ = T.structure "BNCustomTransform"
   let context = T.field bncustom_transform "context" (T.ptr T.void)
@@ -1504,6 +1852,8 @@ struct
   let bninstruction_text_token_value = T.field bninstruction_text_token "value" (T.uint64_t)
   let bninstruction_text_token_size = T.field bninstruction_text_token "size" (T.size_t)
   let bninstruction_text_token_operand = T.field bninstruction_text_token "operand" (T.size_t)
+  let bninstruction_text_token_context = T.field bninstruction_text_token "context" (bninstructiontexttokencontext)
+  let bninstruction_text_token_address = T.field bninstruction_text_token "address" (T.uint64_t)
   let () = T.seal bninstruction_text_token
 
   type bnfunction_recognizer
@@ -1512,21 +1862,30 @@ struct
   let recognizelowlevelil = T.field bnfunction_recognizer "recognizeLowLevelIL"
       (T.static_funptr T.(T.ptr T.void @-> T.ptr bn_binary_view @-> T.ptr bn_function @-> T.ptr bn_lowlevelilfunction @-> returning T.bool))
   let () = T.seal bnfunction_recognizer
+  type bnvariable
+  let bnvariable : bnvariable Ctypes.structure T.typ = T.structure "BNVariable"
+  let bnvariable_type = T.field bnvariable "type" (bnvariablesourcetype)
+  let bnvariable_index = T.field bnvariable "index" (T.uint32_t)
+  let bnvariable_storage = T.field bnvariable "storage" (T.int64_t)
+  let () = T.seal bnvariable
 
-  type bnstack_variable
-  let bnstack_variable : bnstack_variable Ctypes.structure T.typ = T.structure "BNStackVariable"
-  let type_ = T.field bnstack_variable "type" (T.ptr T.void)
-  let name = T.field bnstack_variable "name" (T.string)
-  let offset = T.field bnstack_variable "offset" (T.int64_t)
-  let autodefined = T.field bnstack_variable "autoDefined" (T.bool)
-  let () = T.seal bnstack_variable
+
+  type bnvariable_name_and_type
+  let bnvariable_name_and_type : bnvariable_name_and_type Ctypes.structure T.typ = T.structure "BNVariableNameAndType"
+  let bnvariable_name_and_type_var = T.field bnvariable_name_and_type "var" (bnvariable)
+  let bnvariable_name_and_type_type = T.field bnvariable_name_and_type "type" (T.ptr bn_type)
+  let bnvariable_name_and_type_name = T.field bnvariable_name_and_type "name" (T.string)
+  let bnvariable_name_and_type_autodefined = T.field bnvariable_name_and_type "autoDefined" (T.bool)
+  let () = T.seal bnvariable_name_and_type
+
+
 
   type bnstack_variable_reference
   let bnstack_variable_reference : bnstack_variable_reference Ctypes.structure T.typ = T.structure "BNStackVariableReference"
   let bnstack_variable_sourceoperand = T.field bnstack_variable_reference "sourceOperand" (T.uint32_t)
   let bnstack_variable_type_ = T.field bnstack_variable_reference "type" (T.ptr T.void)
   let bnstack_variable_name = T.field bnstack_variable_reference "name" (T.string)
-  let bnstack_variable_startingoffset = T.field bnstack_variable_reference "startingOffset" (T.int64_t)
+  let bnstack_variable_reference_varidentifier = T.field bnstack_variable_reference "varIdentifier" (T.uint64_t)
   let bnstack_variable_referencedoffset = T.field bnstack_variable_reference "referencedOffset" (T.int64_t)
   let () = T.seal bnstack_variable_reference
 
@@ -1585,8 +1944,8 @@ struct
   type bn_basic_block_edge
   let bn_basic_block_edge : bn_basic_block_edge Ctypes.structure T.typ = T.structure "BNBasicBlockEdge"
   let bn_basic_block_edge_type_ = T.field bn_basic_block_edge "type" (bn_branch_type)
-  let bn_basic_block_edge_target = T.field bn_basic_block_edge "target" (T.uint64_t)
-  let bn_basic_block_edge_arch = T.field bn_basic_block_edge "arch" (T.ptr bn_architecture)
+  let bnbasic_block_edge_target = T.field bn_basic_block_edge "target" (T.ptr_opt bn_basicblock)
+  let bnbasic_block_edge_backedge = T.field bn_basic_block_edge "backEdge" (T.bool)
   let () = T.seal bn_basic_block_edge 
 
   type bn_point
@@ -1598,10 +1957,10 @@ struct
   type bn_function_graph_edge
   let bn_function_graph_edge : bn_function_graph_edge Ctypes.structure T.typ = T.structure "BNFunctionGraphEdge"
   let type_ = T.field bn_function_graph_edge "type" (bn_branch_type)
-  let target = T.field bn_function_graph_edge "target" (T.uint64_t)
-  let arch = T.field bn_function_graph_edge "arch" (T.ptr bn_architecture)
+  let bnfunction_graph_edge_target = T.field bn_function_graph_edge "target" (T.ptr bn_basicblock )
   let points = T.field bn_function_graph_edge "points" (T.ptr bn_point)
   let pointcount = T.field bn_function_graph_edge "pointCount" (T.size_t)
+  let bnfunction_graph_edge_backedge = T.field bn_function_graph_edge "backEdge" (T.bool)
   let () = T.seal bn_function_graph_edge 
 
   (*   type bn_custom_architecture *)
@@ -1738,6 +2097,13 @@ struct
   let type_ = T.field bnname_and_type "type" (T.ptr bn_type)
   let () = T.seal bnname_and_type
 
+  type bnqualified_name_and_type
+  let bnqualified_name_and_type : bnqualified_name_and_type Ctypes.structure T.typ = T.structure "BNQualifiedNameAndType"
+  let bnqualified_name_and_type_name = T.field bnqualified_name_and_type "name" (bnqualified_name)
+  let bnqualified_name_and_type_type = T.field bnqualified_name_and_type "type" (T.ptr bn_type )
+  let () = T.seal bnqualified_name_and_type
+
+
   type bnstructure_member
   let bnstructure_member : bnstructure_member Ctypes.structure T.typ = T.structure "BNStructureMember"
   let type_ = T.field bnstructure_member "type" (T.ptr bn_type)
@@ -1754,9 +2120,9 @@ struct
 
   type bntype_parser_result
   let bntype_parser_result : bntype_parser_result Ctypes.structure T.typ = T.structure "BNTypeParserResult"
-  let types = T.field bntype_parser_result "types" (T.ptr bnname_and_type )
-  let variables = T.field bntype_parser_result "variables" (T.ptr bnname_and_type )
-  let functions = T.field bntype_parser_result "functions" (T.ptr bnname_and_type )
+  let types = T.field bntype_parser_result "types" (T.ptr bnqualified_name_and_type)
+  let variables = T.field bntype_parser_result "variables" (T.ptr bnqualified_name_and_type)
+  let functions = T.field bntype_parser_result "functions" (T.ptr bnqualified_name_and_type)
   let typecount = T.field bntype_parser_result "typeCount" (T.size_t)
   let variablecount = T.field bntype_parser_result "variableCount" (T.size_t)
   let functioncount = T.field bntype_parser_result "functionCount" (T.size_t)
@@ -1774,5 +2140,22 @@ struct
   let notes = T.field bnupdate_version "notes" (T.string)
   let time = T.field bnupdate_version "time" (T.uint64_t)
   let () = T.seal bnupdate_version
+
+  type bnmedium_level_ilinstruction
+  let bnmedium_level_ilinstruction : bnmedium_level_ilinstruction Ctypes.structure T.typ = T.structure "BNMediumLevelILInstruction"
+  let bnmedium_level_ilinstruction_operation = T.field bnmedium_level_ilinstruction "operation" (bnmediumleveliloperation)
+  let bnmedium_level_ilinstruction_size = T.field bnmedium_level_ilinstruction "size" (T.size_t)
+  let bnmedium_level_ilinstruction_operands = Array.init 5 (fun i -> T.field bnmedium_level_ilinstruction "operands" T.uint64_t)
+  let bnmedium_level_ilinstruction_address = T.field bnmedium_level_ilinstruction "address" (T.uint64_t)
+  let () = T.seal bnmedium_level_ilinstruction
+
+  type bnmedium_level_illabel
+  let bnmedium_level_illabel : bnmedium_level_illabel Ctypes.structure T.typ = T.structure "BNMediumLevelILLabel"
+  let bnmedium_level_illabel_resolved = T.field bnmedium_level_illabel "resolved" (T.bool)
+  let bnmedium_level_illabel_ref = T.field bnmedium_level_illabel "ref" (T.size_t)
+  let bnmedium_level_illabel_operand = T.field bnmedium_level_illabel "operand" (T.size_t)
+  let () = T.seal bnmedium_level_illabel
+
+
 end
 

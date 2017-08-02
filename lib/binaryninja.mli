@@ -90,8 +90,7 @@ sig
         | BN_UnresolvedBranch
 
       val get_branch_type : bn_basicblock_edge -> bn_branch_type
-      val get_target : bn_basicblock_edge -> Unsigned.uint64
-      val get_arch : bn_basicblock_edge -> Architecture.bn_architecture
+      val get_target : bn_basicblock_edge -> bn_basicblock option
 
     end
   val get_function : bn_basicblock -> Function.bn_function
@@ -107,74 +106,96 @@ end
 and Lowlevelil :
 sig
 
-  type bn_low_level_il_operation = 
-    | BN_LLIL_NOP
-    | BN_LLIL_SET_REG
-    | BN_LLIL_SET_REG_SPLIT
-    | BN_LLIL_SET_FLAG
-    | BN_LLIL_LOAD
-    | BN_LLIL_STORE
-    | BN_LLIL_PUSH
-    | BN_LLIL_POP
-    | BN_LLIL_REG
-    | BN_LLIL_CONST
-    | BN_LLIL_FLAG
-    | BN_LLIL_FLAG_BIT
-    | BN_LLIL_ADD
-    | BN_LLIL_ADC
-    | BN_LLIL_SUB
-    | BN_LLIL_SBB
-    | BN_LLIL_AND
-    | BN_LLIL_OR
-    | BN_LLIL_XOR
-    | BN_LLIL_LSL
-    | BN_LLIL_LSR
-    | BN_LLIL_ASR
-    | BN_LLIL_ROL
-    | BN_LLIL_RLC
-    | BN_LLIL_ROR
-    | BN_LLIL_RRC
-    | BN_LLIL_MUL
-    | BN_LLIL_MULU_DP
-    | BN_LLIL_MULS_DP
-    | BN_LLIL_DIVU
-    | BN_LLIL_DIVU_DP
-    | BN_LLIL_DIVS
-    | BN_LLIL_DIVS_DP
-    | BN_LLIL_MODU
-    | BN_LLIL_MODU_DP
-    | BN_LLIL_MODS
-    | BN_LLIL_MODS_DP
-    | BN_LLIL_NEG
-    | BN_LLIL_NOT
-    | BN_LLIL_SX
-    | BN_LLIL_ZX
-    | BN_LLIL_JUMP
-    | BN_LLIL_JUMP_TO
-    | BN_LLIL_CALL
-    | BN_LLIL_RET
-    | BN_LLIL_NORET
-    | BN_LLIL_IF
-    | BN_LLIL_GOTO
-    | BN_LLIL_FLAG_COND
-    | BN_LLIL_CMP_E
-    | BN_LLIL_CMP_NE
-    | BN_LLIL_CMP_SLT
-    | BN_LLIL_CMP_ULT
-    | BN_LLIL_CMP_SLE
-    | BN_LLIL_CMP_ULE
-    | BN_LLIL_CMP_SGE
-    | BN_LLIL_CMP_UGE
-    | BN_LLIL_CMP_SGT
-    | BN_LLIL_CMP_UGT
-    | BN_LLIL_TEST_BIT
-    | BN_LLIL_BOOL_TO_INT
-    | BN_LLIL_SYSCALL
-    | BN_LLIL_BP
-    | BN_LLIL_TRAP
-    | BN_LLIL_UNDEF
-    | BN_LLIL_UNIMPL
-    | BN_LLIL_UNIMPL_MEM
+  type bn_low_level_il_operation =
+| BN_LLIL_NOP
+  | BN_LLIL_SET_REG
+  | BN_LLIL_SET_REG_SPLIT
+  | BN_LLIL_SET_FLAG
+  | BN_LLIL_LOAD
+  | BN_LLIL_STORE
+  | BN_LLIL_PUSH
+  | BN_LLIL_POP
+  | BN_LLIL_REG
+  | BN_LLIL_CONST
+  | BN_LLIL_CONST_PTR
+  | BN_LLIL_FLAG
+  | BN_LLIL_FLAG_BIT
+  | BN_LLIL_ADD
+  | BN_LLIL_ADC
+  | BN_LLIL_SUB
+  | BN_LLIL_SBB
+  | BN_LLIL_AND
+  | BN_LLIL_OR
+  | BN_LLIL_XOR
+  | BN_LLIL_LSL
+  | BN_LLIL_LSR
+  | BN_LLIL_ASR
+  | BN_LLIL_ROL
+  | BN_LLIL_RLC
+  | BN_LLIL_ROR
+  | BN_LLIL_RRC
+  | BN_LLIL_MUL
+  | BN_LLIL_MULU_DP
+  | BN_LLIL_MULS_DP
+  | BN_LLIL_DIVU
+  | BN_LLIL_DIVU_DP
+  | BN_LLIL_DIVS
+  | BN_LLIL_DIVS_DP
+  | BN_LLIL_MODU
+  | BN_LLIL_MODU_DP
+  | BN_LLIL_MODS
+  | BN_LLIL_MODS_DP
+  | BN_LLIL_NEG
+  | BN_LLIL_NOT
+  | BN_LLIL_SX
+  | BN_LLIL_ZX
+  | BN_LLIL_LOW_PART
+  | BN_LLIL_JUMP
+  | BN_LLIL_JUMP_TO
+  | BN_LLIL_CALL
+  | BN_LLIL_RET
+  | BN_LLIL_NORET
+  | BN_LLIL_IF
+  | BN_LLIL_GOTO
+  | BN_LLIL_FLAG_COND
+  | BN_LLIL_CMP_E
+  | BN_LLIL_CMP_NE
+  | BN_LLIL_CMP_SLT
+  | BN_LLIL_CMP_ULT
+  | BN_LLIL_CMP_SLE
+  | BN_LLIL_CMP_ULE
+  | BN_LLIL_CMP_SGE
+  | BN_LLIL_CMP_UGE
+  | BN_LLIL_CMP_SGT
+  | BN_LLIL_CMP_UGT
+  | BN_LLIL_TEST_BIT
+  | BN_LLIL_BOOL_TO_INT
+  | BN_LLIL_ADD_OVERFLOW
+  | BN_LLIL_SYSCALL
+  | BN_LLIL_BP
+  | BN_LLIL_TRAP
+  | BN_LLIL_UNDEF
+  | BN_LLIL_UNIMPL
+  | BN_LLIL_UNIMPL_MEM
+  | BN_LLIL_SET_REG_SSA
+  | BN_LLIL_SET_REG_SSA_PARTIAL
+  | BN_LLIL_SET_REG_SPLIT_SSA
+  | BN_LLIL_REG_SPLIT_DEST_SSA
+  | BN_LLIL_REG_SSA
+  | BN_LLIL_REG_SSA_PARTIAL
+  | BN_LLIL_SET_FLAG_SSA
+  | BN_LLIL_FLAG_SSA
+  | BN_LLIL_FLAG_BIT_SSA
+  | BN_LLIL_CALL_SSA
+  | BN_LLIL_SYSCALL_SSA
+  | BN_LLIL_CALL_PARAM_SSA
+  | BN_LLIL_CALL_STACK_SSA
+  | BN_LLIL_CALL_OUTPUT_SSA
+  | BN_LLIL_LOAD_SSA
+  | BN_LLIL_STORE_SSA
+  | BN_LLIL_REG_PHI
+  | BN_LLIL_FLAG_PHI
+  | BN_LLIL_MEM_PHI
 
   type bn_lowlevel_il_flag_condition =
     | BN_LLFC_E
@@ -270,6 +291,11 @@ sig
     | BN_NormalFunctionGraph 
     | BN_LowLevelILFunctionGraph 
     | BN_LiftedILFunctionGraph
+    | BN_LowLevelILSSAFormFunctionGraph
+    | BN_MediumLevelILFunctionGraph
+    | BN_MediumLevelILSSAFormFunctionGraph
+    | BN_MappedMediumLevelILFunctionGraph
+    | BN_MappedMediumLevelILSSAFormFunctionGraph
 
   val create_function_graph : Function.bn_function -> bn_functiongraph
 

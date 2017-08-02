@@ -17,6 +17,7 @@ type bn_file_metadata
 type bn_transform
 type bn_architecture
 type bn_function
+type bn_medium_level_ilfunction
 type bn_basicblock
 type bn_functiongraph
 type bn_functiongraphblock
@@ -26,7 +27,7 @@ type bnbackground_task
 type bn_lowlevelilfunction
 type bn_type
 type bn_structure
-type bnunknown_type
+type bnnamed_type_reference
 type bn_enumeration
 type bn_callingconvention
 type bn_platform
@@ -34,6 +35,9 @@ type bn_analysis_completionevent
 type bnmain_thread_action
 type bndisassembly_settings
 type bnscripting_instance
+type bnrepository
+type bnrepo_plugin
+type bnrepository_manager
 
 type bn_plugin_load_order =
   | BN_EarlyPluginLoadOrder
@@ -77,37 +81,41 @@ type bn_branch_type =
   | BN_IndirectBranch 
   | BN_UnresolvedBranch
 
-type bn_instruction_text_token_type = 
-  | BN_TextToken 
-  | BN_InstructionToken 
-  | BN_OperandSeparatorToken 
-  | BN_RegisterToken 
-  | BN_IntegerToken 
-  | BN_PossibleAddressToken 
-  | BN_BeginMemoryOperandToken 
-  | BN_EndMemoryOperandToken 
-  | BN_FloatingPointToken 
-  | BN_AnnotationToken
-
-  | BNStackVariableTypeToken
-  | BNDataVariableTypeToken
-  | BNFunctionReturnTypeToken
-  | BNFunctionAttributeToken
-  | BNArgumentTypeToken
-  | BNArgumentNameToken
-  | BNHexDumpByteValueToken
-  | BNHexDumpSkippedByteToken
-  | BNHexDumpInvalidByteToken
-  | BNOpcodeToken
-  | BNStringToken
-  | BNCharacterConstantToken
-
-  | BN_CodeRelativeAddressToken 
-  | BN_CodeSymbolToken 
-  | BN_DataSymbolToken 
-  | BN_StackVariableToken 
-  | BN_ImportToken 
-  | BN_AddressDisplayToken
+type bn_instruction_text_token_type =
+  | TextToken
+  | InstructionToken
+  | OperandSeparatorToken
+  | RegisterToken
+  | IntegerToken
+  | PossibleAddressToken
+  | BeginMemoryOperandToken
+  | EndMemoryOperandToken
+  | FloatingPointToken
+  | AnnotationToken
+  | CodeRelativeAddressToken
+  | ArgumentNameToken
+  | HexDumpByteValueToken
+  | HexDumpSkippedByteToken
+  | HexDumpInvalidByteToken
+  | HexDumpTextToken
+  | OpcodeToken
+  | StringToken
+  | CharacterConstantToken
+  | KeywordToken
+  | TypeNameToken
+  | FieldNameToken
+  | CodeSymbolToken
+  | DataSymbolToken
+  | LocalVariableToken
+  | ImportToken
+  | AddressDisplayToken
+    
+type bninstructiontexttokencontext = 
+  | NoTokenContext
+  | LocalVariableTokenContext
+  | DataVariableTokenContext
+  | FunctionReturnTokenContext
+  | ArgumentTokenContext
 
 type bnlineardisassemblylinetype = 
   | BlankLineType
@@ -118,8 +126,8 @@ type bnlineardisassemblylinetype =
   | FunctionHeaderStartLineType
   | FunctionHeaderEndLineType
   | FunctionContinuationLineType
-  | StackVariableLineType
-  | StackVariableListEndLineType
+  | LocalVariableLineType
+  | LocalVariableListEndLineType
   | FunctionEndLineType
   | NoteStartLineType
   | NoteLineType
@@ -156,6 +164,7 @@ type bn_low_level_il_operation =
   | BN_LLIL_POP
   | BN_LLIL_REG
   | BN_LLIL_CONST
+  | BN_LLIL_CONST_PTR
   | BN_LLIL_FLAG
   | BN_LLIL_FLAG_BIT
   | BN_LLIL_ADD
@@ -187,6 +196,7 @@ type bn_low_level_il_operation =
   | BN_LLIL_NOT
   | BN_LLIL_SX
   | BN_LLIL_ZX
+  | BN_LLIL_LOW_PART
   | BN_LLIL_JUMP
   | BN_LLIL_JUMP_TO
   | BN_LLIL_CALL
@@ -207,12 +217,34 @@ type bn_low_level_il_operation =
   | BN_LLIL_CMP_UGT
   | BN_LLIL_TEST_BIT
   | BN_LLIL_BOOL_TO_INT
+  | BN_LLIL_ADD_OVERFLOW
   | BN_LLIL_SYSCALL
   | BN_LLIL_BP
   | BN_LLIL_TRAP
   | BN_LLIL_UNDEF
   | BN_LLIL_UNIMPL
   | BN_LLIL_UNIMPL_MEM
+  | BN_LLIL_SET_REG_SSA
+  | BN_LLIL_SET_REG_SSA_PARTIAL
+  | BN_LLIL_SET_REG_SPLIT_SSA
+  | BN_LLIL_REG_SPLIT_DEST_SSA
+  | BN_LLIL_REG_SSA
+  | BN_LLIL_REG_SSA_PARTIAL
+  | BN_LLIL_SET_FLAG_SSA
+  | BN_LLIL_FLAG_SSA
+  | BN_LLIL_FLAG_BIT_SSA
+  | BN_LLIL_CALL_SSA
+  | BN_LLIL_SYSCALL_SSA
+  | BN_LLIL_CALL_PARAM_SSA
+  | BN_LLIL_CALL_STACK_SSA
+  | BN_LLIL_CALL_OUTPUT_SSA
+  | BN_LLIL_LOAD_SSA
+  | BN_LLIL_STORE_SSA
+  | BN_LLIL_REG_PHI
+  | BN_LLIL_FLAG_PHI
+  | BN_LLIL_MEM_PHI
+
+
 
 type bn_lowlevel_il_flag_condition =
   | BN_LLFC_E
@@ -245,13 +277,18 @@ type bn_function_graph_type =
   | BN_NormalFunctionGraph 
   | BN_LowLevelILFunctionGraph 
   | BN_LiftedILFunctionGraph
+  | BN_LowLevelILSSAFormFunctionGraph
+  | BN_MediumLevelILFunctionGraph
+  | BN_MediumLevelILSSAFormFunctionGraph
+  | BN_MappedMediumLevelILFunctionGraph
+  | BN_MappedMediumLevelILSSAFormFunctionGraph
+
 
 type bndisassemblyoption = 
   | ShowAddress
   | ShowOpcode
   | ExpandLongOpcode
   | GroupLinearDisassemblyFunctions
-  | ShowBasicBlockRegisterState
   | ShowFlagUsage
 
 
@@ -265,6 +302,18 @@ type bn_type_class =
   | BN_PointerTypeClass 
   | BN_ArrayTypeClass 
   | BN_FunctionTypeClass 
+  | BN_VarArgsTypeClass
+  | BN_ValueTypeClass
+  | BN_NamedTypeReferenceClass
+
+type bnnamedtypereferenceclass = 
+  | UnknownNamedTypeClass
+  | TypedefNamedTypeClass
+  | ClassNamedTypeClass
+  | StructNamedTypeClass
+  | UnionNamedTypeClass
+  | EnumNamedTypeClass
+
 
 type bnstructuretype = 
   | ClassStructureType
@@ -275,6 +324,8 @@ type bnmemberscope =
   | StaticScope
   | VirtualScope
   | ThunkScope
+  | FriendScope
+
 type bnmemberaccess = 
   | NoAccess
   | PrivateAccess
@@ -390,22 +441,42 @@ type bnintegerdisplaytype =
   | SignedHexadecimalDisplayType
   | UnsignedHexadecimalDisplayType
   | CharacterConstantDisplayType
+  | PointerDisplayType
 
 type bnimplicitregisterextend = 
   | NoExtend
   | ZeroExtendToFullWidth
   | SignExtendToFullWidth
-type bnregistervaluetype = 
-  | EntryValue
-  | OffsetFromEntryValue
-  | ConstantValue
-  | StackFrameOffset
+
+type bn_register_value_type =
   | UndeterminedValue
-  | OffsetFromUndeterminedValue
+  | EntryValue
+  | ConstantValue
+  | ConstantPointerValue
+  | StackFrameOffset
+  | ReturnAddressValue
   | SignedRangeValue
   | UnsignedRangeValue
   | LookupTableValue
-  | ComparisonResultValue
+  | InSetOfValues
+  | NotInSetOfValues
+
+type bnpluginorigin = 
+  | OfficialPluginOrigin
+  | CommunityPluginOrigin
+  | OtherPluginOrigin
+
+
+type bnpluginupdatestatus = 
+  | UpToDatePluginStatus
+  | UpdatesAvailablePluginStatus
+
+type bnplugintype = 
+  | CorePluginType
+  | UiPluginType
+  | ArchitecturePluginType
+  | BinaryViewPluginType
+
 type bnupdateresult = 
   | UpdateFailed
   | UpdateSuccess
@@ -422,18 +493,6 @@ type bn_implicit_register_extend =
   | BN_NoExtend
   | BN_ZeroExtendToFullWidth
   | BN_SignExtendToFullWidth
-
-type bn_register_value_type = 
-  | BN_EntryValue
-  | BN_OffsetFromEntryValue
-  | BN_ConstantValue
-  | BN_StackFrameOffset
-  | BN_UndeterminedValue
-  | BN_OffsetFromUndeterminedValue
-  | BN_SignedRangeValue
-  | BN_UnsignedRangeValue
-  | BN_LookupTableValue
-  | BN_ComparisonResultValue
 
 type bn_analysis_state =
   | IdleState
@@ -514,3 +573,106 @@ type bn_plugin_command_type =
   | RangePluginCommand
   | FunctionPluginCommand
 
+type bnmediumleveliloperation = 
+  | MLIL_NOP
+  | MLIL_SET_VAR
+  | MLIL_SET_VAR_FIELD
+  | MLIL_SET_VAR_SPLIT
+  | MLIL_LOAD
+  | MLIL_STORE
+  | MLIL_VAR
+  | MLIL_VAR_FIELD
+  | MLIL_ADDRESS_OF
+  | MLIL_ADDRESS_OF_FIELD
+  | MLIL_CONST
+  | MLIL_CONST_PTR
+  | MLIL_ADD
+  | MLIL_ADC
+  | MLIL_SUB
+  | MLIL_SBB
+  | MLIL_AND
+  | MLIL_OR
+  | MLIL_XOR
+  | MLIL_LSL
+  | MLIL_LSR
+  | MLIL_ASR
+  | MLIL_ROL
+  | MLIL_RLC
+  | MLIL_ROR
+  | MLIL_RRC
+  | MLIL_MUL
+  | MLIL_MULU_DP
+  | MLIL_MULS_DP
+  | MLIL_DIVU
+  | MLIL_DIVU_DP
+  | MLIL_DIVS
+  | MLIL_DIVS_DP
+  | MLIL_MODU
+  | MLIL_MODU_DP
+  | MLIL_MODS
+  | MLIL_MODS_DP
+  | MLIL_NEG
+  | MLIL_NOT
+  | MLIL_SX
+  | MLIL_ZX
+  | MLIL_LOW_PART
+  | MLIL_JUMP
+  | MLIL_JUMP_TO
+  | MLIL_CALL
+  | MLIL_CALL_UNTYPED
+  | MLIL_CALL_OUTPUT
+  | MLIL_CALL_PARAM
+  | MLIL_RET
+  | MLIL_NORET
+  | MLIL_IF
+  | MLIL_GOTO
+  | MLIL_CMP_E
+  | MLIL_CMP_NE
+  | MLIL_CMP_SLT
+  | MLIL_CMP_ULT
+  | MLIL_CMP_SLE
+  | MLIL_CMP_ULE
+  | MLIL_CMP_SGE
+  | MLIL_CMP_UGE
+  | MLIL_CMP_SGT
+  | MLIL_CMP_UGT
+  | MLIL_TEST_BIT
+  | MLIL_BOOL_TO_INT
+  | MLIL_ADD_OVERFLOW
+  | MLIL_SYSCALL
+  | MLIL_SYSCALL_UNTYPED
+  | MLIL_BP
+  | MLIL_TRAP
+  | MLIL_UNDEF
+  | MLIL_UNIMPL
+  | MLIL_UNIMPL_MEM
+  | MLIL_SET_VAR_SSA
+  | MLIL_SET_VAR_SSA_FIELD
+  | MLIL_SET_VAR_SPLIT_SSA
+  | MLIL_SET_VAR_ALIASED
+  | MLIL_SET_VAR_ALIASED_FIELD
+  | MLIL_VAR_SSA
+  | MLIL_VAR_SSA_FIELD
+  | MLIL_VAR_ALIASED
+  | MLIL_VAR_ALIASED_FIELD
+  | MLIL_CALL_SSA
+  | MLIL_CALL_UNTYPED_SSA
+  | MLIL_SYSCALL_SSA
+  | MLIL_SYSCALL_UNTYPED_SSA
+  | MLIL_CALL_PARAM_SSA
+  | MLIL_CALL_OUTPUT_SSA
+  | MLIL_LOAD_SSA
+  | MLIL_STORE_SSA
+  | MLIL_VAR_PHI
+  | MLIL_MEM_PHI
+
+
+type bnvariablesourcetype = 
+  | StackVariableSourceType
+  | RegisterVariableSourceType
+  | FlagVariableSourceType
+
+type bnilbranchdependence = 
+  | NotBranchDependent
+  | TrueBranchDependent
+  | FalseBranchDependent

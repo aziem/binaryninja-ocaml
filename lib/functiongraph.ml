@@ -13,6 +13,11 @@ type bn_function_graph_type =  Typedefs.bn_function_graph_type =
   | BN_NormalFunctionGraph 
   | BN_LowLevelILFunctionGraph 
   | BN_LiftedILFunctionGraph
+  | BN_LowLevelILSSAFormFunctionGraph
+  | BN_MediumLevelILFunctionGraph
+  | BN_MediumLevelILSSAFormFunctionGraph
+  | BN_MappedMediumLevelILFunctionGraph
+  | BN_MappedMediumLevelILSSAFormFunctionGraph
 
 let create_function_graph f =
   B.bn_create_function_graph f 

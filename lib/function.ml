@@ -7,8 +7,6 @@ open Ffi_bindings
 open B
 
 type bn_function = Typedefs.bn_function Ctypes.structure Ctypes_static.ptr
-type bn_stack_variable = B.E.bnstack_variable
-type bn_stack_variable_reference = B.E.bnstack_variable_reference
  
 let get_platform f =
   B.bn_get_function_platform f
@@ -71,19 +69,19 @@ let mark_recently_used f =
 let get_lowlevelil_for_instruction f arch addr =
   B.bnget_low_level_ilfor_instruction f arch addr
 
-let get_stack_var_referenced_by_instr f addr =
-  let arch = get_architecture f in
-  let create_stackvar_ref r =
-    let ref = make B.E.bnstack_variable_reference in
-    setf ref B.E.bnstack_variable_sourceoperand (getf r B.E.bnstack_variable_sourceoperand);
-    setf ref B.E.bnstack_variable_name (getf r B.E.bnstack_variable_name);
-    setf ref B.E.bnstack_variable_startingoffset (getf r B.E.bnstack_variable_startingoffset);
-    setf ref B.E.bnstack_variable_referencedoffset (getf r B.E.bnstack_variable_referencedoffset);
-    ref
-  in
-  Utils.get_list_of_things
-    f
-    (fun func i -> B.bnget_stack_variables_referenced_by_instruction func arch addr i)
-    bnfree_stack_variable_reference_list
-    create_stackvar_ref
+(* let get_stack_var_referenced_by_instr f addr = *)
+(*   let arch = get_architecture f in *)
+(*   let create_stackvar_ref r = *)
+(*     let ref = make B.E.bnstack_variable_reference in *)
+(*     setf ref B.E.bnstack_variable_sourceoperand (getf r B.E.bnstack_variable_sourceoperand); *)
+(*     setf ref B.E.bnstack_variable_name (getf r B.E.bnstack_variable_name); *)
+(*     setf ref B.E.bnstack_variable_startingoffset (getf r B.E.bnstack_variable_startingoffset); *)
+(*     setf ref B.E.bnstack_variable_referencedoffset (getf r B.E.bnstack_variable_referencedoffset); *)
+(*     ref *)
+(*   in *)
+(*   Utils.get_list_of_things *)
+(*     f *)
+(*     (fun func i -> B.bnget_stack_variables_referenced_by_instruction func arch addr i) *)
+(*     bnfree_stack_variable_reference_list *)
+(*     create_stackvar_ref *)
    

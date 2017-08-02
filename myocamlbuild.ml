@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: be2efc45b9f572c5d7e24c297d2323ca) *)
+(* DO NOT EDIT (digest: 490e90e9010b54eb5a049dc87970f407) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -904,7 +904,7 @@ let package_default =
                  S
                    [
                       A "-cclib";
-                      A "-L/home/aziem/Downloads/binaryninja";
+                      A "-L/home/aziem/binaryninjainstallation/binaryninja";
                       A "-cclib";
                       A "-lbinaryninjacore"
                    ])
@@ -914,7 +914,7 @@ let package_default =
                (OASISExpr.EBool true,
                  S
                    [
-                      A "-L/home/aziem/Downloads/binaryninja";
+                      A "-L/home/aziem/binaryninjainstallation/binaryninja";
                       A "-lbinaryninjacore"
                    ])
             ])
@@ -964,7 +964,7 @@ let dispatch = function
          let stdlib = BaseEnvLight.var_get "standard_library" env in
          let ctypes = BaseEnvLight.var_get "pkg_ctypes_stubs" env in
          Cmd (S [Sh "g++"; A"-ansi"; A"stubgen/ffi_ml_types_stubgen.c";
-                 A"-I"; P ctypes; A"-I"; P stdlib; A"-L/home/aziem/Downloads/binaryninja"; A"-lbinaryninjacore";
+                 A"-I"; P ctypes; A"-I"; P stdlib; A"-L/home/aziem/binaryninjainstallation/binaryninja"; A"-lbinaryninjacore";
                  A"-o"; A stubgen_ml_types])
       );
 
