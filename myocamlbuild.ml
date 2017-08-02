@@ -930,6 +930,9 @@ let dispatch_default = MyOCamlbuildBase.dispatch_default conf package_default;;
 
 # 932 "myocamlbuild.ml"
 (* OASIS_STOP *)
+
+let binaryninja_lib_loc = "/home/aziem/binaryninjainstallation/binaryninja";;
+
 Ocamlbuild_plugin.dispatch dispatch_default;;
 let dispatch = function
   | After_rules ->
@@ -964,7 +967,8 @@ let dispatch = function
          let stdlib = BaseEnvLight.var_get "standard_library" env in
          let ctypes = BaseEnvLight.var_get "pkg_ctypes_stubs" env in
          Cmd (S [Sh "g++"; A"-ansi"; A"stubgen/ffi_ml_types_stubgen.c";
-                 A"-I"; P ctypes; A"-I"; P stdlib; A"-L/home/aziem/binaryninjainstallation/binaryninja"; A"-lbinaryninjacore";
+                 (* A"-I"; P ctypes; A"-I"; P stdlib; A"-L/home/aziem/binaryninjainstallation/binaryninja"; A"-lbinaryninjacore"; *)
+                 A"-I"; P ctypes; A"-I"; P stdlib; A ("-L" ^ binaryninja_lib_loc); A"-lbinaryninjacore";
                  A"-o"; A stubgen_ml_types])
       );
 
