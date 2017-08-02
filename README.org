@@ -1,12 +1,12 @@
 #+TITLE: README
 
 * About
-OCaml API for Binary Ninja : Only tested on Linux.
+OCaml API for [[https://binary.ninja/][Binary Ninja]] : Only tested on Linux.
 
 Current status: low level bindings track the master branch of [[https://github.com/Vector35/binaryninja-api][Binary
 Ninja API]] repo.
 
-Higher level bindings are currently in progress. 
+Higher level bindings are currently in progress (under the lib directory)
 
 * Building
 Requires Oasis for build system (for now) and of-course a copy of
